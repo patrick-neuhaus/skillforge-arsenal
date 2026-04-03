@@ -1,6 +1,6 @@
 ---
 name: reference-finder
-description: "Skill para fundamentar qualquer tema com referências consagradas — livros, frameworks, metodologias, pessoas, artigos. Use SEMPRE que o usuário mencionar: 'tem framework pra isso?', 'quem é referência?', 'tem livro sobre?', 'melhor prática pra X?', 'me fundamenta isso', 'preciso de referências', ou quando quiser embasar uma decisão ou aplicar conhecimento consagrado. Também sugira quando o usuário tomar decisão importante sem referências. Se o tema já tem referências em references/, consulte primeiro. NÃO use pra perguntas técnicas diretas ('como configuro RLS') — responda direto. Se o usuário já tem referências e só quer aplicar, ajude sem buscar mais."
+description: "Skill para fundamentar qualquer tema com referências consagradas — livros, frameworks, metodologias, pessoas, artigos. Use SEMPRE que o usuário mencionar: 'tem framework pra isso?', 'quem é referência?', 'tem livro sobre?', 'melhor prática pra X?', 'me fundamenta isso', 'preciso de referências', ou quando quiser embasar uma decisão ou aplicar conhecimento consagrado. Também sugira quando o usuário tomar decisão importante sem referências. Se o tema já tem referências em references/, consulte primeiro. NÃO use pra perguntas técnicas diretas ('como configuro RLS') — responda direto. Se o usuário já tem referências e só quer aplicar, ajude sem buscar mais. Also triggers on: best book for, who is the expert on, find best practices."
 ---
 
 # Reference Finder v3
@@ -72,6 +72,8 @@ ANTES de pesquisar, verifique `references/`:
 - Nada encontrado? → Step 3
 
 ## Step 3: Research ⚠️ REQUIRED
+
+Load `references/research-methodology.md` for detailed search strategies and validation rules.
 
 Use web search em 4 camadas:
 
@@ -168,3 +170,4 @@ Quando acionada por outra skill, seja breve — 1-2 referências inline, não o 
 - Resposta rápida e direta → não force referências em tudo
 - Pergunta técnica específica ("como configurar RLS") → responda direto
 - Usuário já tem referências e quer aplicar → ajude a aplicar, não busque mais
+- Confused about which skill to use → invoke maestro

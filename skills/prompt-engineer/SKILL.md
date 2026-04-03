@@ -1,6 +1,6 @@
 ---
 name: prompt-engineer
-description: "Skill para criar, validar e otimizar prompts e contextos para qualquer LLM (Claude, Gemini, GPT). Use esta skill SEMPRE que o usuário mencionar: prompt, system prompt, context engineering, agente, chatbot, JSON Schema pra IA, 'como faço o modelo retornar X', 'o modelo tá respondendo errado', 'preciso melhorar esse prompt', 'quero criar um agente', 'instrução pro Lovable/Cursor', AGENTS.md, ou qualquer variação que envolva escrever instruções pra um modelo de IA. Também use quando o usuário estiver criando skills, configurando nodes de IA no n8n, ou montando agentes de WhatsApp. Se o usuário disser 'valida esse prompt' ou 'melhora isso', USE esta skill. NÃO use se o usuário quer criar uma SKILL do Claude (instruções persistentes com SKILL.md) — use skill-builder. Se é um prompt simples de uma linha, responda direto sem acionar."
+description: "Skill para criar, validar e otimizar prompts e contextos para qualquer LLM (Claude, Gemini, GPT). Use esta skill SEMPRE que o usuário mencionar: prompt, system prompt, context engineering, agente, chatbot, JSON Schema pra IA, 'como faço o modelo retornar X', 'o modelo tá respondendo errado', 'preciso melhorar esse prompt', 'quero criar um agente', 'instrução pro Lovable/Cursor', AGENTS.md, ou qualquer variação que envolva escrever instruções pra um modelo de IA. Também use quando o usuário estiver criando skills, configurando nodes de IA no n8n, ou montando agentes de WhatsApp. Se o usuário disser 'valida esse prompt' ou 'melhora isso', USE esta skill. Also triggers on: fix my prompt, improve this system message, write a prompt for. NÃO use se o usuário quer criar uma SKILL do Claude — use skill-builder. Prompt simples de uma linha, responda direto."
 ---
 
 # Prompt & Context Engineer v2
@@ -181,3 +181,4 @@ Máx 3 parágrafos. Tom: profissional mas acolhedor. *Negrito* pra info-chave.
 - **Prompt simples de 1 linha** → faz direto
 - **Conteúdo do prompt** (lógica de negócio) → use skill de domínio (PRD, n8n)
 - **AGENTS.md pra Lovable específico** → use lovable-knowledge
+- Confused about which skill to use → invoke maestro

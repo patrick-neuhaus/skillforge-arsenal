@@ -1,6 +1,6 @@
 ---
 name: react-patterns
-description: "Audit and implement modern React/Next.js patterns. Server Components, App Router, Server Actions, Suspense, error boundaries, data fetching, caching. Use when user asks to: audit React code, fix React anti-patterns, 'tá certo esse padrão?', migrate to App Router, server vs client component, 'onde coloco essa lógica?', scaffold Next.js feature, 'posso usar use client aqui?', optimize React performance, fix hydration errors. Supports: pattern audit, scaffolding, migration, performance review."
+description: "Audit and implement modern React/Next.js patterns. Server Components, App Router, Server Actions, Suspense, error boundaries, data fetching, caching. Use when user asks to: audit React code, fix React anti-patterns, 'tá certo esse padrão?', migrate to App Router, server vs client component, 'onde coloco essa lógica?', scaffold Next.js feature, 'posso usar use client aqui?', optimize React performance, fix hydration errors, server component vs client, fix useEffect, hydration error, App Router patterns. Supports: pattern audit, scaffolding, migration, performance review."
 ---
 
 # React Patterns
@@ -124,6 +124,7 @@ Before recommending/implementing patterns:
 - React Native → different patterns entirely
 - Pure CRA/Vite SPA without SSR → only client patterns apply
 - Styling-only changes → use `ui-design-system` instead
+- Confused about which skill to use → invoke maestro
 
 ## Integration
 

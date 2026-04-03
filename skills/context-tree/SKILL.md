@@ -1,6 +1,6 @@
 ---
 name: context-tree
-description: "Hierarchical knowledge management system with scoring and decay. Organizes domain knowledge across skills using importance scoring, maturity tiers, and automatic archival. Use when user asks to: organize knowledge, 'quero catalogar isso', score references, manage context tree, 'o que já sei sobre X?', prune stale knowledge, knowledge base status, cross-domain connections, 'conecta isso com o que já tenho'. Supports: add entries, query knowledge, prune stale, view status."
+description: "Hierarchical knowledge management system with scoring and decay. Organizes domain knowledge across skills using importance scoring, maturity tiers, and automatic archival. Use when user asks to: organize knowledge, 'quero catalogar isso', score references, manage context tree, 'o que já sei sobre X?', prune stale knowledge, knowledge base status, cross-domain connections, 'conecta isso com o que já tenho', save this knowledge, what do I know about, knowledge base, organize what I learned. Supports: add entries, query knowledge, prune stale, view status."
 ---
 
 # Context Tree
@@ -167,6 +167,7 @@ Before adding knowledge:
 - Git history / changelog → use `git log`
 - Temporary task tracking → use tasks/todos
 - Documentation → belongs in project docs, not knowledge tree
+- Confused about which skill to use → invoke maestro
 
 ## Integration
 

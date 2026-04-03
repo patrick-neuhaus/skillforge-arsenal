@@ -1,6 +1,6 @@
 ---
 name: maestro
-description: "Orchestrate and route between all skills in the arsenal. Maps user intent to the right skill chain, manages context window budget, and coordinates multi-skill workflows. Use when user asks: 'o que posso fazer?', 'qual skill usar?', 'que skills tenho?', which skill, help me choose, list skills, 'me ajuda a decidir', skill chain, orchestrate, pipeline, 'quero fazer X mas não sei por onde começar', 'preciso de ajuda com', route skills. Auto-activates when multiple skills could apply to a request."
+description: "Orchestrate and route between all skills in the arsenal. Maps user intent to the right skill chain, manages context window budget, and coordinates multi-skill workflows. Use when user asks: 'o que posso fazer?', 'qual skill usar?', 'que skills tenho?', which skill, help me choose, list skills, 'me ajuda a decidir', skill chain, orchestrate, pipeline, 'quero fazer X mas não sei por onde começar', 'preciso de ajuda com', route skills, which tool should I use, help me pick a skill, what can you do, list available skills. Auto-activates when multiple skills could apply to a request."
 ---
 
 # Maestro — Skill Orchestrator

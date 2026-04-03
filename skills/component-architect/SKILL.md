@@ -1,6 +1,6 @@
 ---
 name: component-architect
-description: "Plan and build component architecture using atomic design, composition patterns, and shadcn/ui. Generates component trees, defines interfaces, scaffolds components with proper structure. Use when user asks to: plan components, create component tree, 'como organizo meus componentes', decompose monolithic component, refactor component, component hierarchy, 'componente tá muito grande', atomic design, composition over props, slot pattern, 'quantos props é demais'. Supports: planning, creation, refactoring, audit."
+description: "Plan and build component architecture using atomic design, composition patterns, and shadcn/ui. Generates component trees, defines interfaces, scaffolds components with proper structure. Use when user asks to: plan components, create component tree, 'como organizo meus componentes', decompose monolithic component, refactor component, component hierarchy, 'componente tá muito grande', atomic design, composition over props, slot pattern, 'quantos props é demais', how to structure components, too many props, split this component. Supports: planning, creation, refactoring, audit."
 ---
 
 # Component Architect
@@ -140,6 +140,7 @@ Before creating components:
 - Styling changes only → use `ui-design-system` instead
 - State management decisions → that's architecture, not component design
 - Backend/API work → not applicable
+- Confused about which skill to use → invoke maestro
 
 ## Integration
 

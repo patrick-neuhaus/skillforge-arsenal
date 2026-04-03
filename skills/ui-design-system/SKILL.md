@@ -1,6 +1,6 @@
 ---
 name: ui-design-system
-description: "Generate comprehensive design tokens and design.json for any project. Creates color palettes, typography scales, spacing systems, component specs, animation definitions, and responsive breakpoints from brand inputs. Use when user asks to: create design system, generate design tokens, 'cria um design.json', define color palette, setup typography, 'monta identidade visual', design system from scratch, brand to code, 'preciso de tokens de design', design system audit. Supports: full generation, audit existing, apply to components."
+description: "Generate comprehensive design tokens and design.json for any project. Creates color palettes, typography scales, spacing systems, component specs, animation definitions, and responsive breakpoints from brand inputs. Use when user asks to: create design system, generate design tokens, 'cria um design.json', define color palette, setup typography, 'monta identidade visual', design system from scratch, brand to code, 'preciso de tokens de design', design system audit, build a color palette, setup theme, design tokens for my app, dark mode theme. Supports: full generation, audit existing, apply to components."
 ---
 
 # UI Design System
@@ -118,6 +118,7 @@ Before presenting design.json:
 - Project already has mature design system (Chakra/MUI theme) → `--audit` instead
 - Quick prototype where design doesn't matter yet → skip
 - Backend/API-only project → not applicable
+- Confused about which skill to use → invoke maestro
 
 ## Integration
 

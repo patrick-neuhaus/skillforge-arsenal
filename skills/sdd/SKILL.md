@@ -1,6 +1,6 @@
 ---
 name: sdd
-description: "Spec Driven Development — anti-vibecoding workflow. Four-phase pipeline: Research codebase, write detailed Spec, Implement with fresh context, Review with Trident. Prevents context window bloat and ensures deterministic implementation. Use when user asks to: implement a feature, 'quero adicionar funcionalidade', build something new, 'como implemento isso?', plan implementation, 'faz um plano antes', anti-vibecoding, spec driven, '/research', '/spec', '/implement'. Supports: full pipeline, individual phases."
+description: "Spec Driven Development — anti-vibecoding workflow. Four-phase pipeline: Research codebase, write detailed Spec, Implement with fresh context, Review with Trident. Prevents context window bloat and ensures deterministic implementation. Use when user asks to: implement a feature, 'quero adicionar funcionalidade', build something new, 'como implemento isso?', plan implementation, 'faz um plano antes', anti-vibecoding, spec driven, '/research', '/spec', '/implement', plan before coding, structured implementation, spec first then code. Supports: full pipeline, individual phases."
 ---
 
 # SDD — Spec Driven Development
@@ -162,6 +162,7 @@ Per phase:
 - One-line fix or trivial change → just do it
 - Exploratory/prototype work → vibecoding is fine for throwaway code
 - Bug fix where the problem is already clear → skip research, go to spec
+- Confused about which skill to use → invoke maestro
 
 ## Integration
 
