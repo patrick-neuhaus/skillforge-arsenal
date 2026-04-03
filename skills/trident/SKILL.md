@@ -1,328 +1,174 @@
+---
+name: trident
+description: "Three-pronged code review pipeline: Scan, Verify, Judge. Deep codebase audit for bugs, security vulnerabilities, logic errors, SOLID violations, and dead code with independent 3-agent verification. Use when user asks to: review code, audit code, find bugs, security review, 'revisa esse código', 'tem bug nisso?', 'faz um audit', review PR, review changes, code quality check, check for vulnerabilities, 'analisa esse código', inspect codebase. Supports: unstaged, staged, PR, commit range, directory scan. Don't use for: style-only reviews, trivial one-line changes, test coverage, UX review."
+---
+
 # Trident
 
-Three-pronged code review pipeline: **Scan → Verify → Judge**.
+IRON LAW: NEVER implement changes without explicit user confirmation. This is review-first — scan, verify, judge, then ASK.
 
-Combines multi-lens scanning (SOLID, security, quality, dead code) with an independent 3-agent verification pipeline to produce high-confidence findings with minimal false positives.
+Three-pronged pipeline: **Scan → Verify → Judge**. Multi-lens scanning (SOLID, security, quality, dead code) with independent 3-agent verification for high-confidence findings.
 
-**Core principle:** Scan broadly, verify independently, judge on evidence.
+## Options
 
-## When to Use
+| Option | Description | Default |
+|--------|-------------|---------|
+| `--mode <m>` | Review mode: unstaged, staged, all-local, pr, range, dir | auto-detect |
+| `--target <t>` | PR number, commit range, or directory path | current changes |
 
-- Code review of git changes (PRs, commits, staged diffs)
-- Deep codebase audit for bugs, security issues, logic errors
-- Post-implementation review of complex features
-- Security audit before release
-- Any review where false positives are worse than missed minor issues
-
-**Don't use for:** Style-only reviews, trivial one-line changes, test coverage analysis.
-
-## Pipeline
-
-```dot
-digraph pipeline {
-    rankdir=TB;
-
-    "PHASE 1: Scope & Preflight" [shape=box];
-    "PHASE 2: Dispatch Scanner (./prompts/scanner-prompt.md)" [shape=box];
-    "Collect Scanner output" [shape=box];
-    "PHASE 3: Dispatch Verifier (./prompts/verifier-prompt.md)" [shape=box];
-    "Collect Verifier output" [shape=box];
-    "PHASE 4: Dispatch Arbiter (./prompts/arbiter-prompt.md)" [shape=box];
-    "Collect Arbiter output" [shape=box];
-    "PHASE 5: Present findings to user" [shape=box];
-    "Await user decision" [shape=doublecircle];
-
-    "PHASE 1: Scope & Preflight" -> "PHASE 2: Dispatch Scanner (./prompts/scanner-prompt.md)";
-    "PHASE 2: Dispatch Scanner (./prompts/scanner-prompt.md)" -> "Collect Scanner output";
-    "Collect Scanner output" -> "PHASE 3: Dispatch Verifier (./prompts/verifier-prompt.md)";
-    "PHASE 3: Dispatch Verifier (./prompts/verifier-prompt.md)" -> "Collect Verifier output";
-    "Collect Verifier output" -> "PHASE 4: Dispatch Arbiter (./prompts/arbiter-prompt.md)";
-    "PHASE 4: Dispatch Arbiter (./prompts/arbiter-prompt.md)" -> "Collect Arbiter output";
-    "Collect Arbiter output" -> "PHASE 5: Present findings to user";
-    "PHASE 5: Present findings to user" -> "Await user decision";
-}
-```
-
-## How to Execute
-
-### Phase 1: Scope & Preflight
-
-Before dispatching agents, determine the review mode and gather context.
-
-#### Step 1: Detect Review Mode
-
-Trident supports 4 review modes. Determine which one applies based on user input or auto-detection:
-
-| Mode | Trigger | Diff Command | Notes |
-|------|---------|--------------|-------|
-| **`unstaged`** | Default — no target specified | `git diff` | Working tree changes not yet staged |
-| **`staged`** | User says "staged" or unstaged diff is empty | `git diff --cached` | Changes staged for commit |
-| **`all-local`** | User says "all local" or "everything" | `git diff HEAD` | Staged + unstaged combined |
-| **`pr`** | User provides PR URL, PR number, or says "review PR" | `gh pr diff {N}` | Pull request diff (remote) |
-| **`range`** | User provides commit range, branch name, or says "since X" | `git diff {A}..{B}` | Two commits, tags, or branches |
-| **`dir`** | User provides directory path or says "review src/" | Read all files in path | Entire directory/module audit |
-
-**Auto-detection logic:**
+## Workflow
 
 ```
-1. Did user provide a GitHub PR URL?           → mode = pr
-2. Did user provide a PR number (#123)?        → mode = pr
-3. Did user say "PR" or "pull request"?        → mode = pr (fetch current branch's PR via `gh pr view --json number`)
-4. Did user provide a commit range (abc123..def456)? → mode = range
-5. Did user provide a branch name?             → mode = range (resolve to main..branch)
-6. Did user say "since" / "from" / "after"?    → mode = range (e.g., git diff v1.2..HEAD)
-7. Did user provide a directory path?          → mode = dir
-8. Did user say "staged"?                      → mode = staged
-9. Did user say "all" / "everything"?          → mode = all-local
-10. Default                                    → mode = unstaged
+Trident Progress:
+
+- [ ] Phase 1: Scope & Preflight ⚠️ REQUIRED
+  - [ ] 1.1 Detect review mode (auto or --mode)
+  - [ ] 1.2 Gather diff and context
+  - [ ] 1.3 Handle edge cases (empty diff, large diff)
+- [ ] Phase 2: Scanner (Agent 1)
+  - [ ] Dispatch with prompts/scanner-prompt.md
+  - [ ] Collect output (max 15 findings)
+- [ ] Phase 3: Verifier (Agent 2) ⚠️ REQUIRED
+  - [ ] Dispatch with prompts/verifier-prompt.md
+  - [ ] Independent re-read of cited code
+- [ ] Phase 4: Arbiter (Agent 3)
+  - [ ] Dispatch with prompts/arbiter-prompt.md
+  - [ ] Final verdicts on disputed findings
+- [ ] Phase 5: Present ⛔ BLOCKING
+  - [ ] Format findings with severity and evidence
+  - [ ] ⛔ GATE: Present to user — NO changes without confirmation
 ```
 
-#### Step 2: Gather Diff and Context
+## Phase 1: Scope & Preflight
 
-Based on the detected mode, run the appropriate commands:
+Load `references/review-modes.md` for detailed commands per mode.
 
-**Mode: `unstaged`**
-```bash
-git status -sb
-git diff --stat
-git diff
-```
+### Review Modes
 
-**Mode: `staged`**
-```bash
-git status -sb
-git diff --cached --stat
-git diff --cached
-```
+| Mode | Trigger | Diff |
+|------|---------|------|
+| `unstaged` | Default | `git diff` |
+| `staged` | "staged" or unstaged empty | `git diff --cached` |
+| `all-local` | "all" / "everything" | `git diff HEAD` |
+| `pr` | PR URL, #number, "review PR" | `gh pr diff {N}` |
+| `range` | Commit range, branch, "since X" | `git diff {A}..{B}` |
+| `dir` | Directory path, "review src/" | Read all files |
 
-**Mode: `all-local`**
-```bash
-git status -sb
-git diff HEAD --stat
-git diff HEAD
-```
+### Edge Cases
+- **Empty diff:** auto-try staged → ask user for pr/range
+- **Large diff (>500 lines):** batch by module/feature area
+- **PR not found:** suggest checking number or providing diff manually
 
-**Mode: `pr`**
-```bash
-# Fetch PR metadata for context
-gh pr view {N} --json title,body,author,baseRefName,headRefName,files,additions,deletions
-# Fetch the diff
-gh pr diff {N}
-```
+Set `{TARGET}` (files/diff) and `{CONTEXT}` (mode, metadata, intent) for Scanner.
 
-**Mode: `range`**
-```bash
-git log --oneline {A}..{B}
-git diff --stat {A}..{B}
-git diff {A}..{B}
-```
+## Phase 2: Scanner (Agent 1)
 
-**Mode: `dir`**
-```bash
-# No diff — scan all files in the target directory
-find {DIR} -type f -name "*.ts" -o -name "*.py" -o -name "*.go" ... | head -50
-```
+Dispatch subagent with `./prompts/scanner-prompt.md`, filling `{TARGET}`, `{CONTEXT}`, `{REVIEW_MODE}`.
 
-#### Step 3: Enrich Context
+The Scanner performs multi-lens scanning across 5 dimensions:
+1. **SOLID + Architecture** — SRP violations, coupling, code smells
+2. **Security** — injection, auth gaps, secrets, race conditions
+3. **Code Quality** — error handling, performance, boundary conditions
+4. **Data Integrity** — transactions, validation, idempotency
+5. **Dead Code** — unused, redundant, feature-flagged off
 
-For ALL modes, also gather:
-1. Use `rg` or `grep` to find related modules, usages, and contracts if needed
-2. Identify entry points, ownership boundaries, and critical paths (auth, payments, data writes)
-3. For `pr` mode: include PR title, description, author intent, and base branch in `{CONTEXT}`
-4. For `range` mode: include commit messages in `{CONTEXT}` for intent understanding
+Output: max 15 findings (max 4 SUSPICIOUS), each with evidence + forced counterargument.
 
-#### Step 4: Handle Edge Cases
+## Phase 3: Verifier (Agent 2)
 
-- **Empty diff**: If diff is empty in `unstaged` mode, auto-try `staged` mode. If both empty, ask user if they want `pr` or `range` mode.
-- **Large diff (>500 lines)**: Summarize by file first, then run pipeline in batches by module/feature area.
-- **Mixed concerns**: Group findings by logical feature, not just file order.
-- **PR not found**: If `gh pr diff` fails, suggest user check PR number or provide diff manually.
-- **Branch divergence**: For `range` mode, warn if branches have diverged significantly (>100 commits).
+Dispatch subagent with `./prompts/verifier-prompt.md`, filling `{SCANNER_OUTPUT}`.
 
-#### Step 5: Set Scanner Placeholders
+The Verifier MUST re-read cited code independently — no trusting Scanner's text. For each finding: CONFIRMED, REJECTED, or INSUFFICIENT_EVIDENCE.
 
-Construct `{TARGET}` and `{CONTEXT}` for the Scanner:
+## Phase 4: Arbiter (Agent 3)
 
-- **`{TARGET}`**: The file list, diff content, or directory path to scan
-- **`{CONTEXT}`**: Review mode, PR metadata (if applicable), commit messages (if range), what the code does, areas of concern
+Dispatch subagent with `./prompts/arbiter-prompt.md`, filling `{SCANNER_OUTPUT}` and `{VERIFIER_OUTPUT}`.
 
-### Phase 2: Scanner (Agent 1)
+Final verdicts: REAL_BUG, NOT_A_BUG, or NEEDS_HUMAN_CHECK. May re-inspect disputed or high-severity findings.
 
-Dispatch a subagent using `./prompts/scanner-prompt.md` as the prompt template.
+## Phase 5: Present ⛔ BLOCKING
 
-- Fill `{TARGET}` with the scope (files, directories, modules, or entire repo)
-- Fill `{CONTEXT}` with relevant context (what the code does, recent changes, areas of concern)
-- The Scanner performs multi-lens scanning (SOLID, security, quality, dead code) with forced counterarguments
-- Wait for complete output before proceeding
+### Severity Levels
 
-```
-Task tool:
-  description: "Trident Scanner: deep scan of {TARGET}"
-  prompt: [contents of ./prompts/scanner-prompt.md with placeholders filled]
-```
+| Level | Action |
+|-------|--------|
+| **P0** Critical | Must block merge — security vuln, data loss, correctness bug |
+| **P1** High | Fix before merge — logic error, perf regression, major SOLID |
+| **P2** Medium | Fix or follow-up — code smell, maintainability |
+| **P3** Low | Optional — style, naming, minor suggestion |
 
-### Phase 3: Verifier (Agent 2)
-
-Dispatch a subagent using `./prompts/verifier-prompt.md` as the prompt template.
-
-- Fill `{SCANNER_OUTPUT}` with the complete output from Phase 2
-- Agent has full codebase access and MUST re-read cited code independently
-- Wait for complete output before proceeding
-
-```
-Task tool:
-  description: "Trident Verifier: validate findings"
-  prompt: [contents of ./prompts/verifier-prompt.md with SCANNER_OUTPUT filled]
-```
-
-### Phase 4: Arbiter (Agent 3)
-
-Dispatch a subagent using `./prompts/arbiter-prompt.md` as the prompt template.
-
-- Fill `{SCANNER_OUTPUT}` with output from Phase 2
-- Fill `{VERIFIER_OUTPUT}` with output from Phase 3
-- Agent has full codebase access and re-inspects disputed/high-severity findings
-- Wait for complete output
-
-```
-Task tool:
-  description: "Trident Arbiter: render verdicts"
-  prompt: [contents of ./prompts/arbiter-prompt.md with both outputs filled]
-```
-
-### Phase 5: Present to User
-
-After collecting the Arbiter's final verdicts, present them in the structured output format below. **Do NOT implement any changes until user explicitly confirms.**
-
-## Severity Levels
-
-| Level | Name | Description | Action |
-|-------|------|-------------|--------|
-| **P0** | Critical | Security vulnerability, data loss risk, correctness bug | Must block merge |
-| **P1** | High | Logic error, significant SOLID violation, performance regression | Should fix before merge |
-| **P2** | Medium | Code smell, maintainability concern, minor SOLID violation | Fix in this PR or create follow-up |
-| **P3** | Low | Style, naming, minor suggestion | Optional improvement |
-
-## Shared Output Contract
-
-All agents use a shared `bug_id` keyed schema. Each stage appends its fields:
-
-| Field | Scanner | Verifier | Arbiter |
-|-------|---------|----------|---------|
-| `bug_id` | Creates | Preserves | Preserves |
-| `title` | Creates | Preserves | Preserves |
-| `location` | Creates | Preserves | Preserves |
-| `severity` | Initial (P0-P3) | May revise | Final |
-| `category` | Creates (security/solid/quality/logic/concurrency/dead-code/other) | Preserves | Preserves |
-| `tier` | CONFIRMED/SUSPICIOUS | — | — |
-| `status` | — | CONFIRMED/REJECTED/INSUFFICIENT_EVIDENCE | — |
-| `verdict` | — | — | REAL_BUG/NOT_A_BUG/NEEDS_HUMAN_CHECK |
-| `confidence` | Creates | Creates | Creates |
-
-## Output Format
-
-Structure your final presentation as follows:
+### Output Format
 
 ```markdown
 ## Trident Review
 
 **Files reviewed**: X files, Y lines changed
-**Overall assessment**: [APPROVE / REQUEST_CHANGES / COMMENT]
-
----
+**Assessment**: [APPROVE / REQUEST_CHANGES / COMMENT]
 
 ### Confirmed Bugs (REAL_BUG)
-
 | Bug ID | Severity | Confidence | Category | Title | Location |
 |--------|----------|------------|----------|-------|----------|
-| BUG-01 | P0 | HIGH | security | ... | `file:line` |
 
 ### Dismissed (NOT_A_BUG)
-
 | Bug ID | Original Severity | Reason |
-|--------|-------------------|--------|
-| ... | ... | ... |
 
-### Needs Human Review (NEEDS_HUMAN_CHECK)
-
+### Needs Human Review
 | Bug ID | Severity | What Would Settle It |
-|--------|----------|---------------------|
-| ... | ... | ... |
 
----
-
-### Removal / Iteration Plan
-(if applicable — from Scanner's dead code analysis)
-
----
-
-### Additional Suggestions
-(optional improvements, not blocking)
-
----
+### Removal Plan (if applicable)
+### Additional Suggestions (optional, not blocking)
 
 ## Next Steps
-
-I found X issues (P0: _, P1: _, P2: _, P3: _).
-
-**How would you like to proceed?**
-
-1. **Fix all** — I'll implement all suggested fixes
-2. **Fix P0/P1 only** — Address critical and high priority issues
-3. **Fix specific items** — Tell me which issues to fix
-4. **No changes** — Review complete, no implementation needed
-
-Please choose an option or provide specific instructions.
+1. **Fix all** — implement all fixes
+2. **Fix P0/P1 only** — critical and high priority
+3. **Fix specific items** — tell me which
+4. **No changes** — review complete
 ```
 
-**Inline comments**: Use this format for file-specific findings:
-```
-::code-comment{file="path/to/file.ts" line="42" severity="P1"}
-Description of the issue and suggested fix.
-::
-```
+⛔ **Confirmation Gate:** NEVER proceed to fix without explicit user choice.
 
-**Clean review**: If no issues found, explicitly state:
-- What was checked
-- Areas not covered (e.g., "Did not verify database migrations")
-- Residual risks or recommended follow-up tests
+### Clean Review (no bugs found)
+State: what was checked, areas not covered, residual risks, recommended follow-ups.
+
+## Shared Output Contract
+
+All agents use `bug_id` keyed schema. Each stage appends:
+
+| Field | Scanner | Verifier | Arbiter |
+|-------|---------|----------|---------|
+| `bug_id`, `title`, `location` | Creates | Preserves | Preserves |
+| `severity` (P0-P3) | Initial | May revise | Final |
+| `category` | Creates | Preserves | Preserves |
+| `tier` | CONFIRMED/SUSPICIOUS | — | — |
+| `status` | — | CONFIRMED/REJECTED/INSUFFICIENT_EVIDENCE | — |
+| `verdict` | — | — | REAL_BUG/NOT_A_BUG/NEEDS_HUMAN_CHECK |
 
 ## Design Principles
 
-1. **Independent re-inspection.** Each agent reads the actual code. No agent trusts prior text alone.
-2. **Bounded recall.** Scanner has a hard cap (15 findings, max 4 suspicious). Quality over quantity.
-3. **Evidence-based.** Every claim requires: specific location, concrete trigger, failure story.
-4. **Forced counterargument.** Scanner must state the strongest reason each finding might be wrong.
-5. **Permission to abstain.** Verifier can say INSUFFICIENT_EVIDENCE. Arbiter can say NEEDS_HUMAN_CHECK.
-6. **No fictional scoring.** No fake point systems. Acceptance criteria and evidence requirements drive quality.
-7. **Multi-lens scanning.** SOLID, security, code quality, and dead code — not just bug hunting.
-8. **Review-first.** Never implement without explicit user confirmation.
+1. **Independent re-inspection.** Each agent reads actual code. No trusting prior text alone.
+2. **Bounded recall.** Scanner: max 15 findings, max 4 suspicious. Quality over quantity.
+3. **Evidence-based.** Every claim: specific location + concrete trigger + failure story.
+4. **Forced counterargument.** Scanner states strongest reason each finding might be wrong.
+5. **Permission to abstain.** INSUFFICIENT_EVIDENCE and NEEDS_HUMAN_CHECK exist for a reason.
+6. **Review-first.** Never implement without user confirmation.
 
-## Red Flags
+## Anti-Patterns
 
-**Never:**
-- Skip the Verifier stage. Without verification, false positive rate is 30-60%.
-- Let Verifier or Arbiter judge without codebase access. Text-only debate produces rhetoric, not truth.
-- Remove finding caps from Scanner. Unlimited findings collapse the pipeline into triage noise.
-- Force binary verdicts. NEEDS_HUMAN_CHECK exists for a reason.
-- Use the same model instance for all 3 agents if avoidable (consensus collapse risk).
-- Implement changes before user confirms. This is review-first.
-- Suppress type errors or silence diagnostics to "fix" findings.
+- Skip the Verifier — false positive rate jumps to 30-60%
+- Judge without codebase access — produces rhetoric, not truth
+- Remove Scanner caps — unlimited findings collapse into triage noise
+- Force binary verdicts — some findings genuinely need human judgment
+- Same model instance for all 3 agents — consensus collapse risk
+- Implement before user confirms — violates Iron Law
 
-**If pipeline produces too few findings:**
-- Do NOT make Scanner more aggressive. Instead, add a second independent Scanner with different search focus and merge/dedupe before verification.
-
-## Prompt Templates
-
-- `./prompts/scanner-prompt.md` — Agent 1: multi-lens scan with forced counterarguments
-- `./prompts/verifier-prompt.md` — Agent 2: independent verification with falsification
-- `./prompts/arbiter-prompt.md` — Agent 3: evidence-based final judgment
-
-## References
+## Prompt Templates & References
 
 | File | Purpose |
 |------|---------|
-| `references/solid-checklist.md` | SOLID smell prompts and refactor heuristics |
-| `references/security-checklist.md` | Web/app security and runtime risk checklist |
-| `references/code-quality-checklist.md` | Error handling, performance, boundary conditions |
-| `references/removal-plan.md` | Template for deletion candidates and follow-up plan |
+| `prompts/scanner-prompt.md` | Agent 1: multi-lens scan with counterarguments |
+| `prompts/verifier-prompt.md` | Agent 2: independent verification |
+| `prompts/arbiter-prompt.md` | Agent 3: evidence-based judgment |
+| `references/solid-checklist.md` | SOLID smell prompts and heuristics |
+| `references/security-checklist.md` | Web/app security checklist |
+| `references/code-quality-checklist.md` | Error handling, performance, boundaries |
+| `references/removal-plan.md` | Deletion candidate template |

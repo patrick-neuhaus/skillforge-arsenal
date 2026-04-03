@@ -1,7 +1,9 @@
 ---
 name: repo-review
-description: "Pipeline de 3 agentes pra detecção profunda de bugs em codebase ou banco de dados. Use esta skill quando o usuário precisar de: auditoria profunda de código, revisão de segurança, detecção de bugs após implementação de features complexas, ou quando pedir 'revisa esse código', 'tem bug nisso?', 'faz um audit'. Usa 3 agentes sequenciais (encontrar, verificar, arbitrar) pra maximizar bugs reais com mínimo de falsos positivos. NÃO use pra: revisão de estilo, sugestões de refatoração, análise de cobertura de testes, mudanças triviais, ou revisão de UX/UI — pra UX use ux-audit. Se é uma pergunta pontual sobre um trecho de código, responda direto sem acionar o pipeline."
+description: "[DEPRECATED] Use a skill 'trident' em vez desta. Trident é a evolução do repo-review com pipeline 3-agent melhorado (Scan/Verify/Judge), multi-lens scanning (SOLID, security, quality, dead code), 6 review modes, e shared output contract. Esta skill é mantida apenas como referência histórica."
 ---
+
+> **DEPRECATED:** Esta skill foi substituída por **Trident** (`skills/trident/`). Use Trident para todas as revisões de código.
 
 # Repo Review v2 — Detecção profunda de bugs
 

@@ -1,6 +1,6 @@
 # Discovery: Skillforge Arsenal
 
-**Status:** Fase 0 completa, Fase 1 próxima
+**Status:** Fases 0-4 completas, Fase 5 próxima
 **Última atualização:** 2026-04-03
 **Plano detalhado:** `.claude/plans/swift-popping-zephyr.md`
 **Catálogo de padrões:** `research/patterns-catalog.md`
@@ -268,35 +268,14 @@ Arquivos: `research/pluma-prompts/`
 
 ```
 Fase 0 (Setup)           ✅ Completa
-Fase 1 (Skill Builder)   ← PRÓXIMA
-Fase 2 (Prompt Eng.)     ← Após Fase 1
-Fase 3 (Ref. Finder)     ← Após Fase 2
-Fase 4 (Trident)         Paralelo com 1-3
-Fase 5 (Frontend)        ← Após Fase 2
+Fase 1 (Skill Builder)   ✅ v2 — 211 linhas, 12 técnicas, init/validate scripts
+Fase 2 (Prompt Eng.)     ✅ v2 — 183 linhas, claude-4x-guide.md extraído
+Fase 3 (Ref. Finder)     ✅ v3 — 168 linhas, scoring ByteRover, organization-guide.md
+Fase 4 (Trident)         ✅ 174 linhas, frontmatter GEO, repo-review deprecated
+Fase 5 (Frontend)        ← PRÓXIMA
 Fase 6 (Commands)        ← Após Fase 4+5
 Fase 7 (Context Tree)    ← Após todas
 ```
-
-### Fase 1: Skill Builder v2 — Detalhes
-Reescrever `skills/skill-builder/` incorporando:
-- 12 técnicas do Skill Forge como checklist de qualidade
-- SKILL.md <250 linhas (Progressive Loading)
-- Scripts: init (scaffold), validate (checa estrutura)
-- GEO: gerar keywords otimizadas na description
-- Confirmation Gates + Pre-Delivery Checklist
-- Iron Law: "Nunca gere uma skill sem ler 2+ skills de referência"
-- Anti-Patterns documentados
-- Parameter System: `--quick` (scaffold) / `--full` (guiado) / `--evolve` (melhorar existente)
-- Integração com `npx skills`
-
-### Fase 2: Prompt Engineer v2
-Técnicas de SDD, context window management, design.json como exemplo, Pre-Delivery Checklist pra prompts.
-
-### Fase 3: Reference Finder v3
-Context Tree do ByteRover: scoring, maturity tiers, archive, MOCs automáticos.
-
-### Fase 4: Trident (integrar)
-Já copiado. Falta: adaptar formato, deprecar repo-review.
 
 ### Fase 5: Skills de Frontend
 - `ui-design-system` — design.json (tokens, paleta, tipografia, componentes) baseado nos prompts Pluma
@@ -325,3 +304,10 @@ Versão simplificada do ByteRover: domínios, refs com scoring, cross-pollinatio
 - Criados: patterns-catalog.md, byterover-context-tree.md, 5 análises
 - Plano de 8 fases aprovado
 - **Fase 0 completa** — próximo: Fase 1 (Skill Builder v2)
+
+### 2026-04-03 — Sessão 2
+- **Fase 1 completa:** Skill Builder v2 — 211 linhas (de 446), 12 técnicas incorporadas, scripts init_skill.py + validate.py, 3 novas references (discovery-guide, writing-guide, description-guide)
+- **Fase 2 completa:** Prompt Engineer v2 — 183 linhas (de 307), Claude 4.x guide extraído pra reference, Iron Law + workflow checklist + parameter system
+- **Fase 3 completa:** Reference Finder v3 — 168 linhas (de 265), scoring ByteRover (importance/maturity/recency), organization-guide.md com PARA+Zettelkasten+MOCs
+- **Fase 4 completa:** Trident — 174 linhas (de 328), frontmatter GEO adicionado, review-modes.md extraído, repo-review deprecated
+- **Próximo:** Fase 5 (Skills de Frontend)
