@@ -1,6 +1,6 @@
 # Discovery: Skillforge Arsenal
 
-**Status:** Fases 0-4 completas, Fase 5 próxima
+**Status:** Fases 0-7 completas — ecossistema operacional
 **Última atualização:** 2026-04-03
 **Plano detalhado:** `.claude/plans/swift-popping-zephyr.md`
 **Catálogo de padrões:** `research/patterns-catalog.md`
@@ -19,23 +19,28 @@ Transformar o `skillforge-arsenal` de uma coleção de 18 skills pessoais em um 
 
 ```
 skillforge-arsenal/
-├── skills/                    # 19 skills (18 originais + trident)
+├── skills/                    # 24 skills
 │   ├── comunicacao-clientes/
+│   ├── component-architect/   # NOVO Fase 5: atomic design, shadcn, composição
+│   ├── context-tree/          # NOVO Fase 7: knowledge management com scoring
 │   ├── docx/
 │   ├── lovable-knowledge/
 │   ├── n8n-architect/
 │   ├── pdf/
 │   ├── pptx/
 │   ├── product-discovery-prd/
-│   ├── prompt-engineer/       # → v2 na Fase 2
-│   ├── reference-finder/      # → v3 na Fase 3
-│   ├── repo-review/           # → deprecar após Fase 4
+│   ├── prompt-engineer/       # v2 (Fase 2)
+│   ├── react-patterns/        # NOVO Fase 5: App Router, SSR, Thin Client
+│   ├── reference-finder/      # v3 (Fase 3)
+│   ├── repo-review/           # DEPRECATED → use trident
 │   ├── schedule/
+│   ├── sdd/                   # NOVO Fase 6: Spec Driven Development pipeline
 │   ├── security-audit/
-│   ├── skill-builder/         # → v2 na Fase 1 (PRÓXIMA)
+│   ├── skill-builder/         # v2 (Fase 1)
 │   ├── supabase-db-architect/
 │   ├── tech-lead-pm/
-│   ├── trident/               # NOVO: repo-review v2 (Scan→Verify→Judge)
+│   ├── trident/               # v2 (Fase 4): Scan→Verify→Judge
+│   ├── ui-design-system/      # NOVO Fase 5: design tokens, design.json
 │   ├── ux-audit/
 │   ├── vps-infra-audit/
 │   └── xlsx/
@@ -259,7 +264,7 @@ Arquivos: `research/pluma-prompts/`
 ## Decisões Pendentes
 
 - [ ] Publicar skills no skills.sh? Quando?
-- [ ] Context Tree completo ou versão simplificada?
+- [x] Context Tree completo ou versão simplificada? → Versão simplificada (markdown-based, sem _manifest.json)
 - [ ] Skills globais (~/.claude/skills/) vs. por projeto?
 
 ---
@@ -272,21 +277,10 @@ Fase 1 (Skill Builder)   ✅ v2 — 211 linhas, 12 técnicas, init/validate scri
 Fase 2 (Prompt Eng.)     ✅ v2 — 183 linhas, claude-4x-guide.md extraído
 Fase 3 (Ref. Finder)     ✅ v3 — 168 linhas, scoring ByteRover, organization-guide.md
 Fase 4 (Trident)         ✅ 174 linhas, frontmatter GEO, repo-review deprecated
-Fase 5 (Frontend)        ← PRÓXIMA
-Fase 6 (Commands)        ← Após Fase 4+5
-Fase 7 (Context Tree)    ← Após todas
+Fase 5 (Frontend)        ✅ 3 skills: ui-design-system (125L), component-architect (147L), react-patterns (133L)
+Fase 6 (SDD)             ✅ sdd — 164 linhas, pipeline Research→Spec→Implement→Review
+Fase 7 (Context Tree)    ✅ context-tree — 175 linhas, scoring ByteRover, prune/archive
 ```
-
-### Fase 5: Skills de Frontend
-- `ui-design-system` — design.json (tokens, paleta, tipografia, componentes) baseado nos prompts Pluma
-- `component-architect` — atomic design, composição, shadcn
-- `react-patterns` — App Router, SSR, server actions. Iron Law: Thin Client / Fat Server
-
-### Fase 6: Workflow Commands
-`/research` → `/spec` → `/implement` → `/review` (inspirados nos videos 2+4 e HumanLayer)
-
-### Fase 7: Context Tree
-Versão simplificada do ByteRover: domínios, refs com scoring, cross-pollination entre skills.
 
 ---
 
@@ -310,4 +304,13 @@ Versão simplificada do ByteRover: domínios, refs com scoring, cross-pollinatio
 - **Fase 2 completa:** Prompt Engineer v2 — 183 linhas (de 307), Claude 4.x guide extraído pra reference, Iron Law + workflow checklist + parameter system
 - **Fase 3 completa:** Reference Finder v3 — 168 linhas (de 265), scoring ByteRover (importance/maturity/recency), organization-guide.md com PARA+Zettelkasten+MOCs
 - **Fase 4 completa:** Trident — 174 linhas (de 328), frontmatter GEO adicionado, review-modes.md extraído, repo-review deprecated
-- **Próximo:** Fase 5 (Skills de Frontend)
+
+### 2026-04-03 — Sessão 3
+- **Fase 5 completa:** 3 skills de frontend criadas
+  - `ui-design-system` — 125 linhas, Iron Law: "concrete brand inputs required", design-json-schema.md com schema completo + Tailwind/CSS output examples
+  - `component-architect` — 147 linhas, Iron Law: "check existing before creating", composition-patterns.md com atomic design detalhado + shadcn patterns + health metrics
+  - `react-patterns` — 133 linhas, Iron Law: "Thin Client, Fat Server", pattern-guide.md com Server/Client decision tree + anti-pattern migration table
+- **Fase 6 completa:** SDD (Spec Driven Development) — 164 linhas, pipeline 4 fases com /clear entre cada, prd.md → spec.md → implement → review via Trident
+- **Fase 7 completa:** Context Tree — 175 linhas, scoring ByteRover (importance 0-100, maturity tiers, decay 21d), scoring-guide.md com critérios detalhados + index/manifest formats
+- **Todas as 7 fases do roadmap completas.** 24 skills no repo (18 originais + 6 novas)
+- Todas as 5 novas skills passam no validate.py (frontmatter, <250 linhas, Iron Law, checklist, gates, anti-patterns)
