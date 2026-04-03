@@ -1,210 +1,265 @@
-# Discovery: Construindo o Arsenal Definitivo de Skills
+# Discovery: Skillforge Arsenal
 
-**Status:** Em andamento
+**Status:** Fase 0 completa, Fase 1 próxima
 **Última atualização:** 2026-04-03
+**Plano detalhado:** `.claude/plans/swift-popping-zephyr.md`
+**Catálogo de padrões:** `research/patterns-catalog.md`
 
 ---
 
 ## Objetivo
 
-Transformar o `skillforge-arsenal` de uma coleção pessoal em um arsenal completo e organizado por domínio, onde cada tarefa tem uma skill focada (não generalista). Inspirado pelo ecossistema do skills.sh.
+Transformar o `skillforge-arsenal` de uma coleção de 18 skills pessoais em um **ecossistema de skills de alta qualidade** com abordagem bootstrap: cada skill potencializa a próxima.
+
+**Abordagem:** skill-builder v2 → prompt-engineer v2 → reference-finder v3 → skills de frontend → workflow commands → context tree.
 
 ---
 
-## Pesquisa: Como o Ecossistema de Skills Funciona
+## Estrutura do Repo
 
-### skills.sh (Vercel)
-- Diretório aberto de skills para agentes IA (Claude Code, Cursor, Copilot, etc.)
-- CLI: `npx skills add <owner/repo>` para instalar
-- +91K skills listadas, com leaderboard por installs
-- Skills são SKILL.md com YAML frontmatter (name, description) + instruções em Markdown
-- Instalação local: `.claude/skills/` (projeto) ou `~/.claude/skills/` (global)
-- Suporta 41+ agentes diferentes
-
-### Formato de uma Skill
-```yaml
----
-name: minha-skill
-description: O que faz e quando usar
----
-
-# Instruções em Markdown
+```
+skillforge-arsenal/
+├── skills/                    # 19 skills (18 originais + trident)
+│   ├── comunicacao-clientes/
+│   ├── docx/
+│   ├── lovable-knowledge/
+│   ├── n8n-architect/
+│   ├── pdf/
+│   ├── pptx/
+│   ├── product-discovery-prd/
+│   ├── prompt-engineer/       # → v2 na Fase 2
+│   ├── reference-finder/      # → v3 na Fase 3
+│   ├── repo-review/           # → deprecar após Fase 4
+│   ├── schedule/
+│   ├── security-audit/
+│   ├── skill-builder/         # → v2 na Fase 1 (PRÓXIMA)
+│   ├── supabase-db-architect/
+│   ├── tech-lead-pm/
+│   ├── trident/               # NOVO: repo-review v2 (Scan→Verify→Judge)
+│   ├── ux-audit/
+│   ├── vps-infra-audit/
+│   └── xlsx/
+├── community/                 # Repos de referência clonados
+│   ├── sanyuan-skills/        # Skill Forge + code-review-expert + sigma
+│   └── humanlayer-commands/   # 29 commands anti-vibecoding
+├── research/                  # Análises e documentação
+│   ├── video-transcripts/     # 5 análises completas dos vídeos
+│   ├── pluma-prompts/         # design.json + brief (base pra skill de design)
+│   ├── patterns-catalog.md    # 23 padrões catalogados de 6+ fontes
+│   └── byterover-context-tree.md  # Análise do sistema de memória
+├── DISCOVERY.md               # Este arquivo — hub central
+└── README.md
 ```
 
-### Onde ficam instaladas
-- **Projeto:** `./.claude/skills/<nome>/SKILL.md`
-- **Global:** `~/.claude/skills/<nome>/SKILL.md`
-- Symlink é o método recomendado (single source of truth)
+**Skills pessoais ficam em:** `C:\Users\Patrick Neuhaus\AppData\Roaming\Claude\local-agent-mode-sessions\skills-plugin\2e0d2a98-c8b7-4df2-967a-4b0f524507b0\8b27bf1e-bcdb-40be-86ac-68b8d19e9de9\skills\`
 
-### CLI úteis
-- `npx skills add <repo>` — instalar
-- `npx skills add <repo> -s <nome>` — instalar skill específica
-- `npx skills add <repo> -g` — instalar global
-- `npx skills list` — listar instaladas
-- `npx skills find <query>` — buscar no diretório
-- `npx skills update` — atualizar todas
-- `npx skills init <nome>` — criar template
+**GitHub:** https://github.com/patrick-neuhaus/skillforge-arsenal (privado)
 
 ---
 
-## Artigo: Deborah Folloni (Substack)
+## Ecossistema skills.sh (Vercel)
 
-### Insights principais
-- "Taste is the new moat" — design diferenciado é vantagem competitiva quando IA nivela tudo
-- Skill é um playbook carregado sob demanda (diferente de system prompt)
-- Pré-requisito: ter identidade visual mínima (logo, paleta, tipografia, conceito)
-- A skill `frontend-design` sozinha não basta — precisa de contexto de marca
-
-### Workflow recomendado
-1. Preparar assets (logos, cores, fontes)
-2. Prompt específico mencionando a skill + assets
-3. Iniciar conversa nova para a skill ser detectada
+- Diretório aberto: 91K+ skills, 41+ agentes (Claude Code, Cursor, Copilot, etc.)
+- Formato: `SKILL.md` com YAML frontmatter (`name`, `description`) + Markdown
+- **CLI:** `npx skills add <repo>`, `npx skills find <query>`, `npx skills list`, `npx skills update`, `npx skills init <nome>`
+- **Instalação:** `.claude/skills/` (projeto) ou `~/.claude/skills/` (global). Symlink recomendado.
+- **Ranking:** find-skills da Vercel (open source) indexa e recomenda skills
+- **Top skills frontend:** frontend-design (222K), vercel-react-best-practices (264K), web-design-guidelines (213K), shadcn (53K), ui-ux-pro-max (91K)
 
 ---
 
-## Top Skills de Frontend no skills.sh
+## Insights dos 5 Vídeos (Deborah Folloni / DevGPT)
 
-### Design & Visual
-| Skill | Repo | Installs |
-|-------|------|----------|
-| frontend-design | anthropics/skills | 222K |
-| web-design-guidelines | vercel-labs/agent-skills | 213K |
-| ui-ux-pro-max | nextlevelbuilder/ui-ux-pro-max-skill | 91K |
-| frontend-design | pbakaus/impeccable | 37K |
-| tailwind-design-system | wshobson/agents | 26K |
-| canvas-design | anthropics/skills | 28K |
-| brand-guidelines | anthropics/skills | 20K |
-| theme-factory | anthropics/skills | 21K |
-| landing-page-design | inferen-sh/skills | 8K |
+### Video 1: Omer — Skill mais baixada (1M+ installs)
+**Arquivo:** `research/video-transcripts/01-skill-mais-baixada-omer.md`
 
-### Componentes & Patterns
-| Skill | Repo | Installs |
-|-------|------|----------|
-| vercel-react-best-practices | vercel-labs/agent-skills | 264K |
-| vercel-composition-patterns | vercel-labs/agent-skills | 107K |
-| shadcn | shadcn/ui | 53K |
-| react:components | google-labs-code/stitch-skills | 26K |
-| ui-component-patterns | supercent-io/skills-template | 11K |
-| web-artifacts-builder | anthropics/skills | 22K |
+**GEO (Generative Engine Optimization)** — o conceito mais importante:
+- "The agents are the customers for skills" — otimizar pra agentes, não humanos
+- Ler código do find-skills (open source) pra entender ranking
+- Usar o próprio Claude pra gerar keywords ("que termos você buscaria pra encontrar X?")
+- Skills que resolvem problemas específicos = buscas previsíveis
 
-### Frameworks
-| Skill | Repo | Installs |
-|-------|------|----------|
-| next-best-practices | vercel-labs/next-skills | 48K |
-| vercel-react-native-skills | vercel-labs/agent-skills | 76K |
-| vue-best-practices | hyf0/vue-skills | 14K |
-| vue | antfu/skills | 13K |
-| nuxt | antfu/skills | 9K |
-| vite | antfu/skills | 12K |
+**CLI-First > MCP:**
+- MCPs bloatam context window com JSON enorme
+- CLI tools retornam respostas curtas, preservam performance
+- Padrão superior: SKILL.md + CLI tool executável (não apenas system prompt)
 
-### Acessibilidade & Responsividade
-| Skill | Repo | Installs |
-|-------|------|----------|
-| web-accessibility | supercent-io/skills-template | 13K |
-| responsive-design | supercent-io/skills-template | 11K |
+**Padrões replicáveis:**
+- **Autodiscovery:** skill permite que agente descubra capacidades dinamicamente
+- **Composable Tools:** ferramentas pequenas e modulares que o agente encadeia sozinho
+- **Permission Gate:** aprovar antes de ações irreversíveis (ex: postar no Twitter)
 
-### TypeScript & Estado
-| Skill | Repo | Installs |
-|-------|------|----------|
-| typescript-advanced-types | wshobson/agents | 19K |
-| state-management | supercent-io/skills-template | 11K |
+### Video 2: Vibe Coding Não Funciona — Epic Builder
+**Arquivo:** `research/video-transcripts/02-vibe-coding-nao-funciona.md`
 
----
+**5 problemas do vibe coding:**
+1. IA engasga com tarefas grandes (context window cheia)
+2. Código bagunçado (over-engineering, duplicação)
+3. IA "desobedece" (infere errado quando não tem instrução clara de QUAIS arquivos)
+4. Arrumar uma coisa quebra outra (falta modularização)
+5. Gafes de segurança (lógica no front, chaves expostas)
 
-## Visão: Organização por Domínio (Foco Frontend)
+**Workflow 4 etapas:**
+1. `/spec` — gera documento: páginas + componentes + behaviors
+2. `/break` — quebra em issues atômicas (1 por behavior)
+3. `/plan` — pesquisa codebase + docs externos, enriquece issue com paths + ações + pseudocódigo
+4. `/execute` — implementa com agentes especializados por camada (Model Writer, Component Writer)
 
-A ideia é ter skills **focadas e separadas**, não generalistas. Exemplo para frontend:
-
-### Camada de Design
-- **UI Design** — visual, cores, tipografia, hierarquia, espaçamento
-- **UX Audit** — heurísticas, fluxos, usabilidade (JÁ TEMOS)
-- **Brand/Identity** — guidelines de marca, consistência visual
-- **Responsive Design** — breakpoints, mobile-first, adaptação
-
-### Camada de Componentes
-- **Component Architecture** — padrões de composição, atomic design, reusabilidade
-- **shadcn/UI Library** — como usar shadcn corretamente, customizar temas
-- **Form Patterns** — validação, UX de formulários, acessibilidade
-
-### Camada de Implementação
-- **React Best Practices** — hooks, performance, patterns
-- **Next.js Patterns** — App Router, SSR, caching, ISR
-- **Tailwind System** — utility-first, design tokens, custom plugins
-- **State Management** — quando usar o quê (zustand, jotai, context)
-
-### Camada de Qualidade
-- **Accessibility (a11y)** — WCAG, aria, screen readers
-- **Performance** — Core Web Vitals, lazy loading, bundle size
-- **Testing** — component tests, visual regression, e2e
-
----
-
-## Pesquisa: 5 Vídeos Processados
-
-### Video 1: Skill mais baixada (Omer / Agent Tools)
-- **GEO**: otimizar description pra agentes (não humanos). Usar Claude pra gerar keywords.
-- **CLI-First > MCP**: CLIs preservam context window
-- **Composable Tools**: ferramentas modulares que o agente encadeia
-- Análise completa: `research/video-transcripts/01-skill-mais-baixada-omer.md`
-
-### Video 2: Vibe Coding Não Funciona (Epic)
-- **4 etapas**: `/spec` → `/break` → `/plan` → `/execute`
-- **Agentes especializados**: Model Writer (banco), Component Writer (front)
-- **Thin Client / Fat Server**: zero lógica no front
-- Análise completa: `research/video-transcripts/02-vibe-coding-nao-funciona.md`
+**Regras:**
+- **Thin Client / Fat Server** — zero lógica de negócio no front
+- **`/references` como guardrail** — `architecture.md` + `design-system.md` em todo projeto
+- **Protótipo primeiro, lógica depois**
+- **Especificar arquivos explicitamente:** `[path] → [o que fazer]`
 
 ### Video 3: Skills > Agentes
-- **Progressive Loading**: só carrega skill quando precisa
-- **Retroalimentação**: "registra na skill pra próxima vez"
-- **Determinístico + Não-determinístico**: scripts + IA
-- Análise completa: `research/video-transcripts/03-skills-vs-agentes.md`
+**Arquivo:** `research/video-transcripts/03-skills-vs-agentes.md`
 
-### Video 4: Workflow Anti-Vibe Coding (SDD)
-- **3 passos**: Research → Spec → Implement com `/clear` entre cada
-- **Regra dos 40-50%**: nunca estourar context window
-- **Técnica .tmp**: clonar repo, analisar padrão, deletar
-- Análise completa: `research/video-transcripts/04-workflow-anti-vibe-coding.md`
+**Progressive Loading (conceito mais importante):**
+- System prompt lista APENAS nome + descrição de cada skill (1 linha)
+- Conteúdo completo carrega SÓ quando a IA identifica que precisa
+- Preserva context window para a tarefa real
+
+**Retroalimentação:**
+- "Registra isso na skill pra próxima vez" = melhoria contínua sem deploy
+- Skill evolui com uso, acumulando conhecimento em `references/`
+
+**Determinístico + Não-determinístico:**
+- Scripts (consistência, exatidão) + IA (criatividade, decisão)
+- Exemplo: IA decide layout → script Python aplica branding no PPTX
+
+**Roteiro de perguntas no SKILL.md:**
+- Sempre incluir coleta estruturada antes de executar
+- Obrigatórias + opcionais, sequência lógica
+
+**Estrutura demonstrada:**
+```
+skill/
+├── SKILL.md          # System prompt + roteiro + regras
+├── references/       # Dados, exemplos, planilhas
+└── scripts/          # Operações determinísticas
+```
+
+### Video 4: SDD — Spec Driven Development
+**Arquivo:** `research/video-transcripts/04-workflow-anti-vibe-coding.md`
+
+**3 passos com `/clear` entre cada:**
+1. **Research** — pesquisa codebase + docs + padrões → gera `prd.md`
+2. **Spec** — lê prd.md → gera `spec.md` com paths exatos + ações + pseudocódigo
+3. **Implement** — lê spec.md → executa com context window quase toda livre
+
+**Regra dos 40-50%:** nunca usar mais que metade da context window. Quando passar, `/clear`.
+
+**Técnica `.tmp`:** clonar repo de referência → importar em pasta `.tmp` → pedir ao Claude analisar padrão → deletar pasta.
+
+**Handoff via arquivos .md:** prd.md e spec.md são a "memória" entre conversas. O `/clear` mata o contexto, os arquivos sobrevivem.
+
+**Citação:** "Quem transforma água em vinho é Jesus, não a IA" — qualidade do input = qualidade do output.
 
 ### Video 5: Frontend Design Skill
-- **Skill + identidade visual = resultado profissional**
-- **Workflow 2 fases**: gerar básico → refinar com skill + assets
-- Análise completa: `research/video-transcripts/05-frontend-design-skill.md`
+**Arquivo:** `research/video-transcripts/05-frontend-design-skill.md`
+
+**Skill + identidade visual = resultado profissional:**
+- Skill sozinha = genérico. Skill + assets de marca = distinto e profissional.
+- Pré-requisito: logo (dark/light), paleta hex, 2 fontes (display + body), conceito visual
+
+**Workflow 2 fases:**
+1. Gerar versão funcional básica
+2. Refinar com skill + assets (prompt: "melhore o design usando a skill + essas cores/fontes/assets")
+
+**Assets concretos > descrições:** prints de hex codes e nomes de fontes como imagens anexadas são mais eficazes que descrições textuais.
 
 ---
 
-## Pesquisa: Ferramentas e Repos de Referência
+## Skill Forge — 12 Técnicas Battle-Tested
 
-### Skill Forge (sanyuan0704) — 12 técnicas battle-tested
-Clonado em `community/sanyuan-skills/`. Meta-skill para criar skills de qualidade.
-Técnicas: Progressive Loading, Keyword Bombing, Workflow Checklist, Script Encapsulation, Question-Style Instructions, Confirmation Gates, Pre-Delivery Checklist, Parameter System, Reference Organization, CLI+Skill, Iron Law, Anti-Patterns.
+Repo: `community/sanyuan-skills/skills/skill-forge/`
+**SKILL.md principal + 6 arquivos de referência + 3 scripts**
 
-### HumanLayer — Workflow Commands
-Clonado em `community/humanlayer-commands/`. 29 commands incluindo:
-- `research_codebase.md` — documenta codebase as-is com sub-agents
-- `create_plan.md` — planning iterativo com research paralelo
-- `implement_plan.md` — execução por fases com verification gates
-
-### Trident — Repo Review v2
-Copiado em `skills/trident/`. Pipeline 3 agentes: Scan→Verify→Judge.
-Merge do code-review-expert + repo-review. Multi-lens (SOLID, security, quality, dead code).
-
-### ByteRover — Context Tree
-Análise em `research/byterover-context-tree.md`. Sistema hierárquico de memória persistente.
-Domínios → Tópicos → Subtópicos com scoring, archiving e manifestos.
+| # | Técnica | O que faz |
+|---|---------|-----------|
+| 1 | **Progressive Loading** | SKILL.md <250 linhas, refs carregadas sob demanda |
+| 2 | **Keyword Bombing** | Description otimizada pra agentes (GEO) |
+| 3 | **Workflow Checklist** | Passos numerados e trackáveis com warnings |
+| 4 | **Script Encapsulation** | Operações determinísticas em scripts (menos tokens) |
+| 5 | **Question-Style Instructions** | Perguntas concretas > comandos abstratos |
+| 6 | **Confirmation Gates** | Aprovar antes de ações críticas |
+| 7 | **Pre-Delivery Checklist** | QA antes do output final |
+| 8 | **Parameter System** | Flags e variantes (`--quick`, `--full`) |
+| 9 | **Reference Organization** | Refs por domínio, carregamento seletivo |
+| 10 | **CLI + Skill Pattern** | CLI tools > MCP Servers |
+| 11 | **Iron Law** | Uma regra inquebrável anti-atalhos |
+| 12 | **Anti-Pattern Documentation** | Listar explicitamente o que NÃO fazer |
 
 ---
 
-## Decisões tomadas
+## HumanLayer — Workflow Anti-Vibecoding
+
+Repo: `community/humanlayer-commands/.claude/commands/`
+**29 commands**, os mais importantes:
+
+- **`research_codebase.md`** — Documenta codebase as-is (nunca sugere melhorias). Sub-agents: codebase-locator (WHERE), codebase-analyzer (HOW), pattern-finder (PATTERNS). Output: documento com YAML frontmatter, GitHub permalinks.
+- **`create_plan.md`** — Planning iterativo: context gathering → research/discovery → plan structure → detailed writing → sync/review. Plans em `thoughts/shared/plans/YYYY-MM-DD-description.md`. Separa success criteria em Automated (commands) e Manual (human testing).
+- **`implement_plan.md`** — Execução por fases: revisa plano → cria tracking → implementa → verifica após cada fase (automated + manual). Pausa entre fases pra verificação humana. Adapta à realidade sem abandonar intent do plano.
+
+---
+
+## Trident — Repo Review v2
+
+Skill: `skills/trident/`
+**Pipeline 3 agentes: Scan → Verify → Judge**
+
+- **Scanner** — Multi-lens: SOLID, security, quality, dead code. Forced counterarguments. Max 15 findings.
+- **Verifier** — Re-lê código independente. CONFIRMED/REJECTED/INSUFFICIENT_EVIDENCE.
+- **Arbiter** — Verdicts finais: REAL_BUG/NOT_A_BUG/NEEDS_HUMAN_CHECK.
+
+**Severidade:** P0 (block merge) → P1 (fix before merge) → P2 (fix or follow-up) → P3 (optional)
+**Shared Output Contract:** bug_id schema atravessa os 3 agentes.
+**6 review modes:** unstaged, staged, all-local, PR, range, directory.
+**Merge de:** code-review-expert + repo-review (skills que já temos)
+
+---
+
+## ByteRover — Context Tree
+
+Análise: `research/byterover-context-tree.md`
+**Sistema de memória persistente hierárquico em markdown.**
+
+- **Hierarquia:** Domínios → Tópicos → Subtópicos (max 1 nível de sub)
+- **Scoring:** importance (0-100, +3 busca, +5 curadoria), recency (0-1, decay 21d), maturity (draft→validated→core)
+- **Archive:** maturity=draft AND importance<35 → stub searchable (~220 tokens) + full backup
+- **`_index.md`:** Resumos condensados por nível, propagam pra cima
+- **`_manifest.json`:** 3 lanes (summaries, contexts, stubs)
+- **Relações:** paths explícitos no campo `related` = navegação graph-like
+
+---
+
+## Prompts Pluma (Base pra Skill de Design)
+
+Arquivos: `research/pluma-prompts/`
+
+**`claude-prompt-01.txt`:** Prompt inicial com seções da landing page (Hero, Why Pluma, Pluma Answers, Safety, CTA, Footer). Pede ao Claude gerar um `design.json` analisando screenshot de referência.
+
+**`replit-prompt-02.txt`:** Prompt completo com:
+- `design.json` detalhado: design principles, color palette (primary/accent/neutral), typography (serif headings + sans body), spacing philosophy, component specs (buttons/cards/icons/badges/inputs/nav/footer/chat UI), effects (shadows/gradients/transitions), patterns (hero layout, section rhythm, content hierarchy), responsive breakpoints, imagery guidelines
+- Brief por seção com instruções específicas de layout, animação, micro-interações
+- **Dois design systems:** um usando Playfair Display (serif) + Inter, outro todo Inter (sans-serif)
+
+**Como usar:** Base pra criar skill `ui-design-system` que gera design.json a partir de identidade visual mínima.
+
+---
+
+## Decisões Tomadas
 
 - [x] Estrutura: `skills/` (nossas) + `community/` (terceiros) + `research/` (análises)
 - [x] Stack frontend: React/Next + Tailwind + shadcn
 - [x] Trident substitui repo-review
-- [x] Abordagem bootstrap: skill-builder v2 → prompt-engineer v2 → reference-finder v3
+- [x] Bootstrap: skill-builder v2 → prompt-engineer v2 → reference-finder v3
+- [x] Prompts Pluma = base pra skill de UI design
 
-## Decisões pendentes
+## Decisões Pendentes
 
 - [ ] Publicar skills no skills.sh? Quando?
-- [ ] Implementar Context Tree completo ou versão simplificada?
+- [ ] Context Tree completo ou versão simplificada?
 - [ ] Skills globais (~/.claude/skills/) vs. por projeto?
 
 ---
@@ -213,34 +268,60 @@ Domínios → Tópicos → Subtópicos com scoring, archiving e manifestos.
 
 ```
 Fase 0 (Setup)           ✅ Completa
-Fase 1 (Skill Builder)   ← Próxima
-Fase 2 (Prompt Eng.)
-Fase 3 (Ref. Finder)
+Fase 1 (Skill Builder)   ← PRÓXIMA
+Fase 2 (Prompt Eng.)     ← Após Fase 1
+Fase 3 (Ref. Finder)     ← Após Fase 2
 Fase 4 (Trident)         Paralelo com 1-3
-Fase 5 (Frontend)
-Fase 6 (Commands)
-Fase 7 (Context Tree)
+Fase 5 (Frontend)        ← Após Fase 2
+Fase 6 (Commands)        ← Após Fase 4+5
+Fase 7 (Context Tree)    ← Após todas
 ```
 
-Ver plano completo: `.claude/plans/swift-popping-zephyr.md`
-Catálogo de padrões: `research/patterns-catalog.md`
+### Fase 1: Skill Builder v2 — Detalhes
+Reescrever `skills/skill-builder/` incorporando:
+- 12 técnicas do Skill Forge como checklist de qualidade
+- SKILL.md <250 linhas (Progressive Loading)
+- Scripts: init (scaffold), validate (checa estrutura)
+- GEO: gerar keywords otimizadas na description
+- Confirmation Gates + Pre-Delivery Checklist
+- Iron Law: "Nunca gere uma skill sem ler 2+ skills de referência"
+- Anti-Patterns documentados
+- Parameter System: `--quick` (scaffold) / `--full` (guiado) / `--evolve` (melhorar existente)
+- Integração com `npx skills`
+
+### Fase 2: Prompt Engineer v2
+Técnicas de SDD, context window management, design.json como exemplo, Pre-Delivery Checklist pra prompts.
+
+### Fase 3: Reference Finder v3
+Context Tree do ByteRover: scoring, maturity tiers, archive, MOCs automáticos.
+
+### Fase 4: Trident (integrar)
+Já copiado. Falta: adaptar formato, deprecar repo-review.
+
+### Fase 5: Skills de Frontend
+- `ui-design-system` — design.json (tokens, paleta, tipografia, componentes) baseado nos prompts Pluma
+- `component-architect` — atomic design, composição, shadcn
+- `react-patterns` — App Router, SSR, server actions. Iron Law: Thin Client / Fat Server
+
+### Fase 6: Workflow Commands
+`/research` → `/spec` → `/implement` → `/review` (inspirados nos videos 2+4 e HumanLayer)
+
+### Fase 7: Context Tree
+Versão simplificada do ByteRover: domínios, refs com scoring, cross-pollination entre skills.
 
 ---
 
-## Log de conversa
+## Log de Conversa
 
 ### 2026-04-03 — Sessão 1
-- Criado repo `skillforge-arsenal` com 18 skills pessoais existentes
-- Pesquisado skills.sh, artigo da Deborah Folloni, formato técnico de skills
-- Mapeado 47+ skills de frontend disponíveis no ecossistema
-- Definida visão de organização por camadas (Design → Componentes → Implementação → Qualidade)
-
-### 2026-04-03 — Sessão 1 (continuação)
-- Processados 5 vídeos (6000 linhas de transcrições) com agentes em paralelo
-- Pesquisados: Skill Forge, HumanLayer, Trident, ByteRover, skills.sh
-- Lidos prompts Pluma (design.json + brief) como base pra skill de design
-- Clonados repos: sanyuan-skills, humanlayer-commands
-- Copiado Trident (repo-review v2 do amigo)
-- Criados: patterns-catalog.md, byterover-context-tree.md, 5 análises de vídeo
-- Plano de 8 fases aprovado e documentado
+- Criado repo `skillforge-arsenal` com 18 skills pessoais
+- Skills encontradas em: `AppData/Roaming/Claude/local-agent-mode-sessions/skills-plugin/.../skills/`
+- Pesquisado: skills.sh (Vercel), artigo Substack, 47+ skills frontend
+- Processados 5 vídeos (6000 linhas) com 5 agentes em paralelo
+- Pesquisados: Skill Forge, HumanLayer, Trident, ByteRover
+- Lidos prompts Pluma (design.json + brief)
+- Clonados: sanyuan-skills, humanlayer-commands
+- Copiado: Trident (repo-review v2)
+- Criados: patterns-catalog.md, byterover-context-tree.md, 5 análises
+- Plano de 8 fases aprovado
 - **Fase 0 completa** — próximo: Fase 1 (Skill Builder v2)
