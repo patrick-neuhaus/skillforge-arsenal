@@ -45,11 +45,15 @@ SDD Progress:
 
 **Goal:** Understand the codebase well enough to write a precise spec. Output: `prd.md`.
 
-1. **Read project structure** — `ls`, package.json, folder conventions
-2. **Identify the area of change** — which modules, files, patterns are involved
-3. **Check conventions** — naming, imports, state management, testing, file organization
-4. **Map dependencies** — what touches the area of change
-5. **Document findings** in `prd.md`
+Load `references/research-checklist.md` for the complete investigation checklist.
+
+1. **Query context-tree first** — check if domain knowledge already exists before searching from scratch
+2. **Read project structure** — `ls`, package.json, folder conventions
+3. **Identify the area of change** — which modules, files, patterns are involved
+4. **Check conventions** — naming, imports, state management, testing, file organization
+5. **Map dependencies** — what touches the area of change
+6. **Over-engineering check** — is there a simpler solution already in the codebase?
+7. **Document findings** in `prd.md` (see `references/prd-example.md` for format)
 
 ### prd.md Format
 
@@ -81,6 +85,8 @@ SDD Progress:
 **Goal:** Translate PRD into exact implementation instructions. Output: `spec.md`.
 
 **Rule:** spec.md must be so specific that a fresh conversation can implement it without any other context. Every file path is exact. Every action is explicit.
+
+Load `references/spec-writing-guide.md` for the complete path→action format and examples.
 
 1. Read `prd.md`
 2. For each change, specify:

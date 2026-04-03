@@ -161,6 +161,13 @@ All agents use `bug_id` keyed schema. Each stage appends:
 - Same model instance for all 3 agents — consensus collapse risk
 - Implement before user confirms — violates Iron Law
 
+## Integration
+
+- **SDD** (Phase 4 Review) — SDD invokes trident as its review phase. Input: `git diff` from implement phase.
+- **React Patterns** — run react-patterns `--audit` for React-specific issues BEFORE trident for domain-level bugs.
+- **Security Audit** — if trident finds security-related findings, suggest security-audit for deep OWASP analysis.
+- **Maestro** — maestro routes code review requests to trident. Part of multiple composition chains.
+
 ## Prompt Templates & References
 
 | File | Purpose |

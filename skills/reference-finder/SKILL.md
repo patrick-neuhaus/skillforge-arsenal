@@ -158,6 +158,8 @@ Pode ser acionada POR DENTRO de outras skills:
 - **Product Discovery & PRD**: fundamentar decisões de produto
 - **Tech Lead & PM**: frameworks de priorização, gestão
 - **Prompt Engineer** (Step 2): referências de domínio para prompts
+- **Context Tree**: após encontrar referências, sugira `context-tree --add` para preservar com scoring. Output do reference-finder é input natural do context-tree.
+- **SDD** (Phase 1 Research): consulte a base de referências existente antes de buscar do zero
 
 Quando acionada por outra skill, seja breve — 1-2 referências inline, não o processo completo.
 

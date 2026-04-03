@@ -1,6 +1,6 @@
 # Discovery: Skillforge Arsenal
 
-**Status:** Fases 0-7 completas — ecossistema operacional
+**Status:** Fases 0-7 completas + Quality Audit + Maestro — ecossistema operacional
 **Última atualização:** 2026-04-03
 **Plano detalhado:** `.claude/plans/swift-popping-zephyr.md`
 **Catálogo de padrões:** `research/patterns-catalog.md`
@@ -19,7 +19,7 @@ Transformar o `skillforge-arsenal` de uma coleção de 18 skills pessoais em um 
 
 ```
 skillforge-arsenal/
-├── skills/                    # 24 skills
+├── skills/                    # 25 skills
 │   ├── comunicacao-clientes/
 │   ├── component-architect/   # NOVO Fase 5: atomic design, shadcn, composição
 │   ├── context-tree/          # NOVO Fase 7: knowledge management com scoring
@@ -39,6 +39,7 @@ skillforge-arsenal/
 │   ├── skill-builder/         # v2 (Fase 1)
 │   ├── supabase-db-architect/
 │   ├── tech-lead-pm/
+│   ├── maestro/               # NOVO: Skill orquestradora — routing + chains
 │   ├── trident/               # v2 (Fase 4): Scan→Verify→Judge
 │   ├── ui-design-system/      # NOVO Fase 5: design tokens, design.json
 │   ├── ux-audit/
@@ -280,6 +281,7 @@ Fase 4 (Trident)         ✅ 174 linhas, frontmatter GEO, repo-review deprecated
 Fase 5 (Frontend)        ✅ 3 skills: ui-design-system (125L), component-architect (147L), react-patterns (133L)
 Fase 6 (SDD)             ✅ sdd — 164 linhas, pipeline Research→Spec→Implement→Review
 Fase 7 (Context Tree)    ✅ context-tree — 175 linhas, scoring ByteRover, prune/archive
+Quality Audit             ✅ Avaliação 70%→85%: maestro, sdd refs, integrações bidirecionais
 ```
 
 ---
@@ -314,3 +316,13 @@ Fase 7 (Context Tree)    ✅ context-tree — 175 linhas, scoring ByteRover, pru
 - **Fase 7 completa:** Context Tree — 175 linhas, scoring ByteRover (importance 0-100, maturity tiers, decay 21d), scoring-guide.md com critérios detalhados + index/manifest formats
 - **Todas as 7 fases do roadmap completas.** 24 skills no repo (18 originais + 6 novas)
 - Todas as 5 novas skills passam no validate.py (frontmatter, <250 linhas, Iron Law, checklist, gates, anti-patterns)
+
+### 2026-04-03 — Sessão 4 (Quality Audit + Maestro)
+- **Avaliação honesta:** Score inicial 70% — gaps: sdd/references vazio, integrações unidirecionais, ~15 insights de vídeos não incorporados
+- **Maestro criada:** Skill orquestradora (168L) — routing de intent para skills, composition chains, context window budget. References: skill-catalog.md (mapa completo das 25 skills) + composition-chains.md (9 chains validadas)
+- **SDD references preenchidas:** 3 arquivos criados — spec-writing-guide.md (formato path→action, técnica .tmp), prd-example.md (exemplo completo com anatomia), research-checklist.md (investigation checklist + layered agents + over-engineering check)
+- **Integrações bidirecionais:** reference-finder ↔ context-tree, sdd ↔ context-tree, trident ↔ sdd. Cada skill agora menciona as outras explicitamente.
+- **Feedback loop:** Adicionado na writing-guide.md do skill-builder — seção sobre retroalimentação (Video 3)
+- **Micro-interactions playbook:** Adicionado no design-json-schema.md — hover states, animations, anti-generic-AI design (Video 5)
+- **Trident:** Seção Integration adicionada (era o único skill v2 sem)
+- **Todas 25 skills passam validate.py.** Repo: 25 skills (18 originais + 7 novas)

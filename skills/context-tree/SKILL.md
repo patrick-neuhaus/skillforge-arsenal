@@ -170,6 +170,7 @@ Before adding knowledge:
 
 ## Integration
 
-- **Reference Finder** — findings can be scored and added to tree
-- **Skill Builder** — skill domain knowledge feeds into tree
-- **SDD** — research phase can query tree for existing domain knowledge
+- **Reference Finder** — findings can be scored and added to tree. When reference-finder finishes, suggest `context-tree --add` to preserve findings with scoring.
+- **Skill Builder** — skill domain knowledge feeds into tree. When a new domain is explored during skill creation, add key insights to tree.
+- **SDD** (Phase 1 Research) — query tree FIRST before searching from scratch. Existing knowledge in the tree avoids redundant web searches and provides instant context.
+- **Maestro** — maestro can suggest context-tree as part of knowledge chains (e.g., reference-finder → context-tree).

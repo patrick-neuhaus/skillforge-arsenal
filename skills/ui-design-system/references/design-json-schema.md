@@ -250,6 +250,62 @@ module.exports = {
 }
 ```
 
+## Micro-Interactions Playbook (Video 5 insight)
+
+Micro-interactions são o que separam design "genérico de IA" de design profissional. Sempre inclua no design.json:
+
+### Hover States (obrigatórios para todo elemento interativo)
+```css
+/* Button hover — lift + color shift */
+.btn:hover { transform: translateY(-1px); filter: brightness(1.05); }
+
+/* Card hover — shadow elevation + subtle lift */
+.card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+
+/* Link hover — underline animation */
+.link:hover { text-decoration-color: currentColor; /* animate from transparent */ }
+```
+
+### Page Load Animations
+```css
+/* Fade in up — sections appearing on scroll or load */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Stagger children — list items appearing one by one */
+.stagger > *:nth-child(n) { animation-delay: calc(80ms * var(--i)); }
+```
+
+### Loading States
+```css
+/* Skeleton pulse — placeholder while content loads */
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+.skeleton { animation: pulse 2s ease-in-out infinite; background: var(--neutral-200); }
+
+/* Spinner — for actions in progress */
+@keyframes spin { to { transform: rotate(360deg); } }
+```
+
+### Transition Checklist
+| Element | Property | Duration | Timing |
+|---------|----------|----------|--------|
+| Button hover | background, transform | 200ms | ease |
+| Card hover | box-shadow, transform | 300ms | ease |
+| Modal open | opacity, transform | 300ms | cubic-bezier(0.16, 1, 0.3, 1) |
+| Accordion expand | max-height | 300ms | ease-out |
+| Toast notification | transform | 500ms | spring |
+| Page section | opacity, transform | 600ms | cubic-bezier(0.16, 1, 0.3, 1) |
+
+### Anti-Generic-AI Design (Video 5 — core insight)
+Sinais de "design genérico de IA" a evitar:
+- **Cores default** — usando paleta padrão sem personalidade de marca
+- **Tipografia uniforme** — mesmo tamanho/peso em tudo (sem hierarquia)
+- **Zero micro-interactions** — elementos estáticos, sem hover/animation
+- **Spacing inconsistente** — padding aleatório em vez de scale system
+- **Componentes cookie-cutter** — cards idênticos sem variação visual
+
 ## Accessibility Checks
 
 Before finalizing, verify:

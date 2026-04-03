@@ -184,6 +184,37 @@ Skills operacionais (converte CSV), integração técnica (doc oficial é a font
 
 ---
 
+## 10. Feedback Loop (Retroalimentação — Video 3)
+
+Skills devem melhorar com o uso. Quando o usuário diz "registra isso na skill pra próxima vez", é sinal de retroalimentação.
+
+### Como capturar feedback
+
+Após a skill executar, observe sinais de melhoria:
+- Usuário corrige output → anti-pattern a adicionar
+- Usuário pede etapa extra → step faltando no workflow
+- Usuário ignora uma seção do output → seção pode ser removida ou condensada
+- Usuário elogia → padrão a reforçar
+
+### Como incorporar
+
+1. **Anti-pattern novo** — Adicione na seção Anti-Patterns do SKILL.md
+2. **Step faltando** — Adicione no workflow checklist
+3. **Referência útil** — Adicione em references/ com scoring (context-tree)
+4. **Regra de escrita** — Adicione nas instruções da etapa relevante
+
+### Comando `--evolve`
+
+O modo `--evolve` do skill-builder é a ferramenta de retroalimentação:
+1. Lê a skill existente
+2. Coleta feedback do usuário (o que funcionou, o que não)
+3. Propõe mudanças específicas
+4. ⛔ GATE: Aprovação antes de modificar
+
+**Princípio:** Skill que não evolui com uso está acumulando dívida técnica silenciosa.
+
+---
+
 ## Fontes
 
 - Anthropic Prompt Engineering Guide — hierarquia de 5 níveis
