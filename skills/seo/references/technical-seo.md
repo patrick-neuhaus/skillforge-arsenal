@@ -10,9 +10,11 @@ Métricas de performance que são fator de ranking direto desde 2021.
 
 | Métrica | O que mede | Bom | Precisa melhorar | Ruim |
 |---------|-----------|:---:|:----------------:|:----:|
-| LCP (Largest Contentful Paint) | Tempo de carregamento do maior elemento visível | < 2.5s | 2.5-4s | > 4s |
-| INP (Interaction to Next Paint) | Responsividade a interações | < 200ms | 200-500ms | > 500ms |
+| LCP (Largest Contentful Paint) | Tempo de carregamento do maior elemento visível | < 2.5s | 2.5-4s | > 3s = -23% tráfego |
+| INP (Interaction to Next Paint) | Responsividade a interações | < 200ms | 200-500ms | > 300ms = -31% (mobile) |
 | CLS (Cumulative Layout Shift) | Estabilidade visual (elementos pulando) | < 0.1 | 0.1-0.25 | > 0.25 |
+
+**Nota (2025):** FID está morto — migre foco para INP. FID é legacy metric.
 
 ### Como melhorar LCP
 - Otimizar imagens (WebP, lazy loading, srcset)
@@ -92,7 +94,7 @@ Markup que ajuda Google entender o conteúdo. Pode gerar rich snippets.
 - Registrar no Google Search Console
 - Máximo 50.000 URLs por sitemap (usar sitemap index se mais)
 
-### robots.txt
+### robots.txt (atualizado pra 2025 — nova dimensão com bots de IA)
 ```
 User-agent: *
 Allow: /
@@ -100,9 +102,20 @@ Disallow: /admin/
 Disallow: /api/
 Disallow: /search?
 Sitemap: https://site.com/sitemap.xml
+
+# Permitir bots de IA search (geram citação/tráfego)
+User-agent: OAI-SearchBot
+Allow: /
+
+# Bloquear bots de treinamento (não geram tráfego)
+User-agent: GPTBot
+Disallow: /
+User-agent: CCBot
+Disallow: /
 ```
 
 Regra: robots.txt BLOQUEIA crawling, não indexação. Pra bloquear indexação, use `noindex`.
+Regra 2025: Diferenciar bots de search (permitir) vs bots de treinamento (bloquear).
 
 ---
 

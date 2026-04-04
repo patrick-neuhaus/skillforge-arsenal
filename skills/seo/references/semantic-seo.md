@@ -4,18 +4,19 @@ SEO semântico: otimizar pra como o Google ENTENDE conteúdo, não só pra keywo
 
 ---
 
-## Evolução: Keywords → Entidades
+## Evolução: Keywords → Entidades (2025-2026)
 
 ### Antes (keyword-based)
 - Google matchava palavras exatas
 - "melhor colchão de mola" → procurava essa string exata
 - Keyword stuffing funcionava
 
-### Agora (entity-based)
-- Google entende CONCEITOS e RELAÇÕES
-- "melhor colchão de mola" → Google sabe que "colchão de mola ensacada", "spring mattress", "mola bonnel" são relacionados
-- Knowledge Graph: banco de dados de entidades e relações
+### Agora (entity-based — confirmado 2025-2026)
+- Google entende CONCEITOS e RELAÇÕES via Knowledge Graph
 - BERT/MUM: modelos de NLP que entendem contexto e intenção
+- **Brand mentions (correlação 0.664)** superam backlinks (0.218) para visibilidade em AI Overviews
+- Top 25% das marcas com presença web recebem 10x mais citações em AI Overviews
+- Schema markup não é mais opcional — é como LLMs e Google identificam entidades
 
 ---
 

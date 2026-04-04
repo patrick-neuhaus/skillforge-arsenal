@@ -101,15 +101,45 @@ Volume potencial: apps × apps
 
 ---
 
+## Thresholds de Qualidade (dados 2025-2026)
+
+| Métrica | Mínimo seguro | Zona de risco |
+|---------|:------------:|:-------------:|
+| Palavras únicas por página | ≥ 500 | < 300 |
+| Diferenciação entre páginas | 30-40% único | < 20% |
+| Bounce rate | < 70% | > 80% |
+| Dwell time | > 30s | < 15s |
+| Indexation rate | > 80% | < 60% = parar tudo |
+
+### Protocolo de escala seguro
+1. **Piloto:** 100 páginas → aguardar 2 semanas
+2. **Primeira escala:** 500 páginas → cheques automatizados
+3. **Crescimento controlado:** 2.000 páginas → máx 20-30% MoM
+4. **Regra absoluta:** NUNCA crescer > 50% mês a mês
+
+### Unique Answer Test (3 gates)
+- **Unique Answer:** Se 85%+ do conteúdo é idêntico após trocar variáveis → falha
+- **Data Substantiation:** 40% do conteúdo de fontes de dados únicos
+- **Engagement Sustainability:** Engajamento dentro de 30% do conteúdo manual
+
+### Traffic Cliff (timeline típica de quem escala errado)
+- Meses 1-3: Rankings sobem
+- Meses 4-6: Sinais de usuário deterioram
+- Meses 7-9: Rankings caem
+- Meses 10-12: Tráfego cai 70-90%
+
+**Taxa de falha:** 60% sem QA adequado; 93% dos penalizados não tinham diferenciação suficiente.
+
 ## Riscos e Mitigação
 
 | Risco | Consequência | Mitigação |
 |-------|-------------|-----------|
-| Google Helpful Content Update | Penalização do site INTEIRO | QA obrigatório, score mínimo |
-| Thin content | Páginas desindexadas | Conteúdo mínimo de 500 palavras com dados reais |
+| Scaled Content Abuse (política Google mar/2026) | Penalização do site INTEIRO — páginas ruins arrastam domínio pra baixo | QA obrigatório, Unique Answer Test |
+| Thin content | Páginas desindexadas | Mínimo 500 palavras com dados reais |
 | Doorway pages | Penalização manual | Cada página com valor único |
 | Escala sem QA | 1000 páginas ruins | Judge + revisão humana de amostra |
 | Canibalização | Páginas competindo entre si | Canonical + diferenciação clara |
+| Crescimento explosivo | SpamBrain detecta spike | Max 50% MoM |
 
 ---
 

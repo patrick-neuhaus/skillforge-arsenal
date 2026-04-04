@@ -31,10 +31,17 @@ O site é e-commerce?
 | `/categoria/post-slug` | Blog > 50 posts, sub-nichos claros | /colchoes/melhor-colchao-mola |
 | `/categoria/subcategoria/post` | E-commerce, sites grandes | /moveis/camas/colchao-king |
 
+### Regra absoluta (2025)
+**Money pages NUNCA a mais de 3 cliques da homepage**, independente do restante da arquitetura.
+- Flat melhora crawl efficiency em até 40% pra sites > 1.000 páginas
+- Links in-content acima do fold têm mais peso que links em sidebar/footer
+- Profundidade 3-4 permitida para spokes informacionais com breadcrumb + schema
+
 ### Erros comuns
 - ❌ Criar 20 categorias com 2 posts cada — estrutura vazia
 - ❌ Mudar de flat pra categorias depois de indexado sem redirects — perde tudo
 - ❌ Categoria genérica ("geral", "outros") — zero valor SEO
+- ❌ Money pages enterradas (>3 cliques da home) — crawl efficiency despenca
 
 ---
 

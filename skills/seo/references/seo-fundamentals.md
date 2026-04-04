@@ -82,6 +82,24 @@ Os 200+ fatores do Google se resumem a:
 
 ---
 
+## O que Mudou em 2025-2026 (vs conselho antigo)
+
+| Tópico | Antes | Agora (2025-2026) |
+|--------|-------|-------------------|
+| Keywords | Otimizar pra keywords | Otimizar pra entidades e relações |
+| Links | Quantidade de backlinks = autoridade | Brand mentions > backlinks pra AI visibility |
+| AI Content | Evitar | AI como rascunho + edição humana com expertise |
+| Topical coverage | Publicar muito | Publicar só o necessário pra cobertura completa |
+| EEAT | Só YMYL (saúde/finanças) | Qualquer nicho competitivo (desde Dec/2025) |
+| FID | Otimizar First Input Delay | FID morto → otimizar INP |
+| Flat vs Deep URLs | Flat sempre | Híbrido por tipo de conteúdo |
+
+### Google Navboost
+Google mede se o conteúdo satisfaz a intenção real. Regra: resposta primeiro, contexto depois. Sem intros longas antes de entregar valor.
+
+### AI Content: regra oficial
+John Mueller: "Our systems don't care if content is created by AI or humans." O que penaliza é geração em massa sem profundidade. Sites 100% AI sem edição humana: -40-60% tráfego (Dec/2025).
+
 ## SEO ≠ Hack
 
 - SEO não é truque ou exploit — é alinhar conteúdo com o que pessoas buscam
