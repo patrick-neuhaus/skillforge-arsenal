@@ -114,6 +114,30 @@ O texto clicável do link. Diversificação é crucial.
 
 ---
 
+## Google Sandbox (Sites Novos)
+
+Todo site novo entra em "geladeira" por semanas/meses. Google não posiciona sites sem histórico.
+
+### Campanha de Sandbox (12 semanas)
+
+```
+Semana 1:  Site + Social Fortress (perfis em todas as redes com NAP consistente)
+Semana 2:  Citations em diretórios (Páginas Amarelas, Yelp, etc.)
+Semanas 3-6:  Low velocity (1-2 backlinks/semana pro site + 2 pras redes)
+Semanas 7-8:  High velocity (3-5 links/semana) — simula "viral"
+Semanas 9-10: Low velocity novamente — simula estabilização
+Semana 11+: Repetir ciclo se ainda não saiu do Sandbox
+```
+
+**Sinal de saída:** Começar a aparecer na 1ª página pra keywords alvo.
+
+### Social Fortress
+- Criar perfis em TODAS as redes sociais principais com mesmo NAP
+- Não gera backlinks diretos mas constrói credibilidade com Google
+- Obrigatório na semana 1 de qualquer projeto novo
+
+---
+
 ## Priorização
 
 ```

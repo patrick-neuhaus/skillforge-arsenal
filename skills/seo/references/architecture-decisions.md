@@ -119,6 +119,29 @@ Monetização é display?
 
 ---
 
+## Silo Structure (Pilar + Suporte)
+
+Framework de reforço de páginas via linkagem interna:
+
+```
+FASE 1: Publicar TODAS as páginas pilar primeiro (sem suporte)
+
+FASE 2: Monitorar posicionamento
+  → Pilar na pos. 1-3? → Ok, sem suporte necessário
+  → Pilar na pos. 4+?  → Criar páginas de suporte
+
+FASE 3: Cada suporte linka pra pilar fraca
+  → Repetir até alcançar posição desejada
+```
+
+**Regras:**
+- Quantidade de suporte é proporcional à concorrência — não existe número fixo
+- Evitar criar silo completo de uma vez (muitas páginas de suporte podem ser desnecessárias)
+- Prioridade: **cobertura ampla de pilares > profundidade de silos**
+- Suporte linka pra pilar, pilar linka pros suportes (linkagem bidirecional)
+
+---
+
 ## Single Topic vs Multi-Topic
 
 ### A pergunta: "1 site sobre 1 tema ou 1 site sobre vários temas?"

@@ -21,8 +21,11 @@ Modelos de monetização pra sites que geram tráfego orgânico. Cada modelo tem
 
 ### Quando funciona
 - Volume alto (50k+ pageviews/mês pra Mediavine, 100k+ pra Raptive)
-- Conteúdo informacional (perguntas, how-to, listas)
+- **SOMENTE em páginas informacionais** (perguntas, how-to, listas)
 - Nichos com CPM alto: finanças, saúde, tecnologia, seguros
+
+### Regra crítica: Display Ads NUNCA em páginas comerciais
+Em páginas comerciais (BBR/SPR), Display Ads compete com links de afiliado. Troca comissão de R$500-2000 por R$0,05 de clique em banner. Plataformas recomendadas: **Ezoic** e **Mediavine**.
 
 ### RPM por nicho (estimativas)
 - Finanças: $15-30

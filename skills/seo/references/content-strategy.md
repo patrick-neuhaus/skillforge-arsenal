@@ -4,20 +4,33 @@ Como planejar, criar e otimizar conteúdo pra SEO. O conteúdo é o core — sem
 
 ---
 
-## Buyer Journey (6 Estágios)
+## Buyer Journey (6 Estágios) + Templates de Conteúdo
 
 Cada estágio tem tipo de conteúdo e keyword diferentes:
 
-| Estágio | Estado do usuário | Tipo de conteúdo | Exemplo de keyword |
-|---------|------------------|-----------------|-------------------|
-| 1. Dor | Sente problema, não sabe o que é | Blog informacional | "dor nas costas ao acordar" |
-| 2. Reconhecimento | Identifica o problema | Blog educacional | "problemas de colchão ruim" |
-| 3. Busca de solução | Procura opções | Guia, comparativo | "tipos de colchão" |
-| 4. Avaliação | Compara alternativas | Review, top 10 | "melhor colchão de mola vs espuma" |
-| 5. Decisão | Escolhe qual comprar | Landing page | "colchão castor D33 preço" |
-| 6. Compra | Ação final | CTA direto | "comprar colchão castor online" |
+| Estágio | Estado do usuário | Tipo de conteúdo | Template | Exemplo de keyword |
+|---------|------------------|-----------------|:--------:|-------------------|
+| 1. Dor | Sente problema | Blog informacional | HT (How To) | "dor nas costas ao acordar" |
+| 2. Reconhecimento | Identifica o problema | Blog educacional | HT | "problemas de colchão ruim" |
+| 3. Busca de solução | Procura opções | Guia, comparativo | HT / BBR | "tipos de colchão" |
+| 4. Avaliação | Compara alternativas | Review, top 10 | BBR (Best Buy Review) | "melhor colchão de mola" |
+| 5. Decisão | Escolhe qual comprar | Review unitário | SPR (Single Product Review) | "colchão castor D33 é bom?" |
+| 6. Compra | Ação final | CTA direto | Landing | "comprar colchão castor" |
 
-**Estratégia:** Cobrir todos os estágios. Informacional traz volume, transacional traz conversão.
+### 3 Templates Padrão
+
+| Template | Sigla | Quando usar | Exemplo de trigger |
+|----------|:-----:|------------|-------------------|
+| Best Buy Review | BBR | "melhor", "melhores", "top X" | "Melhor bicicleta aro 29" |
+| Single Product Review | SPR | "é bom?", "vale a pena?", "funciona?" | "Caloi aro 29 é boa?" |
+| How To | HT | "como", "passo a passo", "o que é" | "Como andar de bicicleta" |
+
+### Proporção ideal
+- **50% informacional / 50% comercial** (mercado BR)
+- **60% informacional / 40% comercial** (mercado internacional)
+- Sites 100% comerciais perderam ranking após Google HCU
+
+**Estratégia:** Cobrir todos os estágios. Informacional traz volume + autoridade, comercial traz conversão.
 
 ---
 
