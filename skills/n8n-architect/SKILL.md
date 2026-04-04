@@ -1,6 +1,6 @@
 ---
 name: n8n-architect
-description: "Arquiteta, constrói, debugga, otimiza e revisa automações n8n. Planeja workflows do zero, integra sistemas (Supabase, Evolution API, Kommo, Meta, Mautic), automatiza processos de negócio e fixa fluxos quebrados. Use quando: criar workflow, build automação, debugar erro n8n, otimizar performance, planejar integração entre sistemas, 'conectar X com Y', revisar workflow existente, configurar AI Agent, webhook, subworkflow, error handling, retry, 'meu workflow não funciona', delegar workflow pra equipe, documentar fluxo, MCP, queue mode. Também funciona como arquiteto quando o usuário planeja um fluxo multi-sistema (Supabase + API externa + WhatsApp) mesmo sem mencionar n8n. NÃO use para SQL/schema sem automação (use supabase-db-architect) nem frontend/Lovable puro."
+description: "Arquiteta, desenha, constrói, debugga, otimiza, modulariza e revisa automações n8n. Planeja workflows do zero, desenha fluxos antes de construir, constrói em waves testáveis, integra sistemas (Supabase, Evolution API, Kommo, Meta, Mautic), automatiza processos de negócio e fixa fluxos quebrados. Use quando: criar workflow, build automação, 'pensar no fluxo', 'desenhar o fluxo antes', 'construir em waves', debugar erro n8n, otimizar performance, planejar integração entre sistemas, 'conectar X com Y', modularizar workflow, extrair subworkflow, revisar workflow existente, configurar AI Agent, webhook, subworkflow, error handling, retry, loop, rate limit, 'meu workflow não funciona', delegar workflow pra equipe, documentar fluxo, MCP, queue mode. Também funciona como arquiteto quando o usuário planeja um fluxo multi-sistema (Supabase + API externa + WhatsApp) mesmo sem mencionar n8n. NÃO use para SQL/schema sem automação (use supabase-db-architect) nem frontend/Lovable puro."
 ---
 
 # n8n Automation Architect v4
@@ -11,6 +11,8 @@ IRON LAW: NUNCA construa um workflow sem error handling em CADA node HTTP Reques
 
 | Opção | Descrição | Default |
 |-------|-----------|---------|
+| `--flow` | Desenhar fluxo antes de construir (design thinking) | - |
+| `--waves` | Construir em waves testáveis (4 waves) | - |
 | `--build` | Construir workflow do zero | - |
 | `--debug` | Debugar workflow com problema | - |
 | `--optimize` | Otimizar workflow existente | - |
@@ -24,22 +26,27 @@ IRON LAW: NUNCA construa um workflow sem error handling em CADA node HTTP Reques
 ```
 n8n Architect Progress:
 
+- [ ] 0. Se --flow: Load references/flow-design.md → desenhar fluxo primeiro
 - [ ] 1. Entender requisito ⚠️ REQUIRED
   - [ ] 1.1 O que o workflow faz (resultado, não implementação)
   - [ ] 1.2 Trigger: webhook, cron, chat, evento?
   - [ ] 1.3 Sistemas envolvidos (APIs, bancos, mensageria)
   - [ ] 1.4 Volume esperado (execuções/hora)
   - [ ] 1.5 Criticidade (pode perder dados? precisa de fila?)
+  - [ ] 1.6 Versão do n8n? (features mudam entre versões)
 - [ ] 2. Arquitetar
   - [ ] 2.1 Escolher template base. Load `references/templates.md`
   - [ ] 2.2 Definir estrutura: Trigger → Validação → Processamento → Output → Log
   - [ ] 2.3 Definir camadas de error handling. Load `references/error-handling.md`
   - [ ] 2.4 Se envolve IA: Load `references/ai-nodes.md`
   - [ ] 2.5 Se envolve filas/edge functions: Load `references/filas-e-edge-functions.md`
-- [ ] 3. Construir (em waves)
-  - [ ] 3.1 Wave 1: Trigger + caminho feliz + output básico
-  - [ ] 3.2 Wave 2: Branches + error handling + Execution Data
-  - [ ] 3.3 Wave 3: Otimização + documentação (sticky notes, nomes)
+- [ ] 3. Construir (em waves). Se --waves: Load references/wave-development.md
+  - [ ] 3.1 Wave 1: Trigger + normalização + caminho feliz + output básico
+  - [ ] 3.2 Wave 2: Branches + integrações + lógica condicional
+  - [ ] 3.3 Wave 3: Error handling + retry + dead-letter
+  - [ ] 3.4 Wave 4: Nomenclatura + sticky notes + pre-delivery checklist
+  - [ ] Se envolve loops: Load references/loop-mastery.md
+  - [ ] Se >15 nodes: Load references/modularization-strategy.md
 - [ ] 4. Validar ⚠️ REQUIRED
   - [ ] 4.1 Testar como Draft antes de publicar
   - [ ] 4.2 Rodar pre-delivery checklist
@@ -66,6 +73,24 @@ Load `references/n8n-2-0.md` — mudanças do n8n 2.0 que afetam todas as decis�
 6. **Draft → teste → Publish.** Nunca publique sem testar.
 
 ## Passo a Passo por Modo
+
+### --flow (Desenhar fluxo)
+
+Load `references/flow-design.md` e seguir o framework de 7 perguntas:
+1. Resultado esperado → Trigger → Sistemas → Happy path → Branches → Erros → Dependências
+2. Desenhar diagrama textual do fluxo completo
+3. Definir decisões de design (sync/async, webhook/cron, batch/loop)
+4. ⛔ GATE: Confirmar diagrama com usuário antes de construir
+5. Se aprovado, continuar com --build ou --waves
+
+### --waves (Construir em waves)
+
+Load `references/wave-development.md` e construir incrementalmente:
+1. Wave 1: Trigger + normalização + happy path (testar antes de avançar)
+2. Wave 2: Branches + integrações (testar cada branch)
+3. Wave 3: Error handling + retry + dead-letter (testar com erros simulados)
+4. Wave 4: Nomenclatura + documentação + pre-delivery checklist
+5. ⛔ GATE entre cada wave: "Wave X funciona? Confirma pra avançar?"
 
 ### --build (Construir workflow)
 
@@ -128,6 +153,9 @@ Load `references/documentacao-workflow.md` para template padrão.
 | Confiar em output livre de LLM | Resposta imprevisível quebra nodes downstream | JSON Schema em toda chamada de IA |
 | Community node pra API crítica | Desatualizado, limitado, sem controle | HTTP Request com controle total |
 | Não logar erros | "Deu erro" mas ninguém sabe quando, onde, ou por quê | Tabela de logs no Supabase, sempre |
+| Construir tudo de uma vez sem waves | Impossível debugar, erro pode estar em qualquer lugar | Wave por wave, testar entre cada |
+| Não normalizar dados antes de loop | Memória explode em volume alto | Edit Fields como primeiro node |
+| Copiar 20 nodes idênticos em 5 workflows | Manutenção impossível, bugs se multiplicam | Extrair subworkflow |
 
 ## Pre-Delivery Checklist
 
@@ -166,6 +194,8 @@ Antes de considerar o workflow pronto:
 | `maestro` | Não sabe por onde começar ou envolve múltiplas skills. Maestro roteia. |
 | `tech-lead-pm` | Delegando workflow pra equipe. Combine briefing técnico (n8n-architect) com template de task (tech-lead-pm). |
 | `prompt-engineer` | Configurando AI Agent nodes, system prompts, JSON Schema de output. |
+| `seo` | Automações SEO: content batching, lead loop, scraping programático. |
+| `lovable-router` | Workflow que interage com Lovable → rotear mudanças banco vs código. |
 
 ## Referências
 
@@ -182,3 +212,7 @@ Antes de considerar o workflow pronto:
 | `references/debug-troubleshooting.md` | Processo de debug estruturado + tabela de erros |
 | `references/documentacao-workflow.md` | Template de documentação de workflow |
 | `references/seguranca.md` | Checklist de segurança + Python em Code nodes |
+| `references/flow-design.md` | Metodologia de design de fluxo (7 perguntas + diagrama textual) |
+| `references/wave-development.md` | Guia wave-by-wave com gates entre waves |
+| `references/loop-mastery.md` | Loop mechanics, batch vs Loop Over Items, rate limiting |
+| `references/modularization-strategy.md` | Quando extrair subworkflow, sync vs async, naming |

@@ -61,11 +61,13 @@ Consulte este arquivo no **Phase 2** quando for rotear o intent do usuário para
 - **Output:** Schema, migrations, RLS policies, indexes
 
 ### n8n-architect
-- **O que faz:** Arquitetura e padrões para automações n8n
-- **Triggers PT-BR:** "automação n8n", "workflow n8n", "integração"
-- **Triggers EN:** n8n automation, workflow architecture
-- **Input:** Requisito de automação
-- **Output:** Workflow design, node configuration, error handling patterns
+- **O que faz:** Desenha, arquiteta, constrói em waves, modulariza e revisa automações n8n
+- **Triggers PT-BR:** "automação n8n", "workflow n8n", "integração", "pensar no fluxo", "construir em waves", "modularizar", "loop", "subworkflow"
+- **Triggers EN:** n8n automation, workflow architecture, flow design, wave building, modularize
+- **Modes:** --flow (design thinking), --waves (construção incremental), --build, --debug, --optimize, --review, --delegate, --doc, --template
+- **Input:** Requisito de automação ou workflow existente
+- **Output:** Diagrama textual (--flow), workflow em waves (--waves), node configuration, error handling patterns
+- **Iron Law:** NUNCA construa workflow sem error handling em CADA node HTTP Request
 
 ---
 
@@ -94,6 +96,16 @@ Consulte este arquivo no **Phase 2** quando for rotear o intent do usuário para
 - **Input:** Ideia ou problema de produto
 - **Output:** PRD estruturado com personas, user stories, requisitos
 
+### seo
+- **O que faz:** Audita, planeja, implementa e otimiza estratégias de SEO completas (technical, on-page, off-page, semântico, programático)
+- **Triggers PT-BR:** "melhorar meu SEO", "keyword research", "auditar SEO", "programático ou manual?", "categorias ou flat?", "meu site não rankeia"
+- **Triggers EN:** SEO audit, keyword research, content optimization, technical SEO, programmatic SEO, semantic SEO, topical authority
+- **Modes:** --audit, --keyword, --content, --technical, --architecture, --programmatic, --semantic, --offpage
+- **Input:** Site/projeto + nicho + objetivo
+- **Output:** Auditoria, keyword research, plano de conteúdo, decisões de arquitetura, automação
+- **Iron Law:** NUNCA otimize conteúdo sem keyword research fundamentado
+- **Quando NÃO usar:** Automação n8n pura (n8n-architect), frontend/design (ui-design-system)
+
 ---
 
 ## Knowledge
@@ -121,6 +133,16 @@ Consulte este arquivo no **Phase 2** quando for rotear o intent do usuário para
 - **Triggers PT-BR:** "configurar Lovable", "knowledge pro Lovable"
 - **Input:** Projeto existente ou novo
 - **Output:** Arquivos de knowledge formatados para Lovable
+
+### lovable-router
+- **O que faz:** Classifica mudanças em projetos Lovable e roteia: editar direto (código) ou gerar prompt pro Lovable (banco)
+- **Triggers PT-BR:** "editar projeto lovable", "mexer no banco do lovable", "posso editar direto?", "gerar prompt pro lovable"
+- **Triggers EN:** route lovable change, classify lovable edit, generate lovable prompt, edit lovable project
+- **Modes:** --route (default), --prompt, --direct
+- **Input:** Descrição da mudança desejada
+- **Output:** Classificação (código/banco/zona cinza) + ação (edição direta ou prompt otimizado pro Lovable)
+- **Iron Law:** NUNCA editar schema/RLS/edge functions/storage policies diretamente num repo Lovable
+- **Quando NÃO usar:** Gerar Knowledge (lovable-knowledge), design de schema sem Lovable (supabase-db-architect)
 
 ---
 

@@ -61,7 +61,9 @@ Map to categories:
 | "import pattern/.tmp" | Workflow | pattern-importer, sdd |
 | "plan/spec/research" | Workflow | sdd |
 | "audit infra/VPS" | Infra | vps-infra-audit |
+| "SEO/keyword/rankear/programático/semântico" | Design | seo |
 | "audit UX/UI" | Design | ux-audit |
+| "editar projeto lovable/mexer no banco do lovable" | Implementation | lovable-router |
 | "database/schema/RLS" | Implementation | supabase-db-architect |
 | "automation/n8n/workflow" | Implementation | n8n-architect |
 | "document/export" | Content | pdf, docx, pptx, xlsx |
@@ -103,7 +105,7 @@ If the request crosses domains, load `references/composition-chains.md` and pres
 ### --catalog Output
 
 ```markdown
-## Arsenal de Skills (30 skills)
+## Arsenal de Skills (32 skills)
 
 ### Code Review
 - **trident** — Pipeline 3 agentes: Scan→Verify→Judge
@@ -129,11 +131,13 @@ If the request crosses domains, load `references/composition-chains.md` and pres
 - **ui-design-system** — Design tokens e design.json
 - **ux-audit** — Auditoria de UX/UI
 - **product-discovery-prd** — Discovery e PRD
+- **seo** — SEO completo (audit, keyword, content, programmatic, semantic)
 
 ### Knowledge
 - **reference-finder** — Referências fundamentais por tema
 - **prompt-engineer** — Criar e otimizar prompts
 - **lovable-knowledge** — Knowledge pro Lovable
+- **lovable-router** — Rotear mudanças em projetos Lovable (código vs prompt)
 
 ### Meta
 - **skill-builder** — Criar e melhorar skills

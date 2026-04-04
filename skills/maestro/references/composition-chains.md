@@ -110,6 +110,20 @@ Consulte este arquivo no **Phase 2** quando o intent do usuário cruzar múltipl
 ```
 **Quando:** Novo módulo que precisa de schema
 
+### Editar Projeto Lovable
+```
+1. lovable-router --route     → classificar mudança (código vs banco)
+   ├─ Rota Código:
+   │   └─ sdd / react-patterns / component-architect → implementar direto
+   │   └─ trident --review
+   └─ Rota Banco:
+       └─ (opcional) supabase-db-architect → design schema
+       └─ prompt-engineer → prompt otimizado pro Lovable
+       └─ Pós-Lovable: verificar + ajustar código se necessário
+```
+**Handoff:** classificação → implementação direta OU prompt pro Lovable → verificação
+**Quando:** Qualquer mudança em projeto construído com Lovable
+
 ---
 
 ## Regras de Composição
