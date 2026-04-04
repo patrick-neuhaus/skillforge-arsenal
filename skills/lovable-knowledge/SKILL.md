@@ -1,372 +1,161 @@
 ---
 name: lovable-knowledge
-description: "Skill para gerar Workspace Knowledge e Project Knowledge otimizados para o Lovable. Use esta skill SEMPRE que o usuário mencionar: knowledge, lovable knowledge, workspace knowledge, project knowledge, 'configurar o lovable', 'padrões do lovable', 'regras pro lovable', 'o lovable tá fazendo X errado', 'quero que o lovable siga', 'instruções pro lovable', AGENTS.md, ou qualquer variação que envolva definir como o Lovable deve se comportar ao gerar código. Também use quando o usuário disser que vai começar um projeto novo no Lovable e ainda não tem knowledge configurado, ou quando reclamar que o Lovable tá gerando código inconsistente, usando libs erradas, ou ignorando padrões. Se o usuário já fez discovery/PRD e quer preparar o projeto pro Lovable, USE esta skill — o PRD diz O QUE construir, esta skill diz COMO o Lovable deve construir. NÃO use se o usuário quer definir O QUE construir — use product-discovery-prd. Se é debug de código ou revisão técnica, não é Knowledge — ajude diretamente."
+description: "Create, generate, configure, optimize and review Workspace Knowledge, Project Knowledge and AGENTS.md for Lovable. Use SEMPRE que mencionar: knowledge, lovable knowledge, workspace knowledge, project knowledge, AGENTS.md, CLAUDE.md, 'configurar o lovable', 'padrões do lovable', 'regras pro lovable', 'o lovable tá fazendo X errado', 'quero que o lovable siga', 'instruções pro lovable', fix/improve/update/review knowledge, código inconsistente, libs erradas, preparar projeto pro Lovable após PRD, construir regras pra AI tools (Cursor, Claude Code). PRD diz O QUE construir, esta skill diz COMO o Lovable deve build. NÃO use pra definir O QUE construir (use product-discovery-prd) ou debug de código (ajude direto)."
 ---
 
-# Lovable Knowledge Generator v2
+# Lovable Knowledge Generator v3
 
-## Visão geral
+IRON LAW: NUNCA gere Knowledge sem ler o codebase existente do projeto primeiro. Knowledge genérico conflita com o que o Lovable já gerou. Se não tem codebase, pergunte se existe antes de prosseguir.
 
-Esta skill gera blocos de texto otimizados para os campos de Knowledge do Lovable e arquivos AGENTS.md/CLAUDE.md — o ecossistema completo de instruções persistentes que controlam como AI coding tools geram código.
+## Options
 
-Sem Knowledge configurado, o Lovable toma decisões próprias sobre libs, padrões, arquitetura e naming — e essas decisões mudam entre projetos e conversas. Com Knowledge, você tem consistência e controle.
+| Option | Descrição | Default |
+|--------|-----------|---------|
+| `workspace` | Gerar Workspace Knowledge (setup único, global) | false |
+| `project` | Gerar Project Knowledge (por projeto) | true |
+| `agents` | Gerar AGENTS.md universal pro repo | false |
+| `review` | Revisar Knowledge existente e sugerir melhorias | false |
 
-### O que NÃO é esta skill
-
-- **Não é PRD.** PRD = O QUE construir. Knowledge = COMO o Lovable deve construir.
-- **Não substitui prompts.** Knowledge é contexto persistente, não instrução de tarefa.
-
-## Ecossistema de instruction files
-
-### Hierarquia de prioridade do Lovable
-
-O Lovable lê instruções nesta ordem (maior prioridade primeiro):
-1. **Project Knowledge** (campo no Lovable)
-2. **Workspace Knowledge** (campo no Lovable)
-3. **Código do projeto** (análise do repo)
-4. **Integration Knowledge** (se configurado)
-5. **AGENTS.md / CLAUDE.md** (arquivos no root do repo)
-
-### Estratégia multi-tool
-
-Se o projeto é usado por múltiplas AI tools (Lovable + Cursor + Claude Code), use arquivos complementares:
-
-| Arquivo | Lido por | Escopo |
-|---------|----------|--------|
-| **AGENTS.md** | Lovable, Cursor, Windsurf, Kilo Code, Codex, Factory | Universal — single source of truth |
-| **CLAUDE.md** | Claude Code, Lovable | Claude-específico, sobrescreve AGENTS.md |
-| **.github/copilot-instructions.md** | GitHub Copilot | Copilot-específico |
-| **.cursor/rules/** | Cursor | Cursor-específico, suporta ativação por contexto |
-
-**Regra prática:** Comece com AGENTS.md como fonte única. Adicione arquivos tool-specific SÓ quando precisar de features que AGENTS.md não cobre.
-
-### Limites
-
-- **Workspace Knowledge:** 10.000 caracteres
-- **Project Knowledge:** 10.000 caracteres
-- **AGENTS.md:** sem limite formal, mas ~300 linhas é o sweet spot (cada instrução compete por atenção — frontier LLMs seguem ~150-200 instruções de forma confiável)
-- **CLAUDE.md:** ~250 linhas (Claude Code usa ~50 linhas do sistema)
-
-**Foco no que a IA erraria SEM o arquivo.** Não repita o que linters já fazem (ESLint, Prettier). Foque em decisões de arquitetura, domínio, e padrões que a IA não tem como adivinhar.
-
-## Modos de operação
-
-### Modo 1: Workspace Knowledge (setup único)
-
-Frequência: uma vez por workspace, revisão a cada 3-6 meses.
-
-### Modo 2: Project Knowledge (recorrente)
-
-Aceita 3 tipos de input:
-- **PRD existente** — lê e extrai Knowledge sem refazer perguntas
-- **Briefing verbal** — perguntas pra completar
-- **Código existente** — analisa padrões e gera knowledge
-
-### Modo 3: AGENTS.md (novo)
-
-Gera arquivo AGENTS.md universal pro root do repo. Use quando:
-- O projeto é usado por múltiplas AI tools
-- Quer uma fonte única de verdade versionada no git
-- O Workspace/Project Knowledge do Lovable não é suficiente (ex: precisa de mais de 10k chars de contexto)
-
----
-
-## Modo 1: Workspace Knowledge
-
-### Fase 1: Coleta
-
-Perguntas em blocos de 2-3. NÃO despeje todas de uma vez.
-
-**Bloco 1 — Stack e libs:**
-- Stack base? (React + TypeScript strict?)
-- Libs de UI? (shadcn/ui, Material UI, Chakra?)
-- Estado do cliente? (Zustand, Redux, TanStack Query?)
-- Validação? (Zod, Yup, manual?)
-- Estilização? (Tailwind, CSS Modules?)
-
-**Bloco 2 — Padrões de código:**
-- Naming: camelCase variáveis? PascalCase componentes? kebab-case arquivos?
-- Exports: named ou default?
-- const vs let?
-- Comentários em qual idioma?
-
-**Bloco 3 — Arquitetura:**
-- Chamadas de API: direto do componente ou service layer?
-- Estrutura de pastas? (/components, /services, /hooks, /utils, /types)
-- Valores monetários: cents (inteiro) ou decimal?
-- Mutations: optimistic update ou espera resposta?
-
-**Bloco 4 — Testes e qualidade:**
-- Testes unitários pra hooks/utils?
-- Browser testing do Lovable?
-- Linter após mudanças significativas?
-
-**Bloco 5 — Localização e brand voice:**
-- UI text em qual idioma?
-- Formato de data? (DD/MM/YYYY)
-- Formato de números? (vírgula ou ponto decimal)
-- Tom: formal, informal, técnico?
-- Sentence case ou Title Case pra headings?
-
-**Bloco 6 — "Never do" (guardrails globais):**
-- O que o Lovable NUNCA deve fazer sem pedir?
-- Padrões deprecated a evitar?
-- Libs proibidas?
-
-### Fase 2: Geração
-
-Template — inclua APENAS seções com conteúdo real:
+## Workflow
 
 ```
-Coding standards
-- [TypeScript strict, const, unknown não any, etc]
+Lovable Knowledge Progress:
 
-Naming conventions
-- [camelCase, PascalCase, kebab-case]
-
-Styling
-- [Tailwind, regras de CSS]
-
-Libraries
-- [libs obrigatórias e preferidas, com versões se relevante]
-
-Architecture
-- [service layer, pastas, patterns]
-
-Testing
-- [o que testar, quando rodar]
-
-Localization
-- [idioma UI, formato data/número, idioma código]
-
-Brand voice
-- [tom, convenções de copy, CTAs, mensagens de erro]
-
-General rules
-- NEVER [ação proibida 1]
-- NEVER [ação proibida 2]
-- NEVER [ação proibida 3]
-- ALWAYS [regra obrigatória 1]
-- ALWAYS [regra obrigatória 2]
+- [ ] Step 1: Contexto ⚠️ REQUIRED
+  - [ ] 1.1 Identificar modo (workspace / project / agents / review)
+  - [ ] 1.2 Verificar se existe codebase (IRON LAW)
+  - [ ] 1.3 Verificar se existe PRD ou knowledge anterior
+- [ ] Step 2: Coleta ⚠️ REQUIRED
+  - [ ] 2.1 Carregar referência do modo escolhido
+  - [ ] 2.2 Perguntas em blocos de 2-3 (nunca todas de uma vez)
+  - [ ] 2.3 Extrair info de PRD/codebase quando disponível
+- [ ] Step 3: Geração ⚠️ REQUIRED
+  - [ ] 3.1 Aplicar template do modo escolhido
+  - [ ] 3.2 Incluir guardrails obrigatórios
+  - [ ] 3.3 Validar limites de caracteres
+  - [ ] ⛔ GATE: Apresentar knowledge gerado ao usuário para aprovação
+- [ ] Step 4: Validação ⛔ BLOCKING
+  - [ ] Rodar checklist de entrega
+  - [ ] Verificar conflitos entre Workspace e Project Knowledge
+  - [ ] ⛔ GATE: Aprovação final antes de considerar pronto
 ```
 
-### Fase 3: Validação
+Se `review`: Ler knowledge existente → diagnosticar com checklist → sugerir melhorias → regenerar se necessário.
 
-1. **Contagem de caracteres.** Se > 10.000, corte. Prioridade: General Rules > Architecture > Libraries > Coding Standards > resto.
-2. **Checklist de completude:**
-   - Tem "General rules" com pelo menos 3 "NEVER"? Se não, pergunte.
-   - Tem libs definidas? Sem isso, Lovable escolhe sozinho.
-   - Tem naming? Sem isso, inconsistente entre projetos.
-3. **Apresente e peça confirmação.**
+## Step 1: Contexto ⚠️ REQUIRED
 
----
+### 1.1 Identificar modo
 
-## Modo 2: Project Knowledge
+Pergunte se não está claro: "Você quer criar Workspace Knowledge (global, vale pra todos os projetos), Project Knowledge (específico deste projeto), ou AGENTS.md (arquivo no repo)?"
 
-### Detecção de input
+### 1.2 Verificar codebase (IRON LAW)
 
-1. **Tem PRD?** Leia e extraia: visão, stack, usuários, fluxos, regras, modelo de dados, fora do escopo. Pergunte APENAS o que o PRD não cobre.
-2. **Tem codebase?** Analise: package.json, pastas, schema SQL, componentes, README. Pergunte o que o código não revela.
-3. **Sem nada?** Fluxo completo de perguntas.
+Se existe codebase, analise ANTES de gerar:
+- `package.json` — libs já instaladas, scripts
+- Estrutura de pastas — arquitetura existente
+- Schema SQL / migrations — modelo de dados
+- Componentes existentes — padrões de naming e estilo
+- Knowledge atual — o que já está configurado
 
-### Fase 1: Coleta (sem PRD/código)
+Se não existe codebase, pergunte: "Esse projeto já tem código ou vai começar do zero?"
 
-**Bloco 1 — O projeto:**
-- Em uma frase, o que esse app faz?
-- Pra quem? Roles/permissões?
+### 1.3 Verificar PRD
 
-**Bloco 2 — Dados e arquitetura:**
-- Tabelas/entidades principais?
-- Integrações externas?
-- Algo do schema que o Lovable PRECISA saber?
+Se existe PRD (output de product-discovery-prd), extraia automaticamente: visão, stack, roles, fluxos, regras de negócio, modelo de dados, fora do escopo. Pergunte APENAS o que o PRD não cobre.
 
-**Bloco 3 — Design e UX:**
-- Referência visual?
-- Paleta de cores? Tipografia?
-- Layout: sidebar, tabs, dashboard?
-- Mobile-first ou desktop-first?
+## Step 2: Coleta ⚠️ REQUIRED
 
-**Bloco 4 — Domínio e terminologia:**
-- Termos do negócio que o Lovable pode confundir? (ex: "Transaction = mudança de estoque, não pagamento")
-- Regras de negócio não óbvias?
+### Por modo
 
-**Bloco 5 — Constraints:**
-- O que o Lovable NÃO deve mexer?
-- Componentes intocáveis?
-- Decisões que parecem estranhas mas são intencionais?
+**Workspace Knowledge:** Load `references/workspace-knowledge.md` — perguntas sobre stack, padrões, arquitetura, guardrails globais.
 
-### Fase 2: Geração
+**Project Knowledge:** Load `references/project-knowledge.md` — perguntas sobre o projeto, dados, design, domínio, constraints.
 
-```
-Project overview
-[1-3 frases: o que é, pra quem, qual problema resolve]
+**AGENTS.md:** Load `references/agents-md-guide.md` — estrutura, limites, estratégia multi-tool.
 
-Users
-[Roles, permissões, volume esperado]
+### Regra de coleta
 
-Key database tables
-[Tabelas com campos essenciais e tipos — só o que o Lovable precisa pra queries e types]
+- Blocos de 2-3 perguntas por vez
+- Se tem PRD/codebase, pule perguntas já respondidas
+- Confirme entendimento antes de gerar: "Entendi X, Y e Z. Correto?"
 
-Design guidelines
-[Paleta, tipografia, layout, componentes, referências]
+## Step 3: Geração ⚠️ REQUIRED
 
-Architecture rules
-[Decisões específicas deste projeto]
+### 3.1 Aplicar template
 
-Domain terminology
-[Termos com definição clara — especialmente ambíguos]
+Use o template do modo escolhido (disponível nos arquivos de referência). Inclua APENAS seções com conteúdo real — remova seções vazias.
 
-External integrations
-[APIs, webhooks, formatos esperados]
+### 3.2 Guardrails obrigatórios
 
-Component states
-[Definir empty/loading/error/success pra componentes principais]
+Load `references/lovable-best-practices.md` para guardrails e regras de output.
 
-Out of scope
-[O que NÃO fazer — features adiadas, componentes intocáveis]
-```
+Todo Knowledge DEVE incluir:
+- Pelo menos 3 regras NEVER (proibições explícitas)
+- Seção "Out of scope" (Project Knowledge)
+- Libs com versões pinadas quando relevante
 
-### Fase 3: Validação
+### 3.3 Validar limites
 
-1. **Caracteres < 10.000.** Se exceder, corte detalhes de schema primeiro.
-2. **Conflitos com Workspace.** Se contradiz, avise. Project tem prioridade.
-3. **"Out of scope" obrigatória.** Sem isso, Lovable refatora o que não deveria.
-4. **Apresente e peça confirmação.**
+- Workspace/Project Knowledge: max 10.000 caracteres
+- AGENTS.md: max ~300 linhas (sweet spot de atenção)
+- Se exceder, corte na ordem: exemplos → detalhes de schema → convenções de código → arquitetura → regras gerais (nunca corte regras gerais)
 
----
+⛔ **GATE:** Apresente o Knowledge completo ao usuário. Não considere pronto sem aprovação explícita.
 
-## Modo 3: AGENTS.md
+## Step 4: Validação ⛔ BLOCKING
 
-### Quando usar
+### Pre-Delivery Checklist
 
-- Projeto usado por múltiplas AI tools
-- Precisa versionar instruções no git
-- Contexto do projeto excede 10k chars do Knowledge
-- Quer que Claude Code, Cursor, e Lovable sigam as mesmas regras
+**Estrutura:**
+- [ ] Output dentro do limite de caracteres (10k chars ou ~300 linhas)
+- [ ] Formato pronto pra colar no Lovable (markdown limpo, sem frontmatter)
+- [ ] Seções vazias removidas
 
-### Template AGENTS.md
+**Conteúdo:**
+- [ ] Tem pelo menos 3 regras NEVER com ação específica
+- [ ] Libs definidas com nomes exatos (não "use uma boa lib")
+- [ ] Naming conventions definidas
+- [ ] Decisões de arquitetura que a IA não tem como adivinhar
+- [ ] "Out of scope" presente (Project Knowledge)
+- [ ] Sem conflito entre Workspace e Project Knowledge
+- [ ] Nenhuma regra que ESLint/Prettier já enforça
 
-```markdown
-# AGENTS.md
+**Qualidade:**
+- [ ] Específico > genérico (teste: "isso se aplica a qualquer projeto?" Se sim, é genérico demais)
+- [ ] Sem floreios tipo "escreva código limpo"
+- [ ] Termos técnicos em inglês, resto em PT-BR
+- [ ] Cada NEVER/ALWAYS tem razão implícita ou explícita
 
-## Project Context
-[1-2 frases: o que é o projeto]
+## Anti-patterns
 
-## Tech Stack
-- Frontend: [framework, UI lib, state management]
-- Backend: [Supabase, auth, edge functions]
-- Integrations: [n8n, APIs externas]
+| Anti-pattern | Por que é ruim | Correto |
+|-------------|----------------|---------|
+| Knowledge genérico sem ler codebase | Conflita com código existente, Lovable fica confuso | Ler codebase primeiro, alinhar Knowledge |
+| Despejar 6 blocos de perguntas de uma vez | Usuário desiste ou responde superficialmente | Blocos de 2-3, iterar |
+| "Escreva código limpo e organizado" | Instrução vazia, não muda comportamento | "Use unknown, nunca any. Named exports, nunca default" |
+| Knowledge > 10k chars sem cortar | Lovable trunca silenciosamente | Priorize e corte |
+| Copiar README como Knowledge | Knowledge é pra IA, não pra humanos | Extraia só decisões de arquitetura e proibições |
+| Não incluir "Out of scope" | Lovable refatora tudo que acha melhorável | Liste explicitamente o que NÃO mexer |
+| Repetir regras do Workspace no Project | Desperdício de chars, risco de conflito | Project só o que é específico do projeto |
+| Gerar AGENTS.md pra projeto solo no Lovable | Over-engineering, Knowledge basta | AGENTS.md só pra multi-tool ou >10k chars |
 
-## Build & Test Commands
-```bash
-npm run dev          # dev server
-npm run build        # production build
-npm run test         # run tests
-npm run lint         # lint check
-```
+## Integration
 
-## Project Structure
-```
-src/
-  components/    # React components
-  hooks/         # Custom hooks
-  services/      # API calls, business logic
-  types/         # TypeScript types
-  utils/         # Pure utility functions
-  pages/         # Route pages
-```
+| Skill | Quando usar | Direção |
+|-------|-------------|---------|
+| **product-discovery-prd** | PRD pronto, quer preparar pro Lovable | PRD → input desta skill |
+| **supabase-db-architect** | Schema do banco precisa ser refletido no Knowledge | Schema → "Key database tables" |
+| **prompt-engineer** | AGENTS.md precisa de seção de prompting pra agentes | Combinar output |
+| **ui-design-system** | Design system definido, refletir no Knowledge | Tokens/componentes → "Design guidelines" |
+| **sdd** | Documento técnico detalhado pra projetos complexos | SDD → Architecture rules |
+| **maestro** | Orquestrar pipeline completo (PRD → Schema → Knowledge) | Maestro coordena a sequência |
 
-## Architecture Decisions
-- [Decisão 1: ex: "API calls via service layer, NUNCA direto no componente"]
-- [Decisão 2: ex: "Valores monetários em cents (inteiro), converter pra exibição"]
-- [Decisão 3: ...]
+**Fluxo típico:** product-discovery-prd → supabase-db-architect → **lovable-knowledge** → Lovable
 
-## Domain Terminology
-- [Termo]: [Definição clara]
+## When NOT to use
 
-## Database Schema (key tables)
-- [tabela]: [campos essenciais com tipos]
-
-## Coding Conventions
-- [Padrão 1]
-- [Padrão 2]
-
-## DO NOT
-- [Proibição 1: ex: "Instalar dependências sem aprovação"]
-- [Proibição 2: ex: "Refatorar auth sem ticket"]
-- [Proibição 3: ...]
-```
-
-### Regra dos ~300 linhas
-
-Cada instrução compete por atenção do modelo. Se o AGENTS.md tiver 500 linhas, as últimas vão ser ignoradas. Mantenha em ~300 linhas ou menos. Priorize:
-1. Comandos de build/test (a IA PRECISA disso)
-2. Decisões de arquitetura (não tem como adivinhar)
-3. Terminologia de domínio (evita confusão)
-4. Proibições (DO NOT) (evita danos)
-
-Code style e formatting? Deixe pro linter.
-
----
-
-## Lovable-specific: boas práticas de prompting
-
-Inclua estas orientações quando gerar Knowledge pra projetos Lovable:
-
-### Plan Mode (60-70% do tempo)
-
-Use Plan Mode pra estruturar antes de pedir código. Economiza créditos e evita retrabalho. O Lovable tem Plan Mode que permite desenhar a estrutura antes de gerar código — mais eficiente que iterar em código direto.
-
-### Frontend-first com mock data
-
-Sequência recomendada pro Lovable:
-1. Construir design do frontend (página por página, seção por seção)
-2. Plugar backend (Supabase nativo)
-3. Refinar UX
-
-Use mock data pra prototipar interações antes de conectar backend real.
-
-### Prompts incrementais
-
-- 3-4 mudanças por prompt, não 5+
-- Um componente ou interação por ciclo
-- Pense em estados: empty, loading, filled, error, success
-- Linguagem consistente entre componentes (Lovable generaliza padrões)
-- Construir modular (partes) em vez de páginas inteiras de uma vez
-
-### Guardrails no Knowledge
-
-Sempre inclua no Project Knowledge:
-- "NUNCA instale dependências novas sem pedir"
-- "NUNCA refatore autenticação sem instrução explícita"
-- "NUNCA mude o schema do banco sem aprovação"
-- "Use SEMPRE [lib X] para [caso Y]"
-- "Pin versions: [lib@version]"
-
-### "Try to Fix" é grátis
-
-O botão "Try to Fix" do Lovable não consome créditos — use sem medo pra resolver erros antes de gastar crédito com prompt novo.
-
----
-
-## Regras do output
-
-1. **Português brasileiro** pra comunicação. Knowledge em português EXCETO se workspace é pra time internacional.
-2. **Termos técnicos em inglês** quando universais.
-3. **Sem floreios.** "Escreva código limpo" = inútil. "Nunca use any, use unknown e faça narrowing" = útil.
-4. **Específico > genérico.** "Use shadcn/ui Button" > "Use uma lib de componentes moderna".
-5. **Exemplos quando ajudam.** "Sentence case (ex: 'Create new project', não 'Create New Project')".
-6. **Output como .md** pra copiar direto no Lovable ou salvar como referência.
-
-## Integração com outras skills
-
-- **Depois da skill de PRD:** Sugira rodar esta skill. PRD → Project Knowledge é o fluxo natural.
-- **Com Supabase Architect:** "Key database tables" alimentado pelo output da skill de Supabase.
-- **Com Tech Lead & PM:** Knowledge pode ser passado junto com briefing de delegação.
-- **Com Prompt Engineer:** Se o AGENTS.md precisa de seção de prompting pra agentes IA, combine com a skill de Prompt Engineer.
-
-## Quando NÃO usar
-
-- Definir O QUE construir → skill de PRD
-- Revisar/debugar código → ajude diretamente
-- Pergunta pontual sobre Lovable → responda direto
+- **Definir O QUE construir** → use product-discovery-prd
+- **Revisar/debugar código** → ajude diretamente, não é Knowledge
+- **Pergunta pontual sobre Lovable** → responda direto (ex: "como uso Plan Mode?")
+- **Projeto sem Lovable** → se usa só Cursor/Claude Code, gere AGENTS.md/CLAUDE.md diretamente
+- **Otimizar prompt avulso pra Lovable** → use prompt-engineer

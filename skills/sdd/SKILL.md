@@ -48,12 +48,14 @@ SDD Progress:
 Load `references/research-checklist.md` for the complete investigation checklist.
 
 1. **Query context-tree first** — check if domain knowledge already exists before searching from scratch
-2. **Read project structure** — `ls`, package.json, folder conventions
-3. **Identify the area of change** — which modules, files, patterns are involved
-4. **Check conventions** — naming, imports, state management, testing, file organization
-5. **Map dependencies** — what touches the area of change
-6. **Over-engineering check** — is there a simpler solution already in the codebase?
-7. **Document findings** in `prd.md` (see `references/prd-example.md` for format)
+2. **Search for reusables** — before creating anything new, scan codebase for existing components/functions that solve the same problem. Load `references/dedup-checklist.md`
+3. **Read project structure** — `ls`, package.json, folder conventions
+4. **Identify the area of change** — which modules, files, patterns are involved
+5. **Check conventions** — naming, imports, state management, testing, file organization
+6. **Map dependencies** — what touches the area of change
+7. **Import external patterns (optional)** — use `.tmp` technique to clone reference repos and extract patterns. Load `references/tmp-technique.md`
+8. **Over-engineering check** — is there a simpler solution already in the codebase?
+9. **Document findings** in `prd.md` (see `references/prd-example.md` for format)
 
 ### prd.md Format
 
@@ -87,9 +89,11 @@ Load `references/research-checklist.md` for the complete investigation checklist
 **Rule:** spec.md must be so specific that a fresh conversation can implement it without any other context. Every file path is exact. Every action is explicit.
 
 Load `references/spec-writing-guide.md` for the complete path→action format and examples.
+Load `references/spec-structures.md` for page/component/behavior decomposition and issue breakdown patterns.
 
 1. Read `prd.md`
-2. For each change, specify:
+2. For large features: decompose into atomic issues by behavior (1 issue = 1 behavior or 1 page). Prototype issues first, then functional issues.
+3. For each change, specify:
    - **File path** — exact path
    - **Action** — create / modify / delete
    - **What** — pseudocode or exact code for the change
@@ -130,7 +134,7 @@ Load `references/spec-writing-guide.md` for the complete path→action format an
 3. After each file: run tests or type check if available
 4. If spec is ambiguous, STOP and ask user — do NOT improvise
 
-**Context window rule:** Never use more than 40-50% of context for implementation. If the spec is too large, split into batches.
+**Context window rule (40-50%):** Never use more than half the context window. If approaching the limit, `/clear` and resume with spec.md. Quality degrades silently past 50%.
 
 ## Phase 4: Review
 
@@ -167,5 +171,9 @@ Per phase:
 ## Integration
 
 - **Trident** — used in Phase 4 for code review
+- **Architecture Guard** — use after implement to validate architectural rules (thin client/fat server)
+- **Code Dedup Scanner** — use in Phase 1 to find reusable code before creating new
+- **Pattern Importer** — use in Phase 1 for `.tmp` technique (import external patterns)
+- **Context Guardian** — use between phases to monitor context window and generate handoffs
 - **React Patterns** — use `--scaffold` during implement phase for React features
 - **Component Architect** — use `--plan` during spec phase for component work

@@ -32,13 +32,20 @@ Consulte este arquivo no **Phase 1 (Research)** para não esquecer nenhuma inves
 - [ ] Há migrações de banco necessárias?
 - [ ] Há env vars novas necessárias?
 
-### 5. Over-Engineering Check (Video 4 insight)
+### 5. Pesquisa Externa (Video 4 insight)
+- [ ] Ler documentação relevante das libs/serviços usados (NÃO a doc inteira — só a parte relevante)
+- [ ] Buscar padrões de implementação em repos de referência (usar técnica .tmp — ver `tmp-technique.md`)
+- [ ] Checar Stack Overflow, GitHub issues por edge cases conhecidos
+- [ ] Se usando lib nova: buscar exemplo mínimo funcional antes de projetar a spec
+- [ ] Documentar trechos úteis e code snippets no prd.md (seção "External References")
+
+### 6. Over-Engineering Check
 - [ ] Existe solução mais simples já no codebase? (grep por padrões similares)
 - [ ] Alguma lib instalada já resolve isso? (checar package.json)
 - [ ] A abordagem proposta é mais complexa que o necessário?
 - [ ] Se sim, documentar a alternativa mais simples no prd.md
 
-### 6. Issue Breakdown (Video 2 insight)
+### 7. Issue Breakdown (Video 2 insight)
 Se a feature é grande (>15 mudanças estimadas):
 - [ ] Quebre em issues atômicas (1 issue = 1 comportamento ou 1 página)
 - [ ] Cada issue deve ser implementável independentemente

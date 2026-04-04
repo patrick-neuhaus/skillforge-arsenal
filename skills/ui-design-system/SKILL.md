@@ -14,6 +14,7 @@ IRON LAW: NEVER generate design tokens from abstract descriptions alone — requ
 | `--generate` | Create design.json from brand inputs | default |
 | `--audit` | Audit existing design system for consistency | - |
 | `--apply` | Apply design tokens to Tailwind config or CSS variables | - |
+| `--identity` | Guide user through creating a minimal brand identity (logo, palette, fonts, concept) | - |
 
 ## Workflow
 
@@ -124,3 +125,11 @@ Before presenting design.json:
 
 - **Component Architect** — use design tokens when creating components
 - **React Patterns** — apply tokens via Tailwind/CSS variables in Next.js projects
+- **Trident** — `--design` mode validates output in 3 layers (visual, a11y, performance)
+- **Context Tree** — map brand assets location in the tree for other skills to find
+
+### Remotion Design Tokens
+Load `references/remotion-design-tokens.md` when generating tokens for Remotion video projects.
+
+### Mini Identity Guide
+Load `references/mini-identity-guide.md` for `--identity` mode — step-by-step guide to create minimal brand identity from scratch.

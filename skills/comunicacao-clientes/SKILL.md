@@ -1,211 +1,189 @@
 ---
 name: comunicacao-clientes
-description: "Skill de comunicação com clientes via WhatsApp/Telegram. Foco em ENSINAR o usuário a escrever melhor, não em gerar mensagens prontas. Use esta skill SEMPRE que o usuário mencionar: mensagem pra cliente, responder cliente, WhatsApp, 'como falo isso pro cliente', 'o cliente pediu X', 'o cliente reclamou', 'preciso cobrar', 'preciso avisar de atraso', 'mudança de escopo', 'como dou essa notícia', ou qualquer variação que envolva comunicação externa com clientes. Também use quando o usuário pedir ajuda pra escrever qualquer mensagem profissional — mesmo que não diga 'cliente' explicitamente. Se o contexto for conversa difícil INTERNA (com equipe, com Willy), use a skill de Tech Lead & PM em vez desta. Se é proposta comercial formal ou contrato, não é WhatsApp — é documento, fora do escopo desta skill."
+description: "Write, draft, review, improve, fix, plan, structure, and compose client messages for WhatsApp and Telegram. Teaches communication frameworks (Pyramid Principle, SCQA, NVC, Chris Voss) so the user becomes self-sufficient. Redija, melhore, revise, planeje, estruture e corrija mensagens para clientes via WhatsApp/Telegram. Use SEMPRE que mencionar: mensagem pra cliente, responder cliente, WhatsApp, Telegram, 'como falo isso pro cliente', 'o cliente pediu X', 'o cliente reclamou', 'preciso cobrar', 'preciso avisar de atraso', 'mudança de escopo', 'como dou essa notícia', scope creep, cobrança, pagamento, update de status, reclamação, aprovação, negociação com cliente. Diferente de tech-lead-pm: esta skill cuida de comunicação EXTERNA (clientes), tech-lead-pm cuida de comunicação INTERNA (equipe). NÃO use para: proposta comercial formal, contrato, prospecção/SDR, comunicação interna com equipe."
 ---
 
-# Comunicação com Clientes v2
+# Comunicacao com Clientes v3
 
-## Visão geral
+IRON LAW: NUNCA envie mensagem pra cliente sem objetivo claro. Se voce nao sabe o que quer que o cliente FACA depois de ler, nao mande. Toda mensagem precisa de: (1) objetivo, (2) contexto minimo, (3) acao esperada. Sem esses 3, a mensagem nao sai.
 
-O usuário comunica com clientes por WhatsApp/Telegram. O problema dele não é tom — é velocidade. Ele sabe o que quer dizer mas fica reescrevendo demais. O objetivo desta skill é ENSINAR frameworks de comunicação pra ele internalizar e ficar independente, não gerar mensagens prontas pra copiar e colar.
+## Options
 
-### Novidades na v2
+| Option | Descricao | Default |
+|--------|-----------|---------|
+| `--update` | Montar update de status pro cliente | - |
+| `--aprovacao` | Pedir aprovacao/decisao | - |
+| `--escopo` | Comunicar mudanca de escopo | - |
+| `--bad-news` | Comunicar noticia ruim (atraso, problema) | - |
+| `--cobrar` | Cobrar resposta ou pagamento | - |
+| `--reclamacao` | Responder reclamacao do cliente | - |
+| `--revisar` | Revisar rascunho que o usuario ja escreveu | - |
+| `--ensinar` | Explicar framework sem gerar mensagem | - |
 
-- **Pyramid Principle (Barbara Minto)** — Conclusão primeiro pra mensagens async
-- **SCQA** — Framework narrativo pra comunicações complexas
-- **NVC (Rosenberg)** — OFNR pra conversas difíceis com cliente (cobrança, scope creep)
-- **Técnicas de negociação (Chris Voss)** — Mirroring, labeling, calibrated questions
-- **WhatsApp Business patterns** — Templates de utilidade, open rates
+## Workflow
+
+```
+Comunicacao Progress:
+
+- [ ] Step 1: Contexto ⚠️ REQUIRED
+  - [ ] 1.1 Qual o tipo? (update/aprovacao/escopo/bad-news/cobranca/reclamacao)
+  - [ ] 1.2 Qual o cliente? (prioridade verde/amarelo/vermelho)
+  - [ ] 1.3 Qual o objetivo da mensagem? O que o cliente deve FAZER?
+  - [ ] 1.4 Quais os fatos? (sem interpretacao, so dados)
+- [ ] Step 2: Framework ⚠️ REQUIRED
+  - [ ] 2.1 Selecionar framework adequado (ACPR, SCQA, OFNR)
+  - [ ] 2.2 Se negociacao: selecionar tecnica Voss (mirroring/labeling/calibrated)
+- [ ] Step 3: Rascunho
+  - [ ] 3.1 Montar mensagem com Pyramid Principle (conclusao primeiro)
+  - [ ] 3.2 Aplicar regras de formato WhatsApp/Telegram
+  - [ ] ⛔ GATE: Bad news, escopo, cobranca → confirmar com usuario ANTES de sugerir envio
+- [ ] Step 4: Ensino ⚠️ REQUIRED
+  - [ ] 4.1 Explicar POR QUE a estrutura funciona
+  - [ ] 4.2 Identificar framework usado e nomear pro usuario
+  - [ ] 4.3 Perguntar "Quer ajustar algo ou ta bom pra enviar?"
+- [ ] Step 5: Validacao
+  - [ ] 5.1 Pre-delivery checklist
+```
 
 ## Filosofia
 
-1. **Ensinar o framework, não dar o peixe.** Toda vez que ajudar com mensagem, explique POR QUE a estrutura funciona. O objetivo é que em 3 meses ele não precise mais da skill.
-2. **Primeiro a mensagem funcional, depois o polimento.** Mensagem enviada > mensagem perfeita no rascunho.
-3. **WhatsApp não é email.** Mensagens curtas, parágrafos de 2-3 linhas, sem formalidade excessiva.
-4. **Profissional não é formal.** Tom profissional no WhatsApp = claro, respeitoso, direto.
-5. **Toda mensagem tem um objetivo.** Se você não sabe o que quer que o cliente FAÇA depois de ler, não mande ainda.
-6. **Conclusão primeiro.** O cliente tá ocupado. Diga o ponto principal na primeira linha, depois dê contexto. Não construa até a conclusão — comece por ela. (Referência: Pyramid Principle — Barbara Minto) (NOVO v2)
+1. **Ensinar o framework, nao dar o peixe.** Toda mensagem explicada. Objetivo: usuario independente em 3 meses.
+2. **Mensagem enviada > mensagem perfeita.** Rascunho bom enviado hoje > mensagem linda amanha.
+3. **WhatsApp nao e email.** Curto, direto, sem formalidade excessiva.
+4. **Profissional nao e formal.** Claro + respeitoso + direto = tom certo.
+5. **Conclusao primeiro.** Cliente ta ocupado. Ponto principal na primeira linha. (Pyramid Principle)
+6. **Toda mensagem tem um objetivo.** Se nao sabe o que quer que o cliente faca, nao manda. (IRON LAW)
 
-## O framework ACPR
+## Framework ACPR
 
-Todo tipo de mensagem segue uma variação do mesmo framework:
+Load `references/frameworks-comunicacao.md` para frameworks completos (ACPR, Pyramid, SCQA, OFNR, Voss).
 
-**A — Abertura** (1 linha)
-Cumprimento + contexto rápido. O cliente sabe em 3 segundos do que se trata.
-- "Fala [nome], tudo bem? Passando update do projeto X."
+**A -- Abertura** (1 linha): Cumprimento + contexto rapido.
+**C -- Conteudo** (2-5 linhas): Fatos, conclusao primeiro (Pyramid Principle). MECE se multiplos pontos.
+**P -- Proposta/Pedido** (1-2 linhas): O que voce quer que o cliente faca. SEMPRE de recomendacao.
+**R -- Reforco** (1 linha, opcional): Disponibilidade ou proximo passo.
 
-**C — Conteúdo** (2-5 linhas)
-O que você precisa comunicar. Fatos, não opinião. Específico, não vago.
-- Ruim: "Tivemos alguns probleminhas"
-- Bom: "A integração com o Kommo atrasou 2 dias porque a API deles mudou o formato do webhook"
-
-**P — Proposta / Pedido** (1-2 linhas)
-O que você quer que o cliente faça.
-- "Preciso da sua aprovação pra seguir com a opção A"
-- "Não precisa fazer nada, só te mantendo no loop"
-
-**R — Reforço** (1 linha, opcional)
-Disponibilidade ou próximo passo.
-- "Qualquer dúvida, me chama"
-
-### Pyramid Principle no ACPR (NOVO v2)
-
-A mudança mais importante da v2: o **C (Conteúdo)** segue a Pyramid Principle de Barbara Minto — conclusão primeiro, depois argumentos de suporte.
-
-**Antes (v1):**
-"A API do Kommo mudou o formato do webhook. Isso fez a integração quebrar. Tive que refazer o parser. Isso atrasou 2 dias."
-
-**Depois (v2):**
-"A integração atrasou 2 dias. Motivo: API do Kommo mudou o webhook sem aviso. Fix já aplicado."
-
-A diferença: o cliente leu "atrasou 2 dias" na primeira frase e já sabe a situação. O resto é contexto — pode ler ou não.
-
-**Regra MECE no Conteúdo:** Se tem múltiplos pontos, organize sem sobreposição (Mutually Exclusive) e sem deixar nada de fora (Collectively Exhaustive):
-- "Temos 3 itens pendentes: (1) integração Kommo, (2) tela de relatórios, (3) deploy em produção."
-
-### SCQA pra comunicações complexas (NOVO v2)
-
-Quando ACPR não é suficiente (situações que precisam de contexto narrativo), use SCQA:
-
-- **Situation:** "O projeto X tá na reta final, com 80% entregue."
-- **Complication:** "O cliente pediu 3 features novas que não estavam no escopo."
-- **Question:** "O que priorizamos: entregar no prazo sem as features, ou estender?"
-- **Answer:** "Recomendo entregar no prazo e orçar as features como fase 2."
-
-SCQA funciona melhor pra: propostas, explicações de trade-off, comunicações onde precisa convencer.
-
-## Tipos de mensagem
+## Tipos de Mensagem
 
 ### Tipo 1: Update de status
+**Framework:** ACPR. Update proativo > reativo. Se o cliente pergunta "como ta?", voce ja atrasou.
 
-**Framework:** ACPR (conclusão primeiro no C)
+### Tipo 2: Pedir aprovacao/decisao
+**Framework:** ACPR + opcoes + recomendacao. SEMPRE recomende. "O que voce prefere?" e preguica.
 
-**Princípio:** Update proativo > update reativo. Se o cliente precisa PERGUNTAR "como tá?", você já atrasou.
+### Tipo 3: Mudanca de escopo
+**Framework:** ACPR + tecnicas de negociacao. Nunca diga "nao" seco. Diga "sim, e o impacto e [X]".
+- **Labeling:** "Parece que essa feature e importante pra voces por causa do [contexto]."
+- **Calibrated question:** "Como voce priorizaria isso em relacao ao que ja ta no escopo?"
 
-**Cadência:** Semanal ou por entrega, o que vier primeiro.
+### Tipo 4: Noticia ruim (atraso, problema)
+**Framework:** ACPR (conclusao primeiro = noticia ruim logo). Velocidade > qualidade da noticia.
+- Regra de ouro: Nunca leve so o problema. Leve junto: causa, o que ja fez, plano.
+- Se erro seu, use NVC-OFNR. Load `references/frameworks-comunicacao.md` para roteiro completo.
 
-**Erro comum:** Update longo demais. O cliente quer saber se tá andando e quando recebe.
-
-### Tipo 2: Pedir aprovação/decisão
-
-**Framework:** ACPR com opções + recomendação
-
-**Princípio:** SEMPRE dê sua recomendação. "O que você prefere?" é preguiça. "Recomendo A porque [motivo]" é liderança.
-
-**Erro comum:** 5 opções sem recomendação. Reduza pra 2-3 e recomende.
-
-### Tipo 3: Mudança de escopo
-
-**Framework:** ACPR + técnicas de negociação
-
-**Princípio:** Nunca diga "não" seco. Diga "sim, e o impacto é [X]".
-
-**Com técnicas de Voss (NOVO v2):**
-- **Labeling:** "Parece que essa feature é importante pra vocês por causa do [contexto]." (valida sem concordar)
-- **Calibrated question:** "Como você priorizaria isso em relação ao que já tá no escopo?" (faz o cliente pensar no trade-off)
-
-**Erro comum:** Aceitar mudança sem comunicar impacto.
-
-### Tipo 4: Notícia ruim (atraso, problema)
-
-**Framework:** ACPR (conclusão primeiro = a notícia ruim vem logo)
-
-**Princípio:** Velocidade de comunicação > qualidade da notícia. Avisar terça com solução parcial > avisar sexta com solução completa.
-
-**Regra de ouro:** Nunca leve só o problema. Sempre leve junto: o que causou, o que já fez, e qual o plano.
-
-**Com NVC — OFNR (NOVO v2):**
-Se a notícia ruim é delicada (atraso por erro seu):
-1. **Observation:** "O prazo da integração era sexta e não vai dar."
-2. **Feeling:** "Fico desconfortável de comunicar isso."
-3. **Need:** "Preciso de transparência contigo pra manter confiança."
-4. **Request:** "O novo prazo é terça. Posso te dar update diário até lá?"
-
-NVC humaniza. Não é fraqueza — é maturidade.
+⛔ **GATE: Antes de sugerir envio de noticia ruim, pergunte: "Voce ja tem plano de resolucao? O cliente vai querer saber o que esta sendo feito."**
 
 ### Tipo 5: Cobrar resposta/pagamento
+**Framework:** ACPR + escalonamento progressivo.
+1. Primeira (tom normal): "Mandei [X] em [data], to aguardando retorno."
+2. Segunda (3 dias): "Reforcando -- to com [Y] parado. Preciso da resposta pra seguir."
+3. Terceira (5 dias): "Sem retorno, vou pausar [projeto] ate receber posicionamento."
 
-**Framework:** ACPR + escalonamento progressivo
+⛔ **GATE: Antes de sugerir cobranca nivel 3, confirme: "Voce tem respaldo pra pausar o projeto? Ja alinhou com Willy?"**
 
-**Princípio:** Cobrar não é ser chato. Cobrar é ser profissional.
+### Tipo 6: Responder reclamacao
+**Framework:** Validar → Assumir → Resolver → Prevenir. Nao peca desculpa 5 vezes. Uma basta.
 
-**Escalonamento:**
-1. Primeira (tom normal): "Mandei [X] em [data], tô aguardando retorno."
-2. Segunda (3 dias): "Reforçando — tô com [Y] parado. Preciso da resposta pra seguir."
-3. Terceira (5 dias): "Sem retorno, vou pausar [projeto] até receber posicionamento."
+Load `references/tipos-mensagem-detalhado.md` para exemplos completos de cada tipo.
 
-**Com técnicas de Voss (NOVO v2):**
-- **Mirroring:** Se cliente diz "tô corrido", repita: "...corrido?" → ele vai elaborar e talvez revelar o real motivo
-- **Labeling:** "Parece que tem algo travando do lado de vocês." → valida sem acusar
-- **Calibrated question:** "O que seria necessário pra destravar isso essa semana?" → faz ele propor solução
+## Modo de Uso
 
-### Tipo 6: Responder reclamação
+### Quando ajudar com mensagem:
+1. Pergunte tipo + contexto + fatos (Step 1)
+2. Monte usando framework adequado (Step 2-3)
+3. **ANTES de entregar, explique a estrutura** (Step 4 -- OBRIGATORIO)
+4. Pergunte "Quer ajustar ou ta bom pra enviar?"
 
-**Framework:** ACPR com estrutura Validar → Assumir → Resolver → Prevenir
+### Quando usuario parece inseguro:
+Gere 2 versoes: **direta** (assertiva, menos palavras) e **suave** (mais contexto, tom leve). Explique quando usar cada.
 
-**Princípio:** Reclamação é presente. O que sai sem reclamar é pior.
-
-1. **Valide:** "Entendo sua frustração. Faz sentido."
-2. **Assuma:** "Isso foi falha nossa em [específico]"
-3. **Resolva:** "Vou fazer [ação] até [data]"
-4. **Previna:** "Pra não acontecer de novo, vamos [mudança]"
-
-Não peça desculpa 5 vezes. Uma basta.
-
-## Modo de uso da skill
-
-### Quando o usuário pedir ajuda com mensagem:
-
-1. Pergunte: "Qual o tipo? (update, aprovação, escopo, notícia ruim, cobrança, reclamação)"
-2. Pergunte: "Qual o contexto? Me dá os fatos"
-3. Monte a mensagem usando ACPR (com Pyramid Principle no conteúdo)
-4. ANTES de entregar, **explique a estrutura**: "Abri com X porque [motivo], conteúdo é Y com conclusão primeiro porque [motivo], pedi Z porque [motivo]"
-5. Entregue a mensagem
-6. Pergunte: "Quer ajustar algo ou tá bom pra enviar?"
-
-### Quando o usuário parecer inseguro:
-
-Gere 2 versões:
-- **Versão direta**: Mais assertiva, menos palavras
-- **Versão suave**: Mais contexto, tom mais leve
-
-Explique a diferença e QUANDO usar cada uma.
-
-### Quando a situação pedir negociação (NOVO v2):
-
-Se o contexto envolve conflito, resistência, ou negociação (scope creep, pagamento, insatisfação):
-1. Sugira técnicas específicas de Voss: mirroring, labeling, ou calibrated questions
-2. Explique POR QUE cada técnica funciona naquele contexto
-3. Mostre como integrar no ACPR
-4. Se for conversa por call (não texto), sugira roteiro verbal com as técnicas
+### Quando envolve negociacao:
+Load `references/frameworks-comunicacao.md` secao Voss. Sugira tecnica especifica, explique POR QUE funciona, mostre como integra no ACPR.
 
 ### Ensino progressivo:
+- **1-10 usos:** Explica framework + monta mensagem
+- **10-20 usos:** "Qual seria o A, C, P e R aqui?" -- usuario monta, skill revisa
+- **20+ usos:** Usuario manda rascunho, skill so ajusta
 
-- Primeiras vezes: explica ACPR + Pyramid + monta a mensagem
-- Depois de 5-10 usos: "Qual seria o A, C, P e R aqui?" — ele monta, você revisa
-- Depois de 20 usos: ele manda rascunho e você só ajusta
+O objetivo e SAIR DA SKILL.
 
-O objetivo é SAIR DA SKILL.
+### Quando usuario manda rascunho (--revisar):
+1. Identifique qual framework se aplica
+2. Aponte o que ta bom e o que pode melhorar (especifico, nao generico)
+3. Sugira versao melhorada + explique mudancas
+4. Nao reescreva tudo -- ajuste cirurgico
 
-## Regras de formato (WhatsApp/Telegram)
+## Regras de Formato (WhatsApp/Telegram)
 
-- Parágrafos curtos: 2-3 linhas máximo
-- Uma ideia por parágrafo
-- Conclusão/ponto principal na PRIMEIRA LINHA (Pyramid Principle)
-- Use negrito pra destacar: *prazo*, *valor*, *decisão*
-- Sem "Prezado", "Atenciosamente", "Cordialmente" — isso é email
-- Emojis com moderação (1-2 por mensagem, só se o cliente usa)
-- Se ficou com mais de 10 linhas, quebre em 2 mensagens ou mande áudio
+- Paragrafos curtos: 2-3 linhas maximo
+- Uma ideia por paragrafo
+- Conclusao na PRIMEIRA LINHA
+- Negrito pra destacar: *prazo*, *valor*, *decisao*
+- Sem "Prezado", "Atenciosamente", "Cordialmente"
+- Emojis com moderacao (1-2, so se o cliente usa)
+- Mais de 10 linhas? Quebre em 2 mensagens ou mande audio
 
-## Quando NÃO usar esta skill
+## Anti-Patterns
 
-- Conversa difícil com equipe (Hygor, Jonas) → use skill de Tech Lead & PM
-- Renegociar prazo com o Willy → use skill de Tech Lead & PM
-- Prospecção/SDR → não coberto
-- Mensagem que precisa de tom formal (contrato, proposta) → isso é documento, não WhatsApp
+- **Mensagem sem objetivo** → Se voce nao sabe o que quer que o cliente faca, nao envie. Reescreva com acao clara. (IRON LAW)
+- **Construir ate a conclusao** → Cliente le 2 linhas. Se a conclusao ta na linha 8, ele nao viu. Comece pelo ponto principal.
+- **5 opcoes sem recomendacao** → Jogar decisao pro cliente e preguica. Reduza pra 2-3 e recomende.
+- **Desculpa em loop** → Uma desculpa basta. Depois disso, mostre plano de acao. Pedir desculpa 5x parece inseguranca.
+- **"Prezado Sr."** → WhatsApp nao e email. Tom profissional = claro + respeitoso + direto, nao formal.
+- **Aceitar escopo sem comunicar impacto** → Cliente pede feature extra. Voce aceita. Atrasa. Culpa sua. Sempre comunique trade-off.
+- **Reagir em vez de agir** → Se o cliente precisa perguntar "como ta?", voce ja falhou. Update proativo sempre.
+- **Resolver por texto o que precisa de call** → Se ja mandou 3 mensagens sobre o mesmo assunto e nao resolveu, marca call.
 
-## Integração com outras skills
+## Pre-Delivery Checklist
 
-- **Tech Lead & PM (Módulo 7 - Stakeholders):** Working Backwards funciona quando cliente pede feature sem justificativa
-- **Tech Lead & PM (Módulo 4 - Conversas difíceis):** Se a mensagem virar conversa difícil que precisa de call, use módulo 4. As técnicas de Voss e NVC são as mesmas — a diferença é o canal (texto vs voz).
-- **Product Discovery & PRD:** Se cliente manda ideia nova via WhatsApp, diga "boa ideia, vou estruturar e te mando proposta" e use a skill de PRD
+Antes de entregar qualquer mensagem ao usuario:
+
+- [ ] Objetivo da mensagem esta claro? (IRON LAW)
+- [ ] Conclusao/ponto principal esta na primeira linha? (Pyramid Principle)
+- [ ] Acao esperada do cliente esta explicita?
+- [ ] Formato WhatsApp/Telegram respeitado? (paragrafos curtos, sem formalidade)
+- [ ] Framework usado foi explicado ao usuario? (ensino obrigatorio)
+- [ ] Gates de confirmacao foram respeitados? (bad news, escopo, cobranca)
+- [ ] Tom esta adequado ao cliente? (verde = direto, amarelo = cuidadoso, vermelho = minimo)
+
+## Confirmation Gates
+
+⛔ Estas situacoes exigem confirmacao ANTES de sugerir envio:
+
+| Situacao | Perguntar antes |
+|----------|----------------|
+| Noticia ruim | "Voce ja tem plano de resolucao? Qual?" |
+| Mudanca de escopo | "O impacto (prazo/custo) ta mapeado?" |
+| Cobranca nivel 3 (pausar) | "Tem respaldo pra pausar? Alinhou com Willy?" |
+| Reclamacao grave | "Quer responder por texto ou marcar call?" |
+| Primeira mensagem a cliente novo | "Qual o historico? Como esse cliente prefere se comunicar?" |
+
+## Quando NAO Usar
+
+- **Conversa dificil com equipe** (Hygor, Jonas, Willy) → use **tech-lead-pm** modulo 4
+- **Renegociar prazo com Willy** → use **tech-lead-pm**
+- **Prospeccao/SDR** → nao coberto por nenhuma skill
+- **Proposta comercial formal ou contrato** → documento, nao WhatsApp
+- **Criar PRD a partir de pedido do cliente** → use **product-discovery-prd** (mas pode usar esta skill pra responder o cliente dizendo "vou estruturar")
+- **Duvida sobre qual skill usar** → use **maestro**
+
+## Integration
+
+| Contexto | Skill | Fluxo |
+|----------|-------|-------|
+| Cliente manda ideia nova via WhatsApp | esta → **product-discovery-prd** | Responda "vou estruturar" (esta skill), depois faca discovery (PRD) |
+| Mensagem virou conversa dificil que precisa de call | esta → **tech-lead-pm** mod. 4 | Texto nao resolveu? Use roteiro de conversa dificil |
+| Cliente pede feature sem justificativa | **tech-lead-pm** mod. 7 → esta | Working Backwards (tech-lead) → comunique resultado (esta) |
+| Precisa decidir se e comunicacao ou gestao | **maestro** → esta ou tech-lead-pm | Maestro roteia |
+| Precisa planejar sequencia de comunicacoes | esta skill sozinha | Use --ensinar pra montar plano de comunicacao |
+| Reporte semanal pro cliente | esta skill | Use formato ACPR com update proativo |

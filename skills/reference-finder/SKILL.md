@@ -165,6 +165,9 @@ Pode ser acionada POR DENTRO de outras skills:
 
 Quando acionada por outra skill, seja breve — 1-2 referências inline, não o processo completo.
 
+### Tech References Catalog
+Load `references/tech-catalog.md` for pre-cataloged technical references (GEO, Remotion, Tavily, Exa, etc.) — skip web search when the topic is already in the catalog.
+
 ## When NOT to use
 
 - Resposta rápida e direta → não force referências em tudo

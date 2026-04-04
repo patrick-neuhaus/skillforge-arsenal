@@ -31,10 +31,6 @@ Consulte este arquivo no **Phase 2** quando for rotear o intent do usuário para
 - **Input:** Codebase ou aplicação
 - **Output:** Findings com severity e recomendações OWASP
 
-### repo-review ⚠️ DEPRECATED
-- **Status:** Substituído por trident. Mantido apenas como referência histórica.
-- **Ação:** Sempre redirecionar para trident.
-
 ---
 
 ## Implementation
@@ -169,6 +165,64 @@ Consulte este arquivo no **Phase 2** quando for rotear o intent do usuário para
 
 ---
 
+## Guard
+
+### architecture-guard
+- **O que faz:** Valida implementações contra regras de arquitetura (thin client/fat server, layer separation, behavior organization)
+- **Triggers PT-BR:** "tá seguindo a arquitetura?", "tem lógica no frontend?", "valida a estrutura", "antes de mergear valida"
+- **Triggers EN:** validate architecture, check architecture rules, layer violation, guard architecture
+- **Modes:** --scan, --init, --check, --rules
+- **Input:** Codebase + architecture.md (opcional)
+- **Output:** Violações com severity (P0-P2), file:line, evidence, fix suggestion
+- **Iron Law:** NEVER approve business logic in client components
+- **Quando NÃO usar:** Bugs funcionais (trident), segurança (security-audit), UX (ux-audit)
+
+### code-dedup-scanner
+- **O que faz:** Escaneia codebase pra encontrar componentes/funções reutilizáveis antes de criar código novo
+- **Triggers PT-BR:** "já tem isso no projeto?", "tem componente parecido?", "antes de criar verifica se existe"
+- **Triggers EN:** find duplicates, scan for reusables, check existing code, duplicate scan
+- **Modes:** --scan, --check, --report
+- **Input:** Descrição do que vai criar
+- **Output:** Matches com recomendação (REUSE/EXTEND/CREATE) + localização exata
+- **Iron Law:** NEVER report duplicate without exact location + usage context
+- **Quando NÃO usar:** Code review (trident), planejamento de componentes (component-architect)
+
+### context-guardian
+- **O que faz:** Monitora context window, alerta quando perto de 40-50%, gera handoff pra /clear
+- **Triggers PT-BR:** "quanto de contexto usei?", "tá pesado?", "hora do /clear?", "gera um handoff"
+- **Triggers EN:** check context, context window, handoff document, context budget
+- **Modes:** --check, --handoff, --budget
+- **Input:** Estado atual da conversa
+- **Output:** Status (🟢/🟡/🔴) + handoff document se necessário
+- **Iron Law:** NEVER let context exceed 50% without alerting
+- **Quando NÃO usar:** Conversa curta (<5 exchanges), fim da tarefa
+
+---
+
+## Optimization
+
+### geo-optimizer
+- **O que faz:** Otimiza descriptions de skills/pacotes pra GEO (descoberta por agentes)
+- **Triggers PT-BR:** "a description tá fraca", "ninguém acha minha skill", "otimizar pra agentes"
+- **Triggers EN:** optimize description, GEO, keyword bombing, improve triggering
+- **Modes:** --analyze, --optimize, --benchmark, --keywords
+- **Input:** Description existente ou nova skill
+- **Output:** Description otimizada com score /15 + before/after comparison
+- **Iron Law:** NEVER optimize without generating keywords from agent's perspective first
+- **Quando NÃO usar:** Prompts (prompt-engineer --geo), criar skill do zero (skill-builder)
+
+### cli-skill-wrapper
+- **O que faz:** Transforma API em CLI tool otimizado pra agentes + gera SKILL.md companion
+- **Triggers PT-BR:** "quero wrapar essa API", "o MCP tá pesado", "fazer um CLI pra isso"
+- **Triggers EN:** wrap API, create CLI tool, API to CLI, agent tooling
+- **Modes:** --analyze, --wrap, --compare
+- **Input:** API (REST, SDK, binary, MCP)
+- **Output:** Script CLI + SKILL.md
+- **Iron Law:** NEVER wrap without verifying CLI output is shorter than raw API JSON
+- **Quando NÃO usar:** API usada 1x, MCP funciona bem, criar skill sem API (skill-builder)
+
+---
+
 ## Infra
 
 ### vps-infra-audit
@@ -201,9 +255,19 @@ Consulte este arquivo no **Phase 2** quando for rotear o intent do usuário para
 - **O que faz:** Criar tarefas agendadas que rodam on demand ou automaticamente
 - **Triggers:** "agendar tarefa", "scheduled task", "rodar a cada X horas"
 
+### pattern-importer
+- **O que faz:** Automatiza técnica .tmp: clone repo referência → analisa padrão → extrai → limpa
+- **Triggers PT-BR:** "importa um padrão", "como isso é feito em outros projetos?", "clona pra eu ver"
+- **Triggers EN:** import pattern, clone reference, .tmp technique, extract pattern from repo
+- **Modes:** --import, --analyze, --clean, --list
+- **Input:** Padrão desejado + stack do projeto
+- **Output:** Pattern document com insights aplicáveis
+- **Iron Law:** NEVER leave .tmp directories behind
+- **Quando NÃO usar:** Referências teóricas (reference-finder), copiar código (clone normal)
+
 ---
 
 ## Maestro (esta skill)
 - **O que faz:** Orquestra e roteia entre todas as skills
 - **Triggers:** "qual skill usar?", "o que posso fazer?", "me ajuda a decidir"
-- **Modes:** --suggest, --chain, --catalog, --health
+- **Modes:** --suggest, --chain, --catalog, --health, --loose

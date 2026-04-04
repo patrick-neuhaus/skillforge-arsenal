@@ -146,3 +146,8 @@ Before creating components:
 
 - **UI Design System** — apply design tokens to component specs
 - **React Patterns** — follow server/client component boundaries
+- **Code Dedup Scanner** — run BEFORE creating components to find existing reusables. This skill plans what to CREATE; dedup-scanner finds what already EXISTS
+- **Trident** — `--design` mode validates component output (visual, a11y, performance)
+
+### Remotion Components
+Load `references/remotion-patterns.md` when building video/animation components with Remotion.

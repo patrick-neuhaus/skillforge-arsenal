@@ -1,331 +1,205 @@
 ---
 name: ux-audit
-description: "Skill para auditorias de UX/UI em aplicações web e mobile. Use esta skill SEMPRE que o usuário mencionar: UX, UI, usabilidade, audit, auditoria, revisão de interface, 'o app tá confuso', 'revisa a UX', 'olha a interface', 'feedback de UX', 'melhorar a experiência', 'o usuário tá perdido', 'tá difícil de usar', heurísticas, Nielsen, 'o fluxo tá ruim', ou qualquer variação que indique que um produto digital precisa de análise de experiência do usuário. Também use quando o usuário compartilhar screenshots de um app ou mencionar que vai 'jogar no Lovable' um PRD e quiser garantir qualidade de UX antes ou depois. Se houver dúvida entre UX e feature request, USE esta skill — problemas de UX disfarçados de feature request são comuns. NÃO use pra bugs funcionais (código quebrado, API falhando) — isso é debug, não UX. Se é revisão de código pra encontrar bugs, use repo-review."
+description: "Audita, revisa, analisa, avalia e melhora a experiencia do usuario em apps web e mobile. Identifica problemas de usabilidade, valida acessibilidade WCAG 2.2, verifica dark patterns, checa performance percebida e gera recomendacoes acionaveis com severidade. Use SEMPRE que o usuario mencionar: UX, UI, usabilidade, audit, auditoria, revisao de interface, 'o app ta confuso', 'revisa a UX', 'olha a interface', 'feedback de UX', 'melhorar a experiencia', 'o usuario ta perdido', 'ta dificil de usar', heuristicas, Nielsen, 'o fluxo ta ruim', fix UX issues, evaluate usability, assess accessibility, redesign flow, check user experience, review interface, improve UX, validate WCAG, analyze user flow. Nao confundir com ui-design-system (cria/padroniza componentes visuais) nem trident --design (review de codigo frontend). UX audit foca na EXPERIENCIA do usuario, nao no codigo nem no design system."
 ---
 
-# UX Audit v2 — Auditoria de Experiência do Usuário
+# UX Audit v3
 
-## Visão geral
+IRON LAW: NUNCA entregue um audit de UX sem percorrer o fluxo real do usuario passo a passo. Screenshots sozinhos escondem problemas de interacao — sempre caminhe pelo fluxo como se fosse o usuario.
 
-Esta skill conduz auditorias de UX/UI em aplicações web e mobile. Combina frameworks consagrados (Heurísticas de Nielsen, Laws of UX de Yablonski, Princípios de Norman) com padrões modernos (WCAG 2.2, Core Web Vitals, dark patterns, UX de IA) pra produzir análises estruturadas, priorizadas por severidade, com recomendações acionáveis.
+## Modos
 
-A skill funciona em três modos:
-1. **Audit completo** — Análise sistemática por todas as dimensões (revisão geral)
-2. **Audit focado** — Análise de fluxo específico, tela específica, ou problema específico
-3. **Cognitive Walkthrough** — Avaliação de learnability pra novos usuários (NOVO v2)
+| Modo | Quando usar | Escopo |
+|------|-------------|--------|
+| **Completo** | Revisao geral do produto | Todas as dimensoes (heuristicas, fluxos, WCAG, performance, dark patterns) |
+| **Focado** | Tela ou fluxo especifico | Heuristicas + Laws of UX + WCAG relevantes ao escopo |
+| **Cognitive Walkthrough** | Learnability pra novos usuarios | Perfil do usuario + tarefas + 4 perguntas por passo |
 
-### Novidades na v2
+## Workflow
 
-- **WCAG 2.2** — 9 novos critérios de acessibilidade (target size, dragging alternatives, accessible auth)
-- **Core Web Vitals** — INP substituiu FID em março 2024 como métrica de responsividade
-- **Dark patterns** — Legislação EU DSA, CA CPRA, FTC enforcement — patterns agora ilegais
-- **Cognitive Walkthrough** — Método complementar às heurísticas focado em learnability
-- **UX de IA** — Padrões emergentes pra features com LLM (streaming, confiança, human-in-the-loop)
-- **Design System Evaluation** — Consistência de componentes e tokens
-- **Métricas quantitativas** — SUS + NASA-TLX pra fundamentar recomendações
-- **Thumb zone** — Ergonomia mobile pra telas grandes (6.5"+)
+```
+UX Audit Progress:
 
-## Princípios
+- [ ] Fase 1: Contexto ⚠️ REQUIRED
+  - [ ] 1.1 Identificar usuario-alvo (persona, nivel tecnico, frequencia)
+  - [ ] 1.2 Identificar objetivo principal do produto
+  - [ ] 1.3 Identificar plataforma (web desktop, mobile, responsivo, nativo)
+  - [ ] 1.4 Verificar se tem onboarding e features de IA
+- [ ] Fase 2: Caminhar pelos fluxos ⚠️ REQUIRED
+  - [ ] 2.1 Listar 3-5 fluxos criticos
+  - [ ] 2.2 Percorrer cada fluxo passo a passo como usuario
+  - [ ] 2.3 Documentar friccoes, bloqueios e acertos
+- [ ] Fase 3: Varredura heuristica
+  - [ ] 3.1 Aplicar 10 Heuristicas de Nielsen → Load references/ux-ui-foundations.md
+  - [ ] 3.2 Diagnosticar causa raiz com Laws of UX
+  - [ ] 3.3 Classificar severidade (0-4 Nielsen)
+- [ ] Fase 4: Acessibilidade
+  - [ ] 4.1 Verificar WCAG 2.2 AA → Load references/wcag-checklist.md
+  - [ ] 4.2 Checar target size, contraste, labels, teclado
+- [ ] Fase 5: Verificacoes complementares
+  - [ ] 5.1 Dark patterns → Load references/dark-patterns-check.md
+  - [ ] 5.2 Performance percebida (Core Web Vitals)
+  - [ ] 5.3 UX de IA (se aplicavel)
+  - [ ] 5.4 Mobile ergonomics (se aplicavel)
+- [ ] Fase 6: Sintese ⛔ BLOCKING
+  - [ ] 6.1 Compilar findings por severidade → Load references/scoring-rubrics.md
+  - [ ] 6.2 Listar o que esta funcionando bem
+  - [ ] ⛔ GATE: Revisar — todos os findings tem evidencia + principio + recomendacao?
+  - [ ] ⛔ GATE: Cada fluxo critico foi percorrido? Nenhum foi pulado?
+- [ ] Fase 7: Apresentar ⛔ BLOCKING
+  - [ ] 7.1 Formatar output → Load references/audit-templates.md
+  - [ ] ⛔ GATE: Apresentar ao usuario — NAO implementar sem confirmacao
+```
 
-1. **Imparcialidade total.** Ignore quem construiu. Foque exclusivamente na experiência de quem vai usar.
-2. **Evidência > opinião.** Toda crítica deve citar o princípio/heurística violado. "Tá ruim" não serve — "viola a Heurística 1 de Nielsen (visibilidade do status) porque o botão não dá feedback visual ao ser clicado" serve.
-3. **Severidade governa prioridade.** Use a Escala de Severidade de Nielsen (0-4) pra classificar cada finding. Sem isso, tudo parece igualmente urgente.
-4. **Se tá bom, diga que tá bom.** Não force crítica onde não existe. Reconhecer acertos constrói credibilidade e ajuda a equipe a preservar o que funciona.
-5. **Pense no usuário real.** Sempre contextualize: quem é o usuário, em que situação usa, qual o objetivo dele. Um dashboard pra analista e um app de delivery têm regras diferentes.
-6. **Acionável > teórico.** Cada finding deve ter uma recomendação concreta que pode virar tarefa no ClickUp.
-7. **Acessibilidade não é opcional.** WCAG 2.2 AA é o baseline. Não é "nice to have" — é requisito legal em muitas jurisdições.
+## Principios
 
-## Referências (leia antes de auditar)
+1. **Imparcialidade total.** Ignore quem construiu. Foque na experiencia de quem usa.
+2. **Evidencia > opiniao.** Toda critica cita principio/heuristica violado. "Ta ruim" nao serve.
+3. **Severidade governa prioridade.** Escala de Nielsen (0-4) em todo finding.
+4. **Se ta bom, diga que ta bom.** Nao force critica onde nao existe.
+5. **Pense no usuario real.** Dashboard pra analista e app de delivery tem regras diferentes.
+6. **Acionavel > teorico.** Cada finding vira tarefa no ClickUp.
+7. **Acessibilidade nao e opcional.** WCAG 2.2 AA e baseline legal.
 
-Antes de iniciar qualquer auditoria, leia o reference file:
-- `references/ux-ui-foundations.md` — Contém: 10 Heurísticas de Nielsen, 7 Princípios de Norman, 21 Laws of UX (Yablonski), HEART Framework (Google), Princípios de Krug, Escala de Severidade, WCAG 2.2 critérios, Core Web Vitals, dark patterns, SUS/NASA-TLX
+## Fase 1: Contexto
 
-## Fluxo de trabalho — Audit Completo
+Antes de analisar qualquer coisa, levante:
 
-### Passo 0: Contexto
-
-Antes de analisar qualquer coisa, entenda:
-1. **Quem é o usuário?** (persona, nível técnico, frequência de uso)
-2. **Qual o objetivo principal do produto?** (o que o usuário vem fazer aqui?)
+1. **Quem e o usuario?** (persona, nivel tecnico, frequencia de uso)
+2. **Qual o objetivo principal do produto?**
 3. **Qual a plataforma?** (web desktop, web mobile, app nativo, responsivo)
 4. **Existe onboarding?** (primeiro uso vs uso recorrente)
-5. **Tem features de IA?** (chatbot, geração de conteúdo, agentes — ativa avaliação de UX de IA)
+5. **Tem features de IA?** (chatbot, geracao de conteudo, agentes)
 
-Se o usuário não fornecer esse contexto, pergunte. Auditar sem saber quem usa é como diagnosticar sem saber os sintomas.
+Se o usuario nao fornecer, pergunte. Auditar sem saber quem usa e como diagnosticar sem sintomas.
 
-### Passo 1: Varredura heurística (10 Heurísticas de Nielsen)
-
-Examine a aplicação contra cada uma das 10 heurísticas. Pra cada heurística:
-- **Passa?** → Cite o que está funcionando bem (breve)
-- **Viola?** → Descreva a violação com evidência específica (cite o elemento real do app) + severidade (0-4)
-
-Formato por heurística:
-```
-### H1: Visibilidade do Status do Sistema
-**Veredicto:** ✅ Passa | ⚠️ Parcial | ❌ Viola
-
-**Evidências:**
-- [Elemento X] faz/não faz [comportamento] — Severidade: [0-4]
-- [Elemento Y] faz/não faz [comportamento] — Severidade: [0-4]
-
-**Recomendação:** [Ação concreta]
-```
-
-### Passo 2: Análise de fluxos críticos
+## Fase 2: Caminhar pelos fluxos
 
 ANTES de listar findings, percorra os fluxos de ponta a ponta:
 
-1. **Liste os 3-5 fluxos mais importantes** do produto (ex: "criar conta → configurar → exportar")
-2. **Percorra cada fluxo** como se fosse o usuário, passo a passo
+1. **Liste 3-5 fluxos criticos** (ex: "criar conta → configurar → exportar")
+2. **Percorra cada fluxo** como se fosse o usuario, passo a passo
 3. **Pra cada fluxo, responda:**
-   - É completável sem confusão?
+   - E completavel sem confusao?
    - Quantos passos tem? Pode ser reduzido?
    - Tem feedback em cada etapa?
-   - Tem saída de emergência (voltar, cancelar, desfazer)?
-   - O que acontece quando dá erro?
-4. **Dê um veredicto por fluxo:** ✅ Fluido | ⚠️ Tem fricção | ❌ Quebrado
+   - Tem saida de emergencia (voltar, cancelar, desfazer)?
+   - O que acontece quando da erro?
+4. **Veredicto por fluxo:** ✅ Fluido | ⚠️ Tem friccao | ❌ Quebrado
 
-Formato:
-```
-### Fluxo: [nome]
-**Passos:** [passo 1] → [passo 2] → [passo 3] → ...
-**Veredicto:** ✅ | ⚠️ | ❌
-**Observação:** [2-3 linhas]
-```
+## Fase 3: Varredura heuristica
 
-### Passo 3: Diagnóstico com Laws of UX
+Load `references/ux-ui-foundations.md` — contem as 10 Heuristicas de Nielsen, 7 Principios de Norman, e 21 Laws of UX.
 
-As Laws of UX são FERRAMENTAS de diagnóstico — use-as pra explicar a causa raiz dos problemas encontrados. Não crie seção separada. Cite a Law diretamente no finding quando ela explicar o problema melhor que a heurística.
+Para cada heuristica: **Passa?** → cite o acerto. **Viola?** → descreva com evidencia + severidade (0-4).
 
-**Laws mais úteis em auditorias:**
-- **Jakob's Law** — O app segue padrões que o usuário já conhece? Se não, qual o custo cognitivo?
-- **Hick's Law** — Alguma tela apresenta opções demais? Contar os itens ajuda
-- **Fitts's Law** — Alvos de clique são grandes e próximos de onde o cursor já está?
-- **Miller's Law** — Listas/formulários com mais de 7 itens sem agrupamento?
-- **Gestalt** (Proximity, Common Region, Similarity) — Espaçamento visual reflete relação lógica?
-- **Aesthetic-Usability Effect** — Visual profissional transmite confiança?
-- **Tesler's Law** — Complexidade empurrada pro usuário que poderia estar no backend?
-- **Peak-End Rule** — Em fluxos longos: como o usuário se sente no pico e no final?
+Use as Laws of UX como ferramenta de diagnostico da causa raiz. Nao crie secao separada — cite a Law diretamente no finding quando explicar melhor que a heuristica.
 
-### Passo 4: Acessibilidade (WCAG 2.2)
+## Fase 4: Acessibilidade (WCAG 2.2)
 
-Verifique contra os critérios de acessibilidade mais impactantes:
+Load `references/wcag-checklist.md` — contem criterios WCAG 2.2 novos e classicos que mais falham.
 
-**Critérios novos do WCAG 2.2 (verificar explicitamente):**
-- **2.5.7 Dragging Movements (AA)** — Toda funcionalidade de drag tem alternativa sem arrastar? (ex: botões de mover, dropdowns)
-- **2.5.8 Target Size Minimum (AA)** — Alvos interativos têm pelo menos 24×24 CSS pixels?
-- **3.2.6 Consistent Help (A)** — Mecanismos de ajuda aparecem na mesma posição em todas as páginas?
-- **3.3.7 Redundant Entry (A)** — Informação já inserida é auto-preenchida? Usuário não redigita dados no mesmo processo?
-- **3.3.8 Accessible Authentication (AA)** — Login não requer teste cognitivo (CAPTCHA sem alternativa acessível)?
+Foco minimo: target size (2.5.8), contraste (1.4.3), labels (1.3.1), teclado (2.1.1), dragging alternatives (2.5.7).
 
-**Critérios clássicos que mais falham:**
-- Contraste de cor (1.4.3 — mínimo 4.5:1 pra texto normal)
-- Labels em inputs (1.3.1 — todo campo tem label associado?)
-- Navegação por teclado (2.1.1 — tudo funciona sem mouse?)
-- Alt text em imagens (1.1.1 — imagens informativas têm alt?)
+## Fase 5: Verificacoes complementares
 
-**Formato:** Use severidade de Nielsen pra classificar, mas adicione o critério WCAG violado:
-```
-**Problema:** Botão de fechar modal tem 16x16px
-**WCAG:** 2.5.8 Target Size (Minimum) — AA
-**Severidade:** 3
-**Recomendação:** Aumentar pra mínimo 24x24px (ideal 44x44px pra touch)
-```
+Load `references/dark-patterns-check.md` — contem categorias de dark patterns, checklist de UX de IA, e ergonomia mobile.
 
-### Passo 5: Performance percebida (Core Web Vitals)
+### Performance percebida
+Nao precisa medir com ferramentas — percepcao subjetiva e valida:
+- Pagina principal demora pra carregar → possivel LCP alto
+- Clique sem feedback imediato → possivel INP alto
+- Elementos pulam durante carregamento → CLS
 
-Se tiver acesso ao app rodando, avalie a percepção de performance:
+### UX de IA (se aplicavel)
+Loading states, indicadores de confianca, explainability, error handling, human-in-the-loop, feedback loop.
 
-**Core Web Vitals atuais (desde março 2024):**
-- **LCP (Largest Contentful Paint)** — Bom: ≤ 2.5s. A tela principal carrega rápido?
-- **INP (Interaction to Next Paint)** — Bom: ≤ 200ms. Cliques/toques respondem rápido? (substituiu FID)
-- **CLS (Cumulative Layout Shift)** — Bom: ≤ 0.1. Elementos pulam na tela durante carregamento?
+### Mobile ergonomics (se aplicavel)
+CTAs na thumb zone, bottom nav vs top menu, targets de toque 44x44px.
 
-Não precisa medir com ferramentas — percepção subjetiva é válida em UX audit:
-- "A página principal demora visivelmente pra carregar o conteúdo principal" = possível LCP alto
-- "Ao clicar num botão, o feedback demora" = possível INP alto
-- "Ao carregar, o botão pula de posição" = CLS
+## Fase 6-7: Sintese e apresentacao
 
-### Passo 6: Dark patterns check
+Load `references/audit-templates.md` — contem templates de output pra audit completo, focado e cognitive walkthrough.
 
-Verifique se o app usa padrões que agora são ilegais ou anti-éticos:
+Load `references/scoring-rubrics.md` — contem escala de severidade, SUS, NASA-TLX, HEART framework.
 
-**Categorias a verificar:**
-- **Nagging** — Pop-ups persistentes que interrompem a tarefa principal (ex: "assine agora" que aparece toda vez)
-- **Obstruction** — Cancelamento mais difícil que assinatura? Esconder opção de deletar conta?
-- **Sneaking** — Custos ocultos revelados só no checkout? Itens adicionados ao carrinho automaticamente?
-- **Interface interference** — Botão de aceitar em destaque, recusar escondido? Pré-seleções que beneficiam o negócio?
-- **Forced action** — Obrigar criação de conta pra ver conteúdo que poderia ser público?
+### Output final
 
-**Contexto legal:** EU Digital Services Act, California CPRA, e FTC enforcement tornam dark patterns explicitamente ilegais. Mesmo que o app não esteja nessas jurisdições, é bad practice.
-
-### Passo 7: UX de IA (se aplicável)
-
-Se o app tem features de IA/LLM, avalie:
-
-- **Loading states:** Respostas de LLM mostram streaming progressivo ou tela em branco? Spinner sem estimativa de tempo?
-- **Confiança:** O usuário sabe quando a IA tem certeza vs quando está "chutando"? Tem indicadores de confiança?
-- **Explainability:** O usuário entende POR QUE a IA sugeriu algo? Tem fontes/referências?
-- **Error handling:** O que acontece quando a IA falha? Mensagem genérica ou orientação clara?
-- **Human-in-the-loop:** Ações destrutivas passam por confirmação humana? Tem override fácil?
-- **Feedback loop:** Tem botão de like/dislike ou feedback pra melhorar respostas?
-- **Conversation UX:** Se é chat, mantém contexto entre turnos? Tem histórico acessível?
-
-### Passo 8: Mobile ergonomics (se aplicável)
-
-Se o app é responsivo ou mobile-first, avalie thumb zone:
-
-- **CTAs primários** estão na zona confortável do polegar (centro-baixo da tela)?
-- **Navegação** é por bottom nav (acessível) ou top menu (requer esticar)?
-- **Modais e ações destrutivas** não estão em zonas fáceis de tocar acidentalmente?
-- **Targets de toque** têm pelo menos 44x44px? (WCAG 2.5.8 pede 24px mínimo, mas 44px é melhor pra touch)
-- Em telas grandes (6.5"+), ações no topo-esquerdo são difíceis de alcançar com uma mão
-
-**Referência:** 75% das interações mobile são com o polegar. 49% dos usuários usam o celular com uma mão só (Steven Hoober). Em telas modernas de 6.7"+, a zona segura é menor do que se imagina.
-
-### Passo 9: Síntese e priorização
-
-Compile todos os findings e organize por severidade:
-
-```
+```markdown
 ## Resumo Executivo
+**Heuristicas com falha:** [H1, H3, H5...]
+**WCAG 2.2 violacoes:** [criterios]
+**Findings totais:** [N] — Sev4: [N] | Sev3: [N] | Sev2: [N] | Sev1: [N]
 
-**Heurísticas com falha:** [liste quais falharam, ex: H1, H3, H5]
-**WCAG 2.2 violações:** [critérios violados]
-**Findings totais:** [N]
-- Severidade 4 (catastrófico): [N]
-- Severidade 3 (maior): [N]
-- Severidade 2 (menor): [N]
-- Severidade 1 (cosmético): [N]
-
-## Análise de Fluxos
-
-### Fluxo 1: [nome]
-**Passos:** [passo 1] → [passo 2] → [passo 3] → ...
-**Veredicto:** ✅ Fluido | ⚠️ Tem fricção | ❌ Quebrado
-**Observação:** [2-3 linhas]
-
-[repetir pra cada fluxo]
+## Analise de Fluxos
+[Fluxo → Passos → Veredicto → Observacao]
 
 ## Findings Priorizados
-
-### 🔴 Severidade 4 — Corrigir imediatamente
-[Lista de findings com evidência + princípio + recomendação]
-
-### 🟠 Severidade 3 — Corrigir antes do próximo release
-[Lista de findings com evidência + princípio + recomendação]
-
-### 🟡 Severidade 2 — Prioridade baixa
-[Lista de findings com evidência + princípio + recomendação]
-
-### 🔵 Severidade 1 — Cosmético
-[Lista de findings com evidência + princípio + recomendação]
+### Severidade 4 — Corrigir imediatamente
+### Severidade 3 — Corrigir antes do proximo release
+### Severidade 2 — Prioridade baixa
+### Severidade 1 — Cosmetico
 
 ## Acessibilidade (WCAG 2.2)
-[Resumo de conformidade + violações específicas]
-
-## O que está funcionando bem
-[Lista do que não deve ser mexido]
-
+## O que esta funcionando bem
 ## Oportunidade criativa
-[Uma ideia fora do óbvio que transformaria a experiência]
 ```
 
-### Passo 10: Gerar tarefas (se solicitado)
+⛔ **Confirmation Gate:** NUNCA implemente correcoes sem escolha explicita do usuario.
 
-Se o usuário pedir, transforme os findings em tarefas pro ClickUp:
-- 1 tarefa por finding
-- Título: [Severidade] [Área] - Descrição curta
-- Descrição: Problema → Heurística/WCAG violado → Recomendação
-- Tag de severidade pra priorização
+## Anti-Patterns
 
-## Fluxo de trabalho — Audit Focado
+- **Auditar sem contexto** — nao saber quem e o usuario torna todo finding questionavel
+- **Pular fluxos e ir direto pras heuristicas** — viola a Iron Law. Fluxos revelam problemas que analise estatica nao ve
+- **Forcar problemas onde nao existem** — infla o report e mata credibilidade
+- **Findings sem fundamentacao** — "ta ruim" sem citar principio/heuristica e opiniao, nao audit
+- **Ignorar acessibilidade** — WCAG 2.2 AA e requisito legal, nao sugestao
+- **Misturar UI com UX** — "o botao e feio" (UI) ≠ "o botao nao comunica que e clicavel" (UX)
+- **Ignorar o positivo** — report so com criticas perde a confianca do time
+- **Generalizar** — "a navegacao poderia ser melhor" e inutil. Cite o elemento especifico
+- **Implementar sem confirmacao** — viola o gate de confirmacao
 
-Quando o usuário traz uma tela ou fluxo específico:
+## Pre-delivery Checklist
 
-1. **Identifique o objetivo da tela/fluxo**
-2. **Aplique as heurísticas relevantes** (não precisa passar pelas 10 se é um problema localizado)
-3. **Aplique as Laws of UX relevantes**
-4. **Verifique WCAG 2.2** nos elementos da tela (target size, contraste, labels)
-5. **Dê feedback estruturado:** Problema → Princípio violado → Severidade → Recomendação
+Antes de apresentar o audit ao usuario, confirme:
 
-Formato compacto:
-```
-| # | Problema | Princípio | Severidade | Recomendação |
-|---|---|---|---|---|
-| 1 | [descrição] | [heurística/law/WCAG] | [0-4] | [ação] |
-```
+- [ ] Todo finding tem: evidencia especifica + principio violado + severidade + recomendacao acionavel?
+- [ ] Todos os fluxos criticos foram percorridos passo a passo (nao so olhados)?
+- [ ] A secao "o que esta funcionando bem" existe e nao esta vazia?
+- [ ] Findings estao organizados por severidade (4 → 1)?
+- [ ] Acessibilidade WCAG 2.2 AA foi verificada explicitamente?
+- [ ] Recomendacoes sao acionaveis (podem virar tarefa no ClickUp)?
+- [ ] Contexto do usuario foi considerado (nao aplicou regras de SaaS publico num app interno)?
 
-## Fluxo de trabalho — Cognitive Walkthrough (NOVO v2)
+## Quando NAO usar esta skill
 
-Método focado em learnability pra novos usuários. Complementa a heuristic evaluation com foco em "o novo usuário consegue completar a tarefa sem ajuda?".
+| Situacao | Use em vez disso |
+|----------|-----------------|
+| Bug funcional (codigo quebrado, API falhando) | **trident** (code review) |
+| Revisar codigo frontend por qualidade | **trident --design** |
+| Criar/padronizar design system ou componentes | **ui-design-system** |
+| Criar componentes React reutilizaveis | **component-architect** |
+| Definir escopo de produto novo | **product-discovery-prd** |
+| Revisar seguranca da aplicacao | **security-audit** |
+| Problema e so visual/estetico sem impacto em usabilidade | **ui-design-system** |
 
-### Quando usar
-- Apps walk-up-and-use (kiosks, onboarding, ferramentas públicas)
-- Avaliação de learnability pra usuários de primeiro uso
-- Quando o público-alvo é não-técnico
+## Integracao
 
-### Método (baseado em Wharton, Rieman, Lewis, Polson — 1994)
+- **product-discovery-prd** — Apos gerar PRD, oferecer: "Quer um audit de UX quando as primeiras telas ficarem prontas?"
+- **ui-design-system** — Se o audit encontrar inconsistencias visuais recorrentes, sugerir criacao/atualizacao do design system.
+- **component-architect** — Se findings apontam componentes com usabilidade ruim, sugerir refatoracao do componente.
+- **trident --design** — Trident revisa o CODIGO frontend; UX audit revisa a EXPERIENCIA. Complementares. Rodar UX audit primeiro, depois trident pra implementar correcoes.
+- **sdd** — Se o audit gerar tasks de correcao, usar SDD pra implementar com spec → code → review.
+- **maestro** — Maestro pode orquestrar: discovery → build → UX audit → fix cycle. Parte de composition chains.
+- **security-audit** — Se encontrar dark patterns ou fluxos que induzem compartilhamento de dados desnecessarios, combinar com security audit.
+- **lovable-knowledge** — Se o audit encontrar padroes recorrentes (ex: botoes pequenos), sugerir regra no Project Knowledge.
 
-1. **Defina o perfil do usuário** (experiência, motivação, contexto)
-2. **Defina as tarefas** (3-5 tarefas mais importantes)
-3. **Pra cada passo de cada tarefa, pergunte:**
-   - O usuário vai TENTAR fazer a ação correta? (sabe o que quer fazer?)
-   - O usuário vai NOTAR que a ação correta está disponível? (é visível?)
-   - O usuário vai ASSOCIAR a ação com o efeito desejado? (o label faz sentido?)
-   - Após executar, o usuário vai PERCEBER que progrediu? (tem feedback?)
-4. **Documente falhas** como findings com severidade
+## Referencias
 
-### Formato
-```
-### Tarefa: [nome]
-**Usuário:** [perfil]
-
-| Passo | Ação esperada | Tentativa? | Visível? | Associação? | Feedback? | Problema |
-|-------|---------------|------------|----------|-------------|-----------|----------|
-| 1 | [ação] | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ | [se houver] |
-| 2 | [ação] | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ | [se houver] |
-```
-
-## Métricas quantitativas (pra fundamentar recomendações)
-
-### SUS (System Usability Scale)
-Score de 0-100 (não é porcentagem). Média global: 68.
-- 90-100: Excelente
-- 80-89: Muito bom
-- 70-79: Bom
-- 60-69: Aceitável
-- < 50: Inaceitável
-
-Use como referência quando o usuário tiver dados de SUS. Se não tiver, sugira aplicar (10 perguntas, 5 minutos por usuário).
-
-### NASA-TLX (Task Load Index)
-Mede carga cognitiva em 6 dimensões: mental, física, temporal, performance, esforço, frustração.
-Use quando a tarefa é complexa e a pergunta é "o usuário consegue mas fica exausto?". Complementa SUS: SUS mede usabilidade percebida, NASA-TLX mede custo cognitivo.
-
-## Escala de Severidade — Referência Rápida
-
-| Nível | Nome | Significado | Ação |
-|---|---|---|---|
-| 0 | Não é problema | Sem impacto na usabilidade | Nenhuma |
-| 1 | Cosmético | Usuário nota mas não afeta tarefa | Corrigir quando sobrar tempo |
-| 2 | Menor | Causa leve confusão ou delay | Prioridade baixa |
-| 3 | Maior | Impede ou dificulta significativamente uma tarefa | Corrigir antes do próximo release |
-| 4 | Catastrófico | Bloqueia o usuário de completar uma tarefa essencial | Corrigir imediatamente |
-
-## O que NÃO fazer
-
-1. **Não generalize.** "A navegação poderia ser melhor" é inútil. "O menu principal tem 12 itens no nível 1, violando Hick's Law — reduzir pra 5-7 agrupando por categoria" é útil.
-2. **Não force problemas.** Se a interface é boa, diga que é boa. Credibilidade > volume de feedback.
-3. **Não ignore o positivo.** Sempre inclua uma seção de "o que tá funcionando bem".
-4. **Não dê feedback sem fundamentação.** Toda crítica precisa citar pelo menos 1 princípio/heurística/law/WCAG.
-5. **Não ignore o contexto.** Um app interno pra 5 pessoas tem requisitos diferentes de um SaaS público.
-6. **Não misture UI com UX.** "O botão é feio" (UI) ≠ "O botão não comunica que é clicável" (UX). Ambos importam, mas são análises diferentes.
-7. **Não ignore acessibilidade.** WCAG 2.2 AA não é sugestão — é requisito. Target size de 12px em mobile é severidade 3, não "detalhe".
-
-## Integração com outras skills
-
-- **Product Discovery & PRD:** Após gerar PRD, ofereça: "Quer que eu faça um audit de UX quando as primeiras telas ficarem prontas?"
-- **Lovable Knowledge:** Se o audit encontrar padrões recorrentes, sugira adicionar regras ao Project Knowledge: "O Lovable tá gerando botões pequenos demais consistentemente — vamos adicionar uma regra no Knowledge pra target mínimo de 44px"
-- **Tech Lead & PM:** Findings do audit podem virar sprint items. Sugira: "Quer que eu transforme esses findings em tarefas pro ClickUp?"
-- **Security Audit:** Se encontrar dark patterns ou fluxos que induzem o usuário a compartilhar dados desnecessários, combine com security audit pra avaliar implicações de privacidade.
+| Arquivo | Conteudo |
+|---------|----------|
+| `references/ux-ui-foundations.md` | Heuristicas de Nielsen, Principios de Norman, Laws of UX |
+| `references/wcag-checklist.md` | Criterios WCAG 2.2 novos + classicos que mais falham |
+| `references/dark-patterns-check.md` | Dark patterns, UX de IA, mobile ergonomics, thumb zone |
+| `references/audit-templates.md` | Templates de output: audit completo, focado, cognitive walkthrough |
+| `references/scoring-rubrics.md` | Escala de severidade, SUS, NASA-TLX, HEART framework |

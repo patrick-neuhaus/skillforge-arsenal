@@ -16,6 +16,8 @@ IRON LAW: NEVER add knowledge without scoring it — unscored knowledge becomes 
 | `--prune` | Archive stale entries (draft + low importance + >21d) | - |
 | `--status` | Show tree overview with health metrics | default |
 | `--connect` | Find cross-domain connections for an entry | - |
+| `--architecture` | Generate architecture.md from project analysis | - |
+| `--skills` | Map available skills for progressive disclosure block | - |
 
 ## Workflow
 
@@ -32,6 +34,8 @@ Context Tree Progress:
   - [ ] 2.3 [prune] Find candidates + archive
   - [ ] 2.4 [status] Scan tree + report health
   - [ ] 2.5 [connect] Find cross-domain links
+  - [ ] 2.6 [architecture] Analyze project → generate architecture.md (load references/architecture-template.md)
+  - [ ] 2.7 [skills] Scan skills/ → generate progressive disclosure block for system prompt
 - [ ] Phase 3: Update Indexes
   - [ ] 3.1 Update domain _index.md
   - [ ] 3.2 Update root _manifest.md
@@ -150,6 +154,8 @@ Report:
 - **Duplicate entries** — search before adding. Update existing entries instead.
 - **Over-archiving** — validated/core entries never decay. Only draft + low importance.
 - **Storing code patterns** — code belongs in the codebase, not the tree. Store decisions and rationale.
+- **MCP over CLI** — if a tool is available via CLI, prefer CLI over MCP to reduce context bloat. Load `references/cli-vs-mcp-guide.md` when detecting heavy MCP usage.
+- **No brand asset mapping** — when project has a design system, map where assets live (logos, palettes, fonts) in the tree for skills like ui-design-system to find.
 
 ## Pre-Delivery Checklist
 
@@ -175,3 +181,5 @@ Before adding knowledge:
 - **Skill Builder** — skill domain knowledge feeds into tree. When a new domain is explored during skill creation, add key insights to tree.
 - **SDD** (Phase 1 Research) — query tree FIRST before searching from scratch. Existing knowledge in the tree avoids redundant web searches and provides instant context.
 - **Maestro** — maestro can suggest context-tree as part of knowledge chains (e.g., reference-finder → context-tree).
+- **Architecture Guard** — `--architecture` generates the architecture.md that architecture-guard validates against.
+- **Context Guardian** — context-tree maps what consumes context; context-guardian monitors it at runtime.

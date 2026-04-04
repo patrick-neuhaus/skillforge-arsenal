@@ -15,6 +15,8 @@ Three-pronged pipeline: **Scan → Verify → Judge**. Multi-lens scanning (SOLI
 |--------|-------------|---------|
 | `--mode <m>` | Review mode: unstaged, staged, all-local, pr, range, dir | auto-detect |
 | `--target <t>` | PR number, commit range, or directory path | current changes |
+| `--design` | Design review: visual consistency + accessibility + performance (3 layers) | false |
+| `--skill` | Review a skill as product: GEO, structure, distribution readiness | false |
 
 ## Workflow
 
@@ -167,6 +169,9 @@ All agents use `bug_id` keyed schema. Each stage appends:
 - **React Patterns** — run react-patterns `--audit` for React-specific issues BEFORE trident for domain-level bugs.
 - **Security Audit** — if trident finds security-related findings, suggest security-audit for deep OWASP analysis.
 - **Maestro** — maestro routes code review requests to trident. Part of multiple composition chains.
+- **Architecture Guard** — trident finds bugs, architecture-guard finds structural violations. Run both for complete review.
+- **GEO Optimizer** — `--skill` mode uses GEO scoring to evaluate description quality. Load `references/skill-product-review.md`.
+- **UI Design System** — `--design` mode validates frontend output in 3 layers. Load `references/design-review-checklist.md`.
 
 ## Prompt Templates & References
 

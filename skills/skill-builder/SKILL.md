@@ -94,6 +94,9 @@ Load `references/agentic-patterns.md` to choose the right pattern.
 
 Ask: Is this process linear? Does it need adversarial verification? Independent parallel analyses? Self-evaluation? Default to Linear — only add complexity when Linear fails.
 
+Load `references/cli-first-template.md` if the skill wraps a CLI tool or API.
+Load `references/design-skill-template.md` if the skill involves visual output or branding.
+
 Key constraints:
 - SKILL.md must stay under 250 lines — move everything else to `references/`
 - References organized by domain, one level deep, each with "when to load" pointer
@@ -102,6 +105,7 @@ Key constraints:
 ## Step 4: Write Description ⚠️ REQUIRED
 
 Load `references/description-guide.md` for the keyword bombing technique (GEO).
+Load `references/geo-module.md` for the full GEO process (keyword generation via Claude, Find Skills analysis).
 
 Four dimensions of a great description:
 1. **Core capability** — first sentence, what it does
@@ -137,6 +141,7 @@ skill-name/
 5. **Anti-patterns** — "What would Claude's lazy default look like?" Then forbid it explicitly
 6. **Pre-delivery checklist** — specific, verifiable checks (not "ensure quality")
 7. **Progressive loading** — "Load references/X.md" at the step where needed, not upfront
+8. **Roteiro de perguntas** — structured questions the skill asks the user when context is missing. Mandatory for non-trivial skills. Questions > instructions for gathering context
 
 ### Writing rules (summary — details in writing-guide.md)
 

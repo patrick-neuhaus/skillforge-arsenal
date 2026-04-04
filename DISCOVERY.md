@@ -1,6 +1,6 @@
 # Discovery: Skillforge Arsenal
 
-**Status:** Fases 0-7 completas + Quality Audit + Maestro — ecossistema operacional
+**Status:** Fases 0-7 + Quality Audit + Maestro + Arsenal v2 (6 novas skills, 10 atualizadas) — 30 skills operacionais
 **Última atualização:** 2026-04-03
 **Plano detalhado:** `.claude/plans/swift-popping-zephyr.md`
 **Catálogo de padrões:** `research/patterns-catalog.md`
@@ -19,29 +19,34 @@ Transformar o `skillforge-arsenal` de uma coleção de 18 skills pessoais em um 
 
 ```
 skillforge-arsenal/
-├── skills/                    # 25 skills
+├── skills/                    # 30 skills
+│   ├── architecture-guard/    # NOVO v2: lint de arquitetura, thin client
+│   ├── cli-skill-wrapper/     # NOVO v2: API → CLI → Skill
+│   ├── code-dedup-scanner/    # NOVO v2: encontrar reutilizáveis
 │   ├── comunicacao-clientes/
-│   ├── component-architect/   # NOVO Fase 5: atomic design, shadcn, composição
-│   ├── context-tree/          # NOVO Fase 7: knowledge management com scoring
+│   ├── component-architect/   # Fase 5 + Remotion patterns
+│   ├── context-guardian/      # NOVO v2: monitor context window + handoff
+│   ├── context-tree/          # Fase 7 + --architecture + CLI vs MCP
 │   ├── docx/
+│   ├── geo-optimizer/         # NOVO v2: GEO pra descriptions
 │   ├── lovable-knowledge/
+│   ├── maestro/               # Orquestrador — 30 skills, 15+ chains
 │   ├── n8n-architect/
+│   ├── pattern-importer/      # NOVO v2: técnica .tmp automatizada
 │   ├── pdf/
 │   ├── pptx/
 │   ├── product-discovery-prd/
-│   ├── prompt-engineer/       # v2 (Fase 2)
-│   ├── react-patterns/        # NOVO Fase 5: App Router, SSR, Thin Client
-│   ├── reference-finder/      # v3 (Fase 3)
-│   ├── repo-review/           # DEPRECATED → use trident
+│   ├── prompt-engineer/       # v2 + modos --geo e --skill-prompt
+│   ├── react-patterns/        # Fase 5 + Remotion + Motion
+│   ├── reference-finder/      # v3 + tech-catalog
 │   ├── schedule/
-│   ├── sdd/                   # NOVO Fase 6: Spec Driven Development pipeline
+│   ├── sdd/                   # Fase 6 + dedup + .tmp + spec-structures
 │   ├── security-audit/
-│   ├── skill-builder/         # v2 (Fase 1)
+│   ├── skill-builder/         # v2 + GEO module + CLI-first + design template
 │   ├── supabase-db-architect/
 │   ├── tech-lead-pm/
-│   ├── maestro/               # NOVO: Skill orquestradora — routing + chains
-│   ├── trident/               # v2 (Fase 4): Scan→Verify→Judge
-│   ├── ui-design-system/      # NOVO Fase 5: design tokens, design.json
+│   ├── trident/               # v2 + --design + --skill modes
+│   ├── ui-design-system/      # Fase 5 + --identity + Remotion tokens
 │   ├── ux-audit/
 │   ├── vps-infra-audit/
 │   └── xlsx/
@@ -49,10 +54,12 @@ skillforge-arsenal/
 │   ├── sanyuan-skills/        # Skill Forge + code-review-expert + sigma
 │   └── humanlayer-commands/   # 29 commands anti-vibecoding
 ├── research/                  # Análises e documentação
-│   ├── video-transcripts/     # 5 análises completas dos vídeos
-│   ├── pluma-prompts/         # design.json + brief (base pra skill de design)
+│   ├── README.md              # Guia completo: fontes, processo, mapeamento fonte→skill
+│   ├── video-transcripts/     # 5 transcrições dos vídeos (Deborah Folloni / DevGPT)
+│   ├── video-deep-analysis/   # 5 análises profundas + CONSOLIDADO.md
+│   ├── pluma-prompts/         # design.json + brief (base pra ui-design-system)
 │   ├── patterns-catalog.md    # 23 padrões catalogados de 6+ fontes
-│   └── byterover-context-tree.md  # Análise do sistema de memória
+│   └── byterover-context-tree.md  # Análise do ByteRover (base pra context-tree)
 ├── DISCOVERY.md               # Este arquivo — hub central
 └── README.md
 ```
@@ -258,15 +265,113 @@ Arquivos: `research/pluma-prompts/`
 
 - [x] Estrutura: `skills/` (nossas) + `community/` (terceiros) + `research/` (análises)
 - [x] Stack frontend: React/Next + Tailwind + shadcn
-- [x] Trident substitui repo-review
+- [x] Trident substitui repo-review (repo-review deletado)
 - [x] Bootstrap: skill-builder v2 → prompt-engineer v2 → reference-finder v3
 - [x] Prompts Pluma = base pra skill de UI design
+- [x] 35 propostas do CONSOLIDADO → 6 criadas + 15 absorvidas + 14 adiadas
+- [x] Nomes de skills não renomeados (impacto baixo no triggering)
+- [x] Context Tree simplificado (markdown-based, sem _manifest.json)
+
+## Status do CONSOLIDADO (35 propostas)
+
+### Criadas como skills independentes (6)
+- [x] geo-optimizer — otimização GEO pra descriptions
+- [x] architecture-guard — lint de arquitetura, thin client enforcement
+- [x] code-dedup-scanner — encontrar reutilizáveis antes de criar
+- [x] context-guardian — monitor context window + handoff
+- [x] cli-skill-wrapper — API → CLI → Skill
+- [x] pattern-importer — técnica .tmp automatizada
+
+### Absorvidas em skills existentes (15)
+- [x] spec-writer, spec-breaker, sdd-research, sdd-spec-writer, sdd-implementer → **SDD** (references/spec-structures.md)
+- [x] issue-planner, layer-executor → **SDD** (modos documentados nos references)
+- [x] model-writer, component-writer → **SDD** (conceitos em spec-structures.md)
+- [x] skill-anatomy-validator → **skill-builder** (validate.py + checklist)
+- [x] skill-composer → **maestro** (composition-chains.md)
+- [x] progressive-loader → **context-tree** (modo --skills)
+- [x] vibe-code-auditor → **architecture-guard** (thin client rules)
+- [x] context-diet → **context-tree** (references/cli-vs-mcp-guide.md)
+- [x] brand-identity-builder → **ui-design-system** (modo --identity + mini-identity-guide.md)
+
+### Adiadas / Baixa prioridade (14)
+- [ ] skill-publisher — pendente decisão de publicar no skills.sh
+- [ ] skill-retrofeeder — conceito documentado no skill-builder writing-guide
+- [ ] skill-migrator — converter agentes n8n em skills
+- [ ] media-toolkit — FFmpeg/ImageMagick/Remotion
+- [ ] video-pipeline — pipeline de vídeo programático
+- [ ] social-media-agent — posting automático
+- [ ] proposal-generator — propostas comerciais
+- [ ] yt-title-thumb-advisor — YouTube optimization
+- [ ] branding-applier — identidade visual em documentos
+- [ ] design-before-after — workflow antes/depois com skill de design
+- [ ] asset-prep-for-ai — organizar assets pra coding assistants
+- [ ] landing-page-architect — estrutura de landing pages
+- [ ] ai-design-smell-detector — parcialmente em trident --design
+
+### Melhorias implementadas nas skills existentes (seção 4 do CONSOLIDADO)
+- [x] skill-builder: GEO module + CLI-first template + roteiro de perguntas + design template
+- [x] prompt-engineer: modo --geo + --skill-prompt + técnicas (files, scenarios, deps)
+- [x] sdd: spec-structures + dedup-checklist + tmp-technique + regra 40-50%
+- [x] context-tree: --architecture + CLI vs MCP + --skills + assets de marca
+- [x] maestro: --loose + orchestration SDD + progressive disclosure
+- [x] trident: --skill (produto) + --design (3 camadas)
+- [x] reference-finder: tech-catalog (GEO, Remotion, Tavily, Exa)
+- [x] component-architect: code-dedup-scanner + Remotion patterns
+- [x] ui-design-system: --identity + Remotion tokens + mini-identity-guide
+- [x] react-patterns: Remotion + Motion
+- [x] Todas 14 legadas: refatoradas com Iron Law, workflow, gates, anti-patterns, GEO
+
+### Próximos Passos do CONSOLIDADO — Status
+1. [x] Pipeline SDD enriquecido — absorvido no SDD + skills de guarda
+2. [x] Módulo GEO no skill-builder — implementado + geo-optimizer criado
+3. [x] code-dedup-scanner + pattern-importer — criados
+4. [x] context-tree com progressive disclosure + CLI vs MCP — implementado
+5. [ ] Publicar no skills.sh — **PENDENTE** (decisão estratégica)
 
 ## Decisões Pendentes
 
-- [ ] Publicar skills no skills.sh? Quando?
-- [x] Context Tree completo ou versão simplificada? → Versão simplificada (markdown-based, sem _manifest.json)
+- [ ] Publicar skills no skills.sh? Quando? Quais primeiro?
 - [ ] Skills globais (~/.claude/skills/) vs. por projeto?
+
+---
+
+## Como Criar uma Nova Skill (caminho oficial)
+
+Pipeline completo documentado no maestro `references/composition-chains.md`:
+
+```
+1. reference-finder --find      Fundamentar o domínio
+   └─ Buscar frameworks, livros, padrões consagrados
+   └─ Output: referências curadas com scoring
+
+2. skill-builder --full         Criar a skill
+   └─ Ler 2+ skills existentes como referência (Iron Law do skill-builder)
+   └─ Seguir os 7 steps: Understand → Research → Plan → Description → Write → Build → Validate
+   └─ Output: SKILL.md (<250L) + references/ + scripts/ (opcional)
+
+3. prompt-engineer --validate   Validar prompts internos
+   └─ Checar cada seção do SKILL.md e references/
+   └─ Output: feedback + versão melhorada
+
+   ── /clear (liberar context window) ──
+
+4. geo-optimizer --optimize     Otimizar description
+   └─ Gerar keywords via Claude ("o agente é o cliente")
+   └─ Score /15, before/after comparison
+   └─ Output: description GEO-otimizada
+
+5. trident --skill              Review como produto
+   └─ GEO quality, structure, architecture, distribution readiness
+   └─ Output: verdict PUBLISH / IMPROVE / REWORK
+
+6. python validate.py           Validação automatizada
+   └─ Frontmatter, linhas, Iron Law, checklist, gates, anti-patterns, GEO verbs
+   └─ Output: PASS ou FAIL com detalhes
+```
+
+**Atalho (skill simples):** Pule steps 1 e 3. Faça skill-builder --quick → geo-optimizer → validate.py.
+
+**Para evoluir skill existente:** skill-builder --evolve → prompt-engineer --validate → geo-optimizer → validate.py.
 
 ---
 
@@ -282,6 +387,8 @@ Fase 5 (Frontend)        ✅ 3 skills: ui-design-system (125L), component-archit
 Fase 6 (SDD)             ✅ sdd — 164 linhas, pipeline Research→Spec→Implement→Review
 Fase 7 (Context Tree)    ✅ context-tree — 175 linhas, scoring ByteRover, prune/archive
 Quality Audit             ✅ Avaliação 70%→85%: maestro, sdd refs, integrações bidirecionais
+Arsenal v2               ✅ 6 novas skills + 10 atualizadas + repo-review deletado = 30 skills
+Arsenal v3 (Quality)     ✅ 14 skills legadas refatoradas — 30/30 PASS validate.py, 0 FAIL
 ```
 
 ---
@@ -336,4 +443,25 @@ Quality Audit             ✅ Avaliação 70%→85%: maestro, sdd refs, integra�
   - `research/video-deep-analysis/04-anti-vibe-coding.md` — SDD (Research→Spec→Implement), regra 40-50%, técnica .tmp
   - `research/video-deep-analysis/05-design-skill.md` — skill de design, assets, micro-interactions, antes/depois
 - **CONSOLIDADO.md criado** com: processos por categoria (4 categorias), 35 skills propostas sem duplicatas, referências unificadas, conexões com as 25 skills existentes, top 5 próximos passos
+
+### 2026-04-03 — Sessão 6 (Arsenal v2 — 7 Waves)
+- **Plano criado:** fluffy-giggling-phoenix.md — 7 waves, 6 novas skills, 10 atualizadas, 1 deletada
+- **35 propostas → 6 novas:** Absorveu spec-writer, spec-breaker, sdd-research etc. no SDD; skill-composer no maestro; progressive-loader no context-tree; vibe-code-auditor no architecture-guard
+- **Wave 0:** repo-review deletado + refs limpas (security-audit, vps-infra-audit, ux-audit). skill-builder v2 (GEO module, CLI-first template, design template, validate.py melhorado). prompt-engineer v2 (modos --geo e --skill-prompt)
+- **Wave 1:** geo-optimizer criado (148L, scoring /15, keyword generation). SDD atualizado (dedup-checklist, tmp-technique, spec-structures com agentes por camada)
+- **Wave 2:** architecture-guard (171L, thin client enforcement), code-dedup-scanner (168L + scan_duplicates.py), context-guardian (166L, status 🟢🟡🔴 + handoff)
+- **Wave 3:** cli-skill-wrapper (175L, API→CLI→Skill), pattern-importer (201L, técnica .tmp automatizada)
+- **Wave 4:** context-tree (--architecture, CLI vs MCP guide), trident (--design 3 camadas, --skill product review), reference-finder (tech-catalog)
+- **Wave 5:** component-architect (Remotion + dedup), ui-design-system (--identity + Remotion tokens), react-patterns (Remotion + Motion)
+- **Wave 6:** maestro final (30 skills, 15+ chains, meta-orchestration), skill-catalog.md (6 novas entradas), composition-chains.md (5 novas chains + meta), discovery.md atualizado
+- **Todas 30 skills passam validate.py.** Arsenal: 30 skills (24 + 6 novas)
 - **Memórias salvas:** perfil completo do Patrick, feedback "sempre PT-BR"
+
+### 2026-04-03 — Sessão 7 (Arsenal v3 — Quality Audit)
+- **Diagnóstico:** 16 skills atualizadas (PASS) vs 14 legadas (11 FAIL, 0 Iron Law, 0 anti-patterns)
+- **Wave A:** Review das 4 meta skills (maestro GEO corrigido, catalog 30 skills consistente)
+- **Wave B:** 5 skills core refatoradas: n8n-architect (548→184L), supabase-db (586→202L), security-audit (368→218L), product-discovery-prd (391→181L), lovable-knowledge (372→161L)
+- **Wave C:** 3 skills auditoria: vps-infra-audit (491→196L), ux-audit (331→205L), tech-lead-pm (400→202L)
+- **Wave D:** 5 skills conteúdo: pdf (314→231L), docx (590→175L), pptx (231→173L), xlsx (292→199L), comunicacao-clientes (211→189L)
+- **Wave E:** schedule reescrita (40→135L), validação final 30/30 PASS
+- **Resultado: 30/30 skills PASS validate.py, 0 FAIL, 14 perfeitas (0 warnings), 16 com warnings menores**

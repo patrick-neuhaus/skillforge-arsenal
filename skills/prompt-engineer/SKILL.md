@@ -13,7 +13,9 @@ IRON LAW: Never output a prompt without explaining WHY each section exists. A pr
 |--------|-------------|---------|
 | `--create` | Create a new prompt from scratch | true |
 | `--validate` | Validate/improve an existing prompt | false |
-| `--type <t>` | Prompt type: system, extraction, agents-md, json-schema | auto-detect |
+| `--geo` | Optimize text/description for agent discovery (GEO) | false |
+| `--skill-prompt` | Optimize prompts for SKILL.md format | false |
+| `--type <t>` | Prompt type: system, extraction, agents-md, json-schema, geo, skill-prompt | auto-detect |
 
 ## Workflow
 
@@ -59,6 +61,8 @@ Determine the prompt type and load the corresponding reference:
 | Extraction (OCR, classification) | `references/extracao-dados.md` | Extrair dados de docs, classificar |
 | AGENTS.md (AI coding tools) | `references/agents-md.md` | Lovable, Cursor, Claude Code |
 | JSON Schema output | `references/json-schema-output.md` | n8n, API, formato garantido |
+| GEO (agent discovery) | `references/geo-prompt-guide.md` | Descriptions, skills.sh, READMEs |
+| Skill prompt (SKILL.md) | `references/skill-prompt-guide.md` | Prompts internos de skills |
 
 Key context questions:
 - Which model? (Claude, Gemini, GPT) → Load `references/claude-4x-guide.md` if Claude
@@ -82,6 +86,9 @@ If targeting Claude 4.x: Load `references/claude-4x-guide.md` — critical diffe
 3. Consider the full context — not just the prompt, but tools, examples, docs
 4. Include at least 1 input/output example in the prompt
 5. Add explicit handling for edge cases and unknowns
+6. Specify files/paths explicitly: `[path] → [action]` beats "handle the relevant files"
+7. Include scenarios: happy path, edge case, error — each with expected behavior
+8. List dependencies and constraints upfront (not buried in instructions)
 
 ### Validating (--validate)
 

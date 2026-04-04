@@ -1,391 +1,181 @@
 ---
 name: product-discovery-prd
-description: "Skill para conduzir discovery de produto e gerar PRDs otimizados para Lovable e outras ferramentas de desenvolvimento. Use esta skill SEMPRE que o usuário mencionar: novo projeto, nova feature, PRD, discovery, briefing, especificação, 'quero construir', 'preciso de um app', 'vou fazer um sistema', 'me ajuda a pensar no que construir', MVP, escopo, requisitos, ou qualquer variação que indique que algo novo vai ser planejado ou especificado — mesmo que o usuário não use a palavra 'PRD' explicitamente. Também use quando o usuário disser que vai 'jogar no Lovable' ou 'mandar pro Lovable' algo que ainda não tem especificação clara. Se houver dúvida se o usuário precisa de discovery ou já sabe o que quer, USE esta skill — é melhor perguntar do que deixar passar. NÃO use se o usuário já tem PRD pronto e só quer revisar — nesse caso, dê feedback direto sem acionar a skill. Se o pedido é implementação (código, SQL, workflow), use a skill técnica apropriada."
+description: "Conduz discovery de produto e gera PRDs otimizados para Lovable, Cursor, Bolt e outras AI coding tools. Use esta skill para: criar PRD, planejar projeto, definir escopo, fazer discovery, pesquisar requisitos, validar hipótese, analisar personas, desenhar fluxos, revisar briefing, construir especificação. Triggers: novo projeto, nova feature, PRD, discovery, briefing, especificação, 'quero construir', 'preciso de um app', 'vou fazer um sistema', 'me ajuda a pensar', MVP, escopo, requisitos, 'jogar no Lovable', 'mandar pro Lovable'. Product discovery and PRD generation — create, plan, design, validate, review, analyze, build, define, research, discover product specs for AI-first development."
 ---
 
-# Product Discovery & PRD Generator v5
+# Product Discovery & PRD Generator v6
 
-## Visão geral
+IRON LAW: NUNCA escreva um PRD sem conversar com o usuário sobre QUEM é o usuário final. PRD sem personas é lista de features, não especificação de produto. Sem problema claro, sem PRD.
 
-Esta skill conduz o usuário por um processo de discovery e gera um PRD em formato .md otimizado para ser consumido por AI coding tools (Lovable, Cursor, Bolt) ou usado como briefing técnico (n8n/Supabase).
+## Options
 
-O usuário geralmente chega com um rascunho mental — sabe o que quer mas não estruturou. O papel desta skill é transformar ideia vaga em especificação precisa o suficiente pra uma IA executar sem ambiguidade.
+| Option | Description | Default |
+|--------|-------------|---------|
+| `--quick` | Pula discovery, gera PRD direto de briefing existente | false |
+| `--full` | Discovery completo com todas as fases | true |
+| `--review` | Revisa PRD existente contra checklist de qualidade | false |
+
+## Workflow
+
+```
+Product Discovery Progress:
+
+- [ ] Step 1: Entender o Problema ⚠️ REQUIRED
+  - [ ] 1.1 Extrair problema real (não a solução)
+  - [ ] 1.2 Identificar quem sofre (personas)
+  - [ ] 1.3 Mapear contexto técnico e escopo
+  - [ ] 1.4 Definir MVP e appetite
+  - [ ] ⛔ GATE: Declaração do problema validada pelo usuário
+- [ ] Step 2: Validar Riscos
+  - [ ] 2.1 Assumption Mapping (top 3 riscos)
+  - [ ] 2.2 Pre-mortem
+  - [ ] 2.3 Oportunidades e soluções (OST)
+  - [ ] ⛔ GATE: Riscos apresentados e discutidos
+- [ ] Step 3: Gerar PRD ⚠️ REQUIRED
+  - [ ] 3.1 Estruturar fluxos e waves
+  - [ ] 3.2 Gerar PRD (arquivo .md)
+  - [ ] 3.3 Gerar roadmap pos-MVP (arquivo .md separado)
+  - [ ] ⛔ GATE: Usuário revisa PRD antes de considerar pronto
+- [ ] Step 4: Validação Final ⛔ BLOCKING
+  - [ ] Run pre-delivery checklist
+  - [ ] ⛔ GATE: Aprovação explícita do usuário
+```
+
+Se `--quick`: Pula Step 1-2, vai direto pro Step 3 usando briefing existente.
+Se `--review`: Pula Step 1-2, avalia PRD existente contra o Pre-Delivery Checklist.
 
 ## Princípios
 
-1. **Extrair, não inventar.** O objetivo é tirar da cabeça do usuário o que ele já sabe. Não assume nada. Pergunta.
-2. **Problema antes de solução.** Nunca aceite a primeira ideia como definitiva. Cave até o problema raiz.
-3. **Questionar antes de documentar.** "Você precisa mesmo disso no MVP?" é uma pergunta válida.
-4. **MVP primeiro, sempre.** Cortar escopo é mais valioso do que adicionar.
-5. **Output AI-first.** O PRD não é pra humano ler bonito — é pra uma IA entender com precisão e executar sem ambiguidade.
-6. **Sem tasks.** O PRD não inclui breakdown de tasks. Isso é papel da skill de Tech Lead & PM.
+1. **Extrair, não inventar.** O objetivo é tirar da cabeça do usuário o que ele já sabe. Pergunta.
+2. **Problema antes de solução.** Cave até o problema raiz antes de documentar qualquer coisa.
+3. **MVP primeiro, sempre.** Cortar escopo é mais valioso do que adicionar.
+4. **Output AI-first.** O PRD é pra IA entender e executar, não pra humano ler bonito.
+5. **Sem tasks.** PRD não inclui breakdown de tasks — isso é papel da skill Tech Lead & PM.
+6. **Dois arquivos sempre.** PRD MVP e Roadmap pos-MVP são SEPARADOS.
 
-## Fluxo de trabalho
+## Step 1: Entender o Problema ⚠️ REQUIRED
 
-### Fase 1: Entendimento inicial
+Load `references/discovery-workflow.md` para o roteiro completo de perguntas (5 blocos).
 
-NÃO faça todas as perguntas de uma vez — agrupe em blocos de 2-3 e aprofunde conforme as respostas.
+Resumo dos blocos:
+1. **O Problema** — voltar da solução pro problema real. Usar Mom Test (Fitzpatrick).
+2. **Contexto técnico** — stack, integrações, o que já existe.
+3. **Usuários e escopo** — quem usa, fluxo principal, roles, regras de negócio.
+4. **MVP e prioridade** — How Might We, appetite (Shape Up), cortes de escopo.
+5. **UX e visual** — referências, layout, responsividade (se app web).
 
-**Bloco 1 — O problema (não a solução):**
+Perguntas por bloco, NÃO todas de uma vez. Aprofunde conforme respostas.
 
-O usuário vai chegar falando da SOLUÇÃO ("quero um app que faz X"). Seu trabalho é voltar pro PROBLEMA.
+Se mais de 1 tipo de usuário, crie personas simplificadas (máx 3): nome + papel + o que faz + problema principal. Sem idade, hobby, foto.
 
-- O que você quer construir? (deixe falar livremente)
-- Qual o problema que isso resolve? O que acontece HOJE sem essa solução?
-- Quem sofre com esse problema? Com que frequência?
-- Por que agora? O que muda se não fizer?
+⛔ **GATE:** Declaração do problema: "Nós observamos que [estado atual] faz com que [pessoas] sofram com [problema], o que causa [consequência]." Valide com o usuário antes de prosseguir.
 
-**Mom Test (Rob Fitzpatrick) — regras pra extrair verdade:**
-- NUNCA "você acha que usariam isso?" → "como vocês resolvem isso hoje?"
-- NUNCA "você pagaria por isso?" → "quanto tempo/dinheiro gastam com isso hoje?"
-- NUNCA sobre o futuro ("você usaria se...") → sobre o passado ("quando foi a última vez que...")
+## Step 2: Validar Riscos
 
-Se o usuário disser "meu cliente quer X", questione: "Ele DISSE que quer X ou ele tá SOFRENDO com um problema que você acha que X resolve?"
+Load `references/discovery-frameworks.md` para Assumption Mapping, Pre-mortem, Impact Mapping, e outros frameworks.
 
-**Declaração do Problema:**
-"Nós observamos que [estado atual] faz com que [pessoas] sofram com [problema], o que causa [consequência]."
+1. **Assumption Mapping** — mapeie top 3 suposições (desirability, feasibility, viability). Apresente: "Essas são as apostas mais arriscadas. Tem evidência pra alguma?"
+2. **Pre-mortem** — "3 meses, projeto fracassou. Por quê?" Se tiver project killer sem mitigação, resolva ANTES de prosseguir.
+3. **OST (Teresa Torres)** — organize oportunidades → soluções. Se projeto simples (1 problema, 1 solução), pule.
+4. **Hipótese** — "Nós acreditamos que [fazendo X] para [Y] vamos [Z]. Saberemos quando [métrica]."
+5. **North Star Metric** — métrica única de sucesso.
 
-**Bloco 2 — Contexto técnico:**
-- App web, automação, integração, ou mix?
-- Qual a stack? (Lovable + Supabase? n8n? Outro?)
-- Tem algo já construído? (banco, API, fluxo existente)
-- Integrações com sistemas externos? Quais?
+⛔ **GATE:** Riscos e hipótese validados com o usuário.
 
-**Bloco 3 — Usuários e escopo:**
-- Quem vai usar? (perfil, quantidade esperada)
-- Fluxo principal? (caminho feliz do início ao fim)
-- Autenticação? Roles diferentes?
-- Regras de negócio não óbvias?
+## Step 3: Gerar PRD ⚠️ REQUIRED
 
-Se mais de um tipo de usuário, crie **personas simplificadas** (máx 3):
-- Nome + papel (ex: "Ana, gerente de operações")
-- O que FAZ no sistema
-- Problema principal DELA
-- NÃO inclua idade, hobby, foto
+Load `references/prd-template.md` para template completo e regras AI-first.
+Load `references/roadmap-template.md` para template do roadmap pos-MVP.
 
-**Bloco 4 — MVP e prioridade:**
+### Estruturação (User Story Mapping)
 
-Use **How Might We** (HMW):
-- "Como podemos [resolver problema X] para [persona Y] de forma que [resultado Z]?"
-- Gere 2-3 HMWs e valide com o usuário
+Antes de escrever, organize em waves:
+- **Wave 1:** Mínimo absoluto pra validar hipótese. 1-2 fluxos.
+- **Wave 2:** Complementos pra uso no dia a dia.
+- **Wave 3:** O que completa o MVP.
 
-Depois:
-- Se pudesse lançar com UMA funcionalidade, qual seria?
-- O que é MVP vs "legal ter depois"?
-- Tem prazo? Restrição de orçamento/tempo?
+Cada wave testável sozinha. Se Wave 1 depende de Wave 2, tá errado.
 
-**Bloco 5 — UX e visual (se app web):**
-- Referência visual? (outro app, screenshot, wireframe)
-- Layout? (sidebar, tabs, dashboard, lista)
-- Mobile-first ou desktop-first?
-- Branding? (cores, logo, tom)
+### Gerar dois arquivos
 
-### Fase 2: Validação de Risco
+1. **PRD** — seguindo template AI-first (fluxos numerados, estados, comportamentos explícitos, I/O de exemplo, lista de exclusões)
+2. **Roadmap pos-MVP** — features cortadas, suposições pendentes, riscos, próximos passos
 
-Antes de estruturar a solução, valide os riscos com duas técnicas:
+⛔ **GATE:** Apresente o PRD completo ao usuário. Peça revisão explícita antes de considerar pronto.
 
-**Assumption Mapping (David Bland — Testing Business Ideas):**
+## Step 4: Validação Final ⛔ BLOCKING
 
-Mapeie as suposições do projeto numa matriz 2×2:
-- Eixo Y: Importância pra o sucesso (alta ↔ baixa)
-- Eixo X: Evidência que temos (forte ↔ fraca)
+### Pre-Delivery Checklist
 
-O quadrante **alta importância + pouca evidência** = "Leap of Faith" — teste ANTES de construir.
+**Conteúdo:**
+- [ ] Tem declaração do problema (não só descrição da solução)
+- [ ] Tem personas ou descrição clara de quem usa
+- [ ] Tem hipótese com métrica de validação
+- [ ] Tem North Star Metric
+- [ ] Fluxos numerados com trigger → resultado → estados
+- [ ] Comportamentos explícitos ("Quando X, faça Y") pra interações não-triviais
+- [ ] Estados obrigatórios por tela: empty, loading, filled, error, success
+- [ ] Lista de exclusões ("NÃO construa") com motivo
+- [ ] Modelo de dados com tipos explícitos (se aplicável)
+- [ ] Sequência de build sugerida
 
-Categorize cada suposição:
-- **Desirability**: "Eles querem isso?" (demanda real)
-- **Feasibility**: "Conseguimos fazer?" (técnico)
-- **Viability**: "O negócio se sustenta?" (financeiro)
+**Estrutura:**
+- [ ] Resumo cabe em 1 frase
+- [ ] PRD e Roadmap são arquivos separados
+- [ ] Waves marcadas em cada fluxo/tela
+- [ ] Português brasileiro (exceto termos técnicos)
 
-Apresente as top 3 suposições de risco pro usuário: "Essas são as apostas mais arriscadas desse projeto. Tem evidência pra alguma delas ou estamos no escuro?"
+**Validação:**
+- [ ] Usuário revisou e aprovou declaração do problema
+- [ ] Usuário revisou e aprovou PRD final
+- [ ] Nenhum project killer sem mitigação
 
-**Pre-mortem:**
+## Anti-Patterns
 
-"Imagina que passaram 3 meses e esse projeto fracassou completamente. Por que fracassou?"
+- **Pular direto pra solução** — usuário diz "quero um app" e você começa a documentar features sem entender o problema. VOLTE pro problema.
+- **PRD sem personas** — Iron Law. Quem usa? Se não sabe, não escreva PRD.
+- **Aceitar tudo sem questionar** — "Você precisa mesmo disso no MVP?" é pergunta obrigatória. Cortar escopo salva projetos.
+- **Inventar features** — Discovery é EXTRAIR do usuário, não ADICIONAR do seu repertório.
+- **PRD genérico** — "O sistema deve ser responsivo" não é especificação. Cada comportamento precisa ser explícito pra AI tool executar.
+- **Telas sem estados** — AI coding tool que não sabe o empty state inventa algo feio. SEMPRE definir empty/loading/error/success.
+- **Roadmap solto** — roadmap precisa vir do discovery, não ser lista genérica de "nice to have".
+- **Assumption Mapping como formalidade** — se fez o mapping e ignorou o project killer, não fez nada.
 
-Categorize os riscos:
-- **Project killers** — bloqueios que impedem o lançamento
-- **Known-but-unsaid** — coisas que a equipe suspeita mas ninguém fala
-- **Execution risks** — desafios de viabilidade técnica
+## When NOT to use
 
-Se o projeto tiver riscos graves no pre-mortem, discuta mitigações ANTES de seguir pra estruturação.
-
-### Fase 3: Oportunidades e Soluções (Opportunity Solution Tree)
-
-Organize o que foi levantado usando a árvore de Teresa Torres:
-
-```
-Outcome desejado (resultado de negócio)
-├── Oportunidade 1 (problema/necessidade)
-│   ├── Solução A
-│   └── Solução B
-├── Oportunidade 2
-│   ├── Solução C
-│   └── Solução D (escolhida pro MVP)
-└── Oportunidade 3 (deixar pra depois)
-    └── Solução E
-```
-
-**Complemento — Impact Mapping (Gojko Adzic):**
-
-Se o projeto envolver múltiplos stakeholders ou for estratégico, use Impact Mapping pra conectar a árvore ao negócio:
-
-```
-Goal (objetivo de negócio)
-└── Actor (quem influencia)
-    └── Impact (que mudança de comportamento)
-        └── Deliverable (o que entregar)
-```
-
-Impact Mapping responde "que mudança de comportamento gera valor"; OST responde "que dor do cliente cria essa oportunidade de mudança".
-
-Se o projeto for simples (1 problema, 1 solução óbvia), pule e vá pra Fase 4.
-
-### Fase 4: Estruturação (User Story Mapping)
-
-Organize a implementação:
-
-1. **Eixo horizontal (backbone):** Atividades principais em ordem cronológica
-2. **Eixo vertical (profundidade):** Tarefas do mais essencial ao menos essencial
-3. **Linha do MVP:** Separa o que entra do que fica pra depois
-4. **Dividir em Waves** (se MVP for grande):
-   - **Wave 1:** Mínimo absoluto pra validar a hipótese. 1-2 fluxos principais.
-   - **Wave 2:** Complementos que tornam usável no dia a dia.
-   - **Wave 3:** O que completa o MVP.
-
-Cada wave testável sozinha. Se Wave 1 não funciona sem Wave 2, tá errado.
-
-No PRD, marque cada fluxo/tela: `[Wave 1]`, `[Wave 2]`, `[Wave 3]`.
-
-### Fase 5: Validação e confronto
-
-ANTES de gerar o PRD:
-
-1. **Resuma** em 3-5 frases e peça confirmação
-2. **Declare a hipótese:** "Nós acreditamos que [fazendo X] para [pessoa Y] vamos [resultado Z]. Saberemos que é verdade quando [métrica/evidência]."
-3. **North Star Metric:** Qual a métrica única que define sucesso? (ex: "documentos processados por semana", "leads qualificados por dia"). Pode ser de atenção (DAU, sessões), transação (conversões, valor), ou produtividade (tarefas completas, itens processados).
-4. **Appetite (Shape Up — Ryan Singer):** "Quanto tempo/esforço QUER gastar nisso?" O escopo se adapta ao appetite, não o contrário.
-5. **Aponte inconsistências** — se algo contradiz, fala
-6. **Questione escopo** — demais pro appetite = sugere cortes
-7. **Identifique buracos** — informação crítica faltando
-
-### Fase 6: Geração do PRD (AI-First)
-
-O PRD agora é otimizado pra AI coding tools. Isso muda a estrutura:
-
-```markdown
-# [Nome do Projeto]
-
-## Resumo
-[1 frase: o que é, pra quem, qual problema resolve]
-
-## Declaração do problema
-Nós observamos que [estado atual] faz com que [pessoas] sofram com [problema], o que causa [consequência].
-
-## Hipótese
-Nós acreditamos que [fazendo X] para [pessoa Y] vamos [resultado Z]. Saberemos que é verdade quando [métrica/evidência].
-
-## North Star Metric
-[Métrica única que define sucesso. Ex: "Documentos SST processados sem erro por semana"]
-
-## Stack técnica
-- Frontend: [ex: Lovable (React + Tailwind + shadcn/ui)]
-- Backend: [ex: Supabase (PostgreSQL + Auth + Edge Functions)]
-- Integrações: [ex: Evolution API, n8n, Kommo]
-
-## Usuários
-[Quem usa, roles, volume esperado]
-[Personas se houver: nome + papel + problema + o que faz]
-
-## Fluxos principais
-
-### Fluxo 1: [Nome] [Wave N]
-
-**Trigger:** [O que inicia este fluxo]
-**Resultado:** [O que acontece no final]
-
-1. [Passo 1] → Estado: [loading/success/error]
-2. [Passo 2] → Estado: [...]
-3. [Passo 3] → Estado: [...]
-
-**Comportamentos explícitos:**
-- Quando [condição X]: faça [ação Y]
-- Quando [erro Z]: mostre [mensagem W]
-- Quando [lista vazia]: mostre [empty state com texto e CTA]
-
-**Input/Output de exemplo:**
-```json
-{
-  "input": { "campo1": "valor", "campo2": 123 },
-  "output": { "status": "success", "resultado": "..." }
-}
-```
-
-### Fluxo 2: [Nome] [Wave N]
-...
-
-## User Stories / Job Stories
-[Apenas pros fluxos principais do MVP]
-
-User Story: "Como [persona], eu quero [ação] para que [benefício]"
-Job Story: "Quando [situação], eu quero [motivação] para que [resultado]"
-
-Critérios INVEST por story.
-
-## Regras de negócio
-- [Regra 1]: [descrição clara e sem ambiguidade]
-- [Regra 2]: ...
-
-## Modelo de dados (se aplicável)
-[Tabelas, campos essenciais, relacionamentos. Incluir tipos.]
-
-## Telas / Páginas (se app web) [Wave N]
-
-### [Nome da tela]
-- **Objetivo:** [o que o usuário faz aqui]
-- **Estados:** empty | loading | filled | error | success
-- **Elementos:** [componentes, campos, botões]
-- **Ações:** [o que o usuário pode fazer + resultado de cada ação]
-- **Regras:** [comportamentos condicionais]
-
-## Integrações externas
-- [Sistema]: [o que entra, o que sai, quando dispara, formato]
-
-## NÃO construa (fora do escopo MVP)
-[Lista explícita e específica do que NÃO entra]
-- NÃO: [feature X] — motivo
-- NÃO: [feature Y] — motivo
-- NÃO: [otimização Z] — motivo
-
-## Notas para implementação
-[Decisões técnicas, padrões, preferências, ordem sugerida de build]
-- Sequência recomendada: schema → auth → fluxo principal → UI → error handling
-- [Decisão de webhook: direto vs Edge Function + Fila]
-- [Libs específicas, padrões de naming, etc]
-```
-
-### Regras do output AI-first
-
-1. **Descrição em 1 frase.** O resumo do projeto deve caber em 1 frase. Se precisa de mais, o escopo tá grande demais.
-2. **User flows numerados.** Cada passo do fluxo com número, estado, e resultado esperado.
-3. **Comportamentos explícitos.** "Quando X, faça Y" pra CADA interação não-trivial. AI coding tools executam literalmente — se não especificou, vai chutar.
-4. **Estados obrigatórios.** Toda tela/componente deve definir: empty, loading, filled, error, success. AI que não sabe o empty state inventa algo feio.
-5. **Input/Output de exemplo.** Pra fluxos com dados complexos (OCR, integrações, formulários), inclua JSON de exemplo. Modelos performam dramaticamente melhor com exemplos concretos.
-6. **Lista de exclusões.** "NÃO construa" é TÃO importante quanto "construa". Sem isso, AI tools adicionam features não solicitadas.
-7. **Modelo de dados com tipos.** Se incluir, use tipos explícitos (`UUID`, `TIMESTAMPTZ`, `TEXT`, `JSONB`), não descrições vagas.
-8. **Português brasileiro** exceto termos técnicos universais.
-9. **Dois arquivos sempre.** PRD MVP e Roadmap pós-MVP são SEPARADOS.
-10. **Sequência de build.** Na seção "Notas para implementação", sugira a ordem: schema → auth → fluxo principal → UI → error handling. AI tools constroem melhor com phasing explícito.
-
-### Fase 7: Roadmap pós-MVP
-
-Gere segundo arquivo `roadmap-pos-mvp.md`:
-
-```markdown
-# [Nome do Projeto] — Roadmap pós-MVP
-
-## Features cortadas do MVP
-- [Feature]: [por que cortada] → [quando implementar]
-
-## Suposições não validadas
-[Top 3 do Assumption Mapping que ainda não têm evidência]
-
-## Riscos identificados (pre-mortem)
-[Riscos do pre-mortem + mitigações planejadas]
-
-## Segurança e permissões
-[MVP básico vs produção]
-
-## Performance e escalabilidade
-[O que no MVP não importa mas em produção sim]
-
-## Integrações adiadas
-- [Sistema]: [o que faria, complexidade estimada]
-
-## UX e melhorias visuais
-[Funcional mas não ideal no MVP]
-
-## Monitoramento
-- Logs, alertas, métricas, health checks
-
-## Estimativa de esforço
-1. [Item] — esforço: [baixo/médio/alto] — impacto: [baixo/médio/alto]
-```
-
-### Regras do roadmap
-1. Só inclua o que veio do discovery.
-2. Seja específico ao projeto.
-3. Estimativa honesta.
-
-## Variações por tipo de projeto
-
-### Para apps web (Lovable)
-- Foco em telas, fluxos visuais, componentes com estados
-- "Telas / Páginas" detalhada com empty/loading/error states
-- Responsividade explícita
-- Referência visual quando houver
-
-### Para automações (n8n)
-- Foco em triggers, condições, outputs
-- "Workflows" no lugar de "Telas"
-- Job Stories > User Stories
-- Decisão de webhook obrigatória: direto vs Edge Function + Fila
-
-### Para projetos mistos
-- Separe frontend, backend, automação
-- Especifique QUEM chama QUEM
-- Onde cada parte vive (Lovable, Supabase, n8n)
-
-## Frameworks complementares (use quando relevante)
-
-### Lean UX Canvas (Jeff Gothelf)
-Use quando o projeto precisar de alinhamento OKR + JTBD:
-- Box 1: Business Problem (Objective)
-- Box 2: Success Metrics (Key Results)
-- Box 3: Assumptions
-- Box 4: JTBD + Métricas de comportamento
-
-### Dual Track Agile
-Use quando houver discovery contínuo em paralelo com delivery:
-- Track 1 (Discovery): validando suposições, entrevistas, protótipos
-- Track 2 (Delivery): construindo o que já foi validado
-
-Sugira esses frameworks quando o contexto pedir — não force em todo projeto.
-
-## Quando NÃO usar esta skill
-
-- PRD pronto e só quer revisar → feedback direto
-- Ajuda com implementação → skill técnica apropriada
-- Task pequena e isolada → faz direto
-
-## Integração com outras skills
-
-- **Lovable Knowledge:** Após gerar PRD, sugira gerar Project Knowledge. PRD = O QUE, Knowledge = COMO.
-- **Tech Lead & PM:** PRD pronto → skill de Tech Lead gera tasks e briefings.
-- **Supabase Architect:** Se PRD inclui modelo de dados, a skill de Supabase valida e refina.
-- **n8n Architect:** Se PRD inclui automações, a skill de n8n define implementação.
-
-## Exemplo de interação
+- **PRD pronto, quer revisar** → use `--review` ou dê feedback direto sem acionar a skill
+- **Implementação** (código, SQL, workflow) → use skill técnica apropriada (SDD, n8n, Supabase)
+- **Task pequena e isolada** → faz direto, não precisa de discovery
+- **Já tem spec técnica** → pule direto pra SDD
+- **Quer só o template** → Load `references/prd-template.md` direto
+
+## Integration
+
+| Etapa | Skill | Quando |
+|-------|-------|--------|
+| Pos-PRD | **SDD** | PRD alimenta a fase de Research do SDD. PRD = O QUE, Spec = COMO |
+| Pos-PRD | **Lovable Knowledge** | Gerar Project Knowledge a partir do PRD. PRD = spec, Knowledge = padrões |
+| Pos-PRD | **Tech Lead & PM** | PRD pronto → gera tasks e briefings pra equipe |
+| Se app web | **UI Design System** | PRD define o que, Design System define a aparência |
+| Se app web | **UX Audit** | Após implementar, auditar UX contra o que o PRD especificou |
+| Se modelo de dados | **Supabase DB Architect** | PRD inclui schema → Supabase valida e refina |
+| Se automação | **N8n Architect** | PRD inclui workflows → n8n define implementação |
+| Orquestração | **Maestro** | Se não sabe por onde começar, Maestro direciona pra cá |
+
+## Exemplo de Interação
 
 **Usuário:** "Quero fazer um app pra gerenciar documentos de SST, com OCR"
 
-**Skill (Bloco 1):**
-"Antes de pensar no app, me ajuda a entender o problema:
+**Skill (Bloco 1):** "Antes de pensar no app, me ajuda a entender o problema:
 1. O que acontece HOJE com esses documentos? Como são gerenciados?
 2. Quem sofre com isso? Você, o cliente, a equipe?
 3. O OCR é pra resolver qual problema específico?"
 
-**Usuário responde...**
+**Skill (Assumption Mapping):** "As 3 suposições mais arriscadas:
+1. OCR do Gemini extrai campos SST com precisão suficiente (feasibility, pouca evidência)
+2. Equipe vai adotar o sistema (desirability, sem evidência)
+3. Volume justifica investimento (viability, alguma evidência)
 
-**Skill (Declaração do problema):**
-"Deixa eu checar: 'Nós observamos que os documentos de SST chegam em PDF e são conferidos manualmente, o que faz com que a equipe gaste X horas/semana e cometa erros de validação, causando risco de multa.' É isso?"
+A suposição 1 é project killer. Quer testar antes de construir o app?"
 
-**Skill (Assumption Mapping):**
-"Antes de seguir, as 3 suposições mais arriscadas desse projeto:
-1. Que o OCR do Gemini consegue extrair campos de documentos SST com precisão suficiente (feasibility, pouca evidência)
-2. Que a equipe vai adotar o sistema no dia a dia (desirability, sem evidência)
-3. Que o volume justifica o investimento (viability, alguma evidência)
-
-A suposição 1 é um project killer — se o OCR não funciona, nada funciona. Quer testar isso antes de construir o app?"
-
-**Skill avança pelos blocos, estrutura (User Story Map), valida, e gera os 2 .md.**
+**Skill avança pelos blocos, valida, e gera 2 arquivos .md.**

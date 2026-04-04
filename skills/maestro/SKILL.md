@@ -1,6 +1,6 @@
 ---
 name: maestro
-description: "Orchestrate and route between all skills in the arsenal. Maps user intent to the right skill chain, manages context window budget, and coordinates multi-skill workflows. Use when user asks: 'o que posso fazer?', 'qual skill usar?', 'que skills tenho?', which skill, help me choose, list skills, 'me ajuda a decidir', skill chain, orchestrate, pipeline, 'quero fazer X mas não sei por onde começar', 'preciso de ajuda com', route skills, which tool should I use, help me pick a skill, what can you do, list available skills. Auto-activates when multiple skills could apply to a request."
+description: "Analyze user intent and route to the right skill or skill chain. Plan multi-skill pipelines, check skill availability, organize workflow sequences, and review context window budget. Use when user asks: 'o que posso fazer?', 'qual skill usar?', 'que skills tenho?', which skill, help me choose, list skills, 'me ajuda a decidir', plan skill chain, orchestrate pipeline, 'quero fazer X mas não sei por onde começar', 'preciso de ajuda com', route skills, which tool should I use, help me pick a skill, what can you do, validate skill choice, list available skills. Auto-activates when multiple skills could apply to a request."
 ---
 
 # Maestro — Skill Orchestrator
@@ -15,6 +15,7 @@ IRON LAW: NEVER recommend a skill without reading its SKILL.md first — descrip
 | `--chain` | Build multi-skill pipeline with execution order | - |
 | `--catalog` | List all skills grouped by category | - |
 | `--health` | Check arsenal health (missing refs, broken links) | - |
+| `--loose` | Loose orchestration: give sub-agent CLI access, let it compose workflow emergently | - |
 
 ## Workflow
 
@@ -49,9 +50,15 @@ Map to categories:
 | "build/implement/create feature" | Implementation | sdd, react-patterns, component-architect |
 | "review/audit code" | Code Review | trident, react-patterns |
 | "find bugs/security issues" | Code Review | trident, security-audit |
+| "validate architecture/thin client" | Guard | architecture-guard, trident |
+| "find duplicates/reusables" | Guard | code-dedup-scanner |
+| "context window/clear/handoff" | Guard | context-guardian |
 | "design system/tokens/UI" | Design | ui-design-system, component-architect |
 | "find references/books/frameworks" | Knowledge | reference-finder, context-tree |
 | "create/improve skill" | Meta | skill-builder, prompt-engineer |
+| "optimize description/GEO" | Optimization | geo-optimizer |
+| "wrap API/create CLI tool" | Optimization | cli-skill-wrapper |
+| "import pattern/.tmp" | Workflow | pattern-importer, sdd |
 | "plan/spec/research" | Workflow | sdd |
 | "audit infra/VPS" | Infra | vps-infra-audit |
 | "audit UX/UI" | Design | ux-audit |
@@ -96,12 +103,21 @@ If the request crosses domains, load `references/composition-chains.md` and pres
 ### --catalog Output
 
 ```markdown
-## Arsenal de Skills (25 skills)
+## Arsenal de Skills (30 skills)
 
 ### Code Review
 - **trident** — Pipeline 3 agentes: Scan→Verify→Judge
 - **react-patterns** — Audit de padrões React/Next.js
 - **security-audit** — Auditoria de segurança OWASP
+
+### Guard
+- **architecture-guard** — Lint de arquitetura (thin client, layer separation)
+- **code-dedup-scanner** — Encontrar reutilizáveis antes de criar novo
+- **context-guardian** — Monitor de context window + handoff pra /clear
+
+### Optimization
+- **geo-optimizer** — Otimizar descriptions pra GEO (descoberta por agentes)
+- **cli-skill-wrapper** — Transformar API em CLI tool + gerar skill
 
 ### Implementation
 - **sdd** — Spec Driven Development (Research→Spec→Implement→Review)
@@ -135,6 +151,7 @@ If the request crosses domains, load `references/composition-chains.md` and pres
 
 ### Workflow
 - **schedule** — Tarefas agendadas
+- **pattern-importer** — Técnica .tmp: importar padrões de repos externos
 ```
 
 ## Anti-Patterns

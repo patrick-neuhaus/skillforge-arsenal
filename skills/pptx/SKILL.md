@@ -1,213 +1,90 @@
 ---
 name: pptx
-description: "Use this skill any time a .pptx file is involved in any way — as input, output, or both. This includes: creating slide decks, pitch decks, or presentations; reading, parsing, or extracting text from any .pptx file (even if the extracted content will be used elsewhere, like in an email or summary); editing, modifying, or updating existing presentations; combining or splitting slide files; working with templates, layouts, speaker notes, or comments. Trigger whenever the user mentions \"deck,\" \"slides,\" \"presentation,\" or references a .pptx filename, regardless of what they plan to do with the content afterward. If a .pptx file needs to be opened, created, or touched, use this skill."
+description: "Cria, edita, lê, analisa, converte e inspeciona apresentações PowerPoint (.pptx). Gera decks profissionais do zero ou a partir de templates, extrai texto e dados de slides, faz QA visual automatizado, combina e reestrutura apresentações. Use quando: criar apresentação, montar deck, pitch deck, slides, editar pptx, extrair texto de apresentação, converter slides pra imagens, fazer QA visual, criar do zero com PptxGenJS, editar template XML. Triggers: 'deck', 'slides', 'apresentação', 'presentation', '.pptx', 'pitch deck', 'slide deck', 'montar apresentação', 'criar slides'. NÃO use para PDFs (use pdf), planilhas (use xlsx), ou documentos Word (use docx)."
 license: Proprietary. LICENSE.txt has complete terms
 ---
 
 # PPTX Skill
 
+IRON LAW: NUNCA crie slides sem perguntar sobre a audiência e o propósito primeiro. Um pitch de vendas e uma revisão técnica precisam de estruturas completamente diferentes.
+
 ## Quick Reference
 
-| Task | Guide |
-|------|-------|
-| Read/analyze content | `python -m markitdown presentation.pptx` |
-| Edit or create from template | Read [editing.md](editing.md) |
-| Create from scratch | Read [pptxgenjs.md](pptxgenjs.md) |
+| Tarefa | Guia |
+|--------|------|
+| Ler/analisar conteúdo | `python -m markitdown presentation.pptx` |
+| Editar ou criar de template | Load [editing.md](editing.md) |
+| Criar do zero | Load [pptxgenjs.md](pptxgenjs.md) |
+| Design e paletas | Load [references/design-guide.md](references/design-guide.md) |
+| QA visual | Load [references/qa-visual.md](references/qa-visual.md) |
 
----
+## Checklist do Workflow
 
-## Reading Content
+```
+PPTX Skill Progress:
+
+- [ ] 1. Entender o contexto ⚠️ REQUIRED
+  - [ ] 1.1 Quem é a audiência? (cliente, diretoria, técnico, investidor)
+  - [ ] 1.2 Qual o propósito? (vender, ensinar, reportar, convencer)
+  - [ ] 1.3 Existe template/marca? (cores, logo, guideline)
+  - [ ] 1.4 Quantos slides? (estimativa)
+  - [ ] 1.5 Conteúdo: tem texto pronto ou precisa criar?
+- [ ] 2. Planejar estrutura
+  - [ ] 2.1 Definir roteiro de slides (título → problema → solução → CTA)
+  - [ ] 2.2 Escolher paleta de cores. Load `references/design-guide.md`
+  - [ ] 2.3 Escolher fluxo: template (editing.md) ou do zero (pptxgenjs.md)?
+  - [ ] ⛔ GATE: Confirmar estrutura com o usuário antes de gerar
+- [ ] 3. Construir (em waves)
+  - [ ] 3.1 Wave 1: Estrutura + conteúdo principal
+  - [ ] 3.2 Wave 2: Design, ícones, gráficos, polish visual
+  - [ ] 3.3 Wave 3: QA visual completo. Load `references/qa-visual.md`
+- [ ] 4. QA ⚠️ REQUIRED
+  - [ ] 4.1 Conteúdo: markitdown → verificar texto, ordem, typos
+  - [ ] 4.2 Visual: converter pra imagens → subagent review
+  - [ ] 4.3 Fix + re-verify (mínimo 1 ciclo)
+  - [ ] ⛔ GATE: Confirmar com usuário antes de sobrescrever arquivo original
+- [ ] 5. Entregar
+  - [ ] 5.1 Rodar pre-delivery checklist
+  - [ ] 5.2 Nomear arquivo corretamente
+```
+
+## Leitura de Conteúdo
 
 ```bash
-# Text extraction
+# Extração de texto
 python -m markitdown presentation.pptx
 
-# Visual overview
+# Overview visual (grid de thumbnails)
 python scripts/thumbnail.py presentation.pptx
 
-# Raw XML
+# XML bruto
 python scripts/office/unpack.py presentation.pptx unpacked/
 ```
 
----
+## Workflow de Edição
 
-## Editing Workflow
+**Load [editing.md](editing.md) para detalhes completos.**
 
-**Read [editing.md](editing.md) for full details.**
+1. Analisar template com `thumbnail.py`
+2. Unpack → manipular slides → editar conteúdo → clean → pack
 
-1. Analyze template with `thumbnail.py`
-2. Unpack → manipulate slides → edit content → clean → pack
+## Criação do Zero
 
----
+**Load [pptxgenjs.md](pptxgenjs.md) para detalhes completos.**
 
-## Creating from Scratch
+Usar quando não há template ou apresentação de referência disponível.
 
-**Read [pptxgenjs.md](pptxgenjs.md) for full details.**
+## Ideias de Design
 
-Use when no template or reference presentation is available.
+**Load [references/design-guide.md](references/design-guide.md)** para paletas de cores, tipografia, layouts e regras visuais.
 
----
+Resumo rápido:
+- **Paleta audaciosa e específica pro tema** — se trocar as cores pra outra apresentação e "funcionar", você não foi específico o bastante
+- **Dominância, não igualdade** — uma cor domina (60-70%), 1-2 de suporte, 1 de acento
+- **Todo slide precisa de elemento visual** — imagem, gráfico, ícone ou shape. Slides só de texto são esquecíveis
+- **Nunca use linhas de acento abaixo de títulos** — marca registrada de slide gerado por IA
 
-## Design Ideas
-
-**Don't create boring slides.** Plain bullets on a white background won't impress anyone. Consider ideas from this list for each slide.
-
-### Before Starting
-
-- **Pick a bold, content-informed color palette**: The palette should feel designed for THIS topic. If swapping your colors into a completely different presentation would still "work," you haven't made specific enough choices.
-- **Dominance over equality**: One color should dominate (60-70% visual weight), with 1-2 supporting tones and one sharp accent. Never give all colors equal weight.
-- **Dark/light contrast**: Dark backgrounds for title + conclusion slides, light for content ("sandwich" structure). Or commit to dark throughout for a premium feel.
-- **Commit to a visual motif**: Pick ONE distinctive element and repeat it — rounded image frames, icons in colored circles, thick single-side borders. Carry it across every slide.
-
-### Color Palettes
-
-Choose colors that match your topic — don't default to generic blue. Use these palettes as inspiration:
-
-| Theme | Primary | Secondary | Accent |
-|-------|---------|-----------|--------|
-| **Midnight Executive** | `1E2761` (navy) | `CADCFC` (ice blue) | `FFFFFF` (white) |
-| **Forest & Moss** | `2C5F2D` (forest) | `97BC62` (moss) | `F5F5F5` (cream) |
-| **Coral Energy** | `F96167` (coral) | `F9E795` (gold) | `2F3C7E` (navy) |
-| **Warm Terracotta** | `B85042` (terracotta) | `E7E8D1` (sand) | `A7BEAE` (sage) |
-| **Ocean Gradient** | `065A82` (deep blue) | `1C7293` (teal) | `21295C` (midnight) |
-| **Charcoal Minimal** | `36454F` (charcoal) | `F2F2F2` (off-white) | `212121` (black) |
-| **Teal Trust** | `028090` (teal) | `00A896` (seafoam) | `02C39A` (mint) |
-| **Berry & Cream** | `6D2E46` (berry) | `A26769` (dusty rose) | `ECE2D0` (cream) |
-| **Sage Calm** | `84B59F` (sage) | `69A297` (eucalyptus) | `50808E` (slate) |
-| **Cherry Bold** | `990011` (cherry) | `FCF6F5` (off-white) | `2F3C7E` (navy) |
-
-### For Each Slide
-
-**Every slide needs a visual element** — image, chart, icon, or shape. Text-only slides are forgettable.
-
-**Layout options:**
-- Two-column (text left, illustration on right)
-- Icon + text rows (icon in colored circle, bold header, description below)
-- 2x2 or 2x3 grid (image on one side, grid of content blocks on other)
-- Half-bleed image (full left or right side) with content overlay
-
-**Data display:**
-- Large stat callouts (big numbers 60-72pt with small labels below)
-- Comparison columns (before/after, pros/cons, side-by-side options)
-- Timeline or process flow (numbered steps, arrows)
-
-**Visual polish:**
-- Icons in small colored circles next to section headers
-- Italic accent text for key stats or taglines
-
-### Typography
-
-**Choose an interesting font pairing** — don't default to Arial. Pick a header font with personality and pair it with a clean body font.
-
-| Header Font | Body Font |
-|-------------|-----------|
-| Georgia | Calibri |
-| Arial Black | Arial |
-| Calibri | Calibri Light |
-| Cambria | Calibri |
-| Trebuchet MS | Calibri |
-| Impact | Arial |
-| Palatino | Garamond |
-| Consolas | Calibri |
-
-| Element | Size |
-|---------|------|
-| Slide title | 36-44pt bold |
-| Section header | 20-24pt bold |
-| Body text | 14-16pt |
-| Captions | 10-12pt muted |
-
-### Spacing
-
-- 0.5" minimum margins
-- 0.3-0.5" between content blocks
-- Leave breathing room—don't fill every inch
-
-### Avoid (Common Mistakes)
-
-- **Don't repeat the same layout** — vary columns, cards, and callouts across slides
-- **Don't center body text** — left-align paragraphs and lists; center only titles
-- **Don't skimp on size contrast** — titles need 36pt+ to stand out from 14-16pt body
-- **Don't default to blue** — pick colors that reflect the specific topic
-- **Don't mix spacing randomly** — choose 0.3" or 0.5" gaps and use consistently
-- **Don't style one slide and leave the rest plain** — commit fully or keep it simple throughout
-- **Don't create text-only slides** — add images, icons, charts, or visual elements; avoid plain title + bullets
-- **Don't forget text box padding** — when aligning lines or shapes with text edges, set `margin: 0` on the text box or offset the shape to account for padding
-- **Don't use low-contrast elements** — icons AND text need strong contrast against the background; avoid light text on light backgrounds or dark text on dark backgrounds
-- **NEVER use accent lines under titles** — these are a hallmark of AI-generated slides; use whitespace or background color instead
-
----
-
-## QA (Required)
-
-**Assume there are problems. Your job is to find them.**
-
-Your first render is almost never correct. Approach QA as a bug hunt, not a confirmation step. If you found zero issues on first inspection, you weren't looking hard enough.
-
-### Content QA
-
-```bash
-python -m markitdown output.pptx
-```
-
-Check for missing content, typos, wrong order.
-
-**When using templates, check for leftover placeholder text:**
-
-```bash
-python -m markitdown output.pptx | grep -iE "\bx{3,}\b|lorem|ipsum|\bTODO|\[insert|this.*(page|slide).*layout"
-```
-
-If grep returns results, fix them before declaring success.
-
-### Visual QA
-
-**⚠️ USE SUBAGENTS** — even for 2-3 slides. You've been staring at the code and will see what you expect, not what's there. Subagents have fresh eyes.
-
-Convert slides to images (see [Converting to Images](#converting-to-images)), then use this prompt:
-
-```
-Visually inspect these slides. Assume there are issues — find them.
-
-Look for:
-- Overlapping elements (text through shapes, lines through words, stacked elements)
-- Text overflow or cut off at edges/box boundaries
-- Decorative lines positioned for single-line text but title wrapped to two lines
-- Source citations or footers colliding with content above
-- Elements too close (< 0.3" gaps) or cards/sections nearly touching
-- Uneven gaps (large empty area in one place, cramped in another)
-- Insufficient margin from slide edges (< 0.5")
-- Columns or similar elements not aligned consistently
-- Low-contrast text (e.g., light gray text on cream-colored background)
-- Low-contrast icons (e.g., dark icons on dark backgrounds without a contrasting circle)
-- Text boxes too narrow causing excessive wrapping
-- Leftover placeholder content
-
-For each slide, list issues or areas of concern, even if minor.
-
-Read and analyze these images — run `ls -1 "$PWD"/slide-*.jpg` and use the exact absolute paths it prints:
-1. <absolute-path>/slide-N.jpg — (Expected: [brief description])
-2. <absolute-path>/slide-N.jpg — (Expected: [brief description])
-...
-
-Report ALL issues found, including minor ones.
-```
-
-### Verification Loop
-
-1. Generate slides → Convert to images → Inspect
-2. **List issues found** (if none found, look again more critically)
-3. Fix issues
-4. **Re-verify affected slides** — one fix often creates another problem
-5. Repeat until a full pass reveals no new issues
-
-**Do not declare success until you've completed at least one fix-and-verify cycle.**
-
----
-
-## Converting to Images
-
-Convert presentations to individual slide images for visual inspection:
+## Conversão para Imagens
 
 ```bash
 python scripts/office/soffice.py --headless --convert-to pdf output.pptx
@@ -216,16 +93,81 @@ pdftoppm -jpeg -r 150 output.pdf slide
 ls -1 "$PWD"/slide-*.jpg
 ```
 
-**Pass the absolute paths printed above directly to the view tool.** The `rm` clears stale images from prior runs. `pdftoppm` zero-pads based on page count: `slide-1.jpg` for decks under 10 pages, `slide-01.jpg` for 10-99, `slide-001.jpg` for 100+.
+Passe os caminhos absolutos diretamente para a ferramenta de visualização. O `rm` limpa imagens de rodadas anteriores.
 
-**After fixes, rerun all four commands above** — the PDF must be regenerated from the edited `.pptx` before `pdftoppm` can reflect your changes.
+**Após correções, rode os 4 comandos novamente** — o PDF precisa ser regenerado do `.pptx` editado.
 
----
+## Confirmation Gates
 
-## Dependencies
+⛔ **Antes de sobrescrever arquivo existente:** "O arquivo [nome] já existe. Confirma substituição?"
 
-- `pip install "markitdown[pptx]"` - text extraction
-- `pip install Pillow` - thumbnail grids
-- `npm install -g pptxgenjs` - creating from scratch
-- LibreOffice (`soffice`) - PDF conversion (auto-configured for sandboxed environments via `scripts/office/soffice.py`)
-- Poppler (`pdftoppm`) - PDF to images
+⛔ **Antes de gerar slides:** "Confirma a estrutura proposta (X slides, tema Y, audiência Z) antes de eu começar?"
+
+⛔ **Antes de aplicar design radical:** "Vou usar [paleta/estilo]. Quer ver preview de 1-2 slides antes de eu fazer todos?"
+
+## Anti-Patterns
+
+| Anti-pattern | Por que é ruim | O que fazer |
+|---|---|---|
+| Mesmo layout em todos os slides | Apresentação monótona, audiência desliga | Variar: colunas, cards, callouts, imagens |
+| Texto centralizado no body | Parece amador, difícil de ler | Left-align parágrafos e listas; centralizar só títulos |
+| Paleta genérica azul | Sem identidade, parece template gratuito | Cores específicas pro tema/marca |
+| Slides só de texto | Esquecíveis, sem impacto visual | Sempre ter imagem, ícone, gráfico ou shape |
+| Pular QA visual | "Funciona no código" ≠ "funciona no slide" | Converter pra imagem + subagent review |
+| Linhas de acento sob títulos | Marca de slide AI-generated | Whitespace ou cor de fundo |
+| Unicode bullets (•) | Cria bullets duplos no PowerPoint | Usar `bullet: true` (PptxGenJS) ou `<a:buChar>` (XML) |
+| Reusar objetos de opção | PptxGenJS muta objetos in-place, corrompe o 2o uso | Factory function `() => ({...})` pra cada chamada |
+| Ignorar audiência | Pitch de vendas ≠ review técnico | Perguntar propósito antes de criar |
+
+## Pre-Delivery Checklist
+
+Antes de considerar a apresentação pronta:
+
+- [ ] Todos os slides revisados com markitdown (sem placeholder text)
+- [ ] QA visual feito (converter pra imagens + subagent)
+- [ ] Mínimo 1 ciclo de fix + re-verify completo
+- [ ] Layouts variados (não repetir o mesmo em slides consecutivos)
+- [ ] Paleta consistente em todos os slides
+- [ ] Tipografia: títulos 36pt+, body 14-16pt, captions 10-12pt
+- [ ] Margens mínimas de 0.5" respeitadas
+- [ ] Sem texto cortado ou overflow
+- [ ] Contraste adequado (texto E ícones vs fundo)
+- [ ] Speaker notes adicionadas (se solicitado)
+- [ ] Nome do arquivo descritivo
+
+## Quando NÃO Usar Esta Skill
+
+- **PDF puro** → use `pdf`
+- **Documento Word** → use `docx`
+- **Planilha/dados tabulares** → use `xlsx`
+- **Só extrair texto de PDF que era apresentação** → use `pdf`
+- **Google Slides** → esta skill é pra .pptx local
+- **Confuso sobre qual skill usar** → invoque `maestro`
+
+## Integração
+
+| Skill | Quando combinar |
+|-------|----------------|
+| `pdf` | Converter apresentação pra PDF final. Ou extrair conteúdo de PDF pra montar slides. |
+| `docx` | Conteúdo vem de um Word doc. Ou gerar handout/resumo da apresentação em Word. |
+| `xlsx` | Dados de planilha viram gráficos nos slides. Ou exportar tabela da apresentação. |
+| `maestro` | Projeto envolve múltiplos formatos. Maestro orquestra a sequência. |
+| `prompt-engineer` | Gerar conteúdo dos slides com IA antes de montar. |
+| `product-discovery-prd` | Apresentação é parte de discovery — PRD vira deck de pitch. |
+
+## Referências
+
+| Arquivo | Conteúdo |
+|---------|----------|
+| [editing.md](editing.md) | Workflow completo de edição via template (unpack/pack/XML) |
+| [pptxgenjs.md](pptxgenjs.md) | Tutorial PptxGenJS: texto, shapes, imagens, ícones, charts, masters |
+| [references/design-guide.md](references/design-guide.md) | Paletas de cores, tipografia, layouts, spacing, erros comuns |
+| [references/qa-visual.md](references/qa-visual.md) | Processo de QA visual completo com subagents |
+
+## Dependências
+
+- `pip install "markitdown[pptx]"` — extração de texto
+- `pip install Pillow` — grids de thumbnails
+- `npm install -g pptxgenjs` — criação do zero
+- LibreOffice (`soffice`) — conversão pra PDF (auto-configurado via `scripts/office/soffice.py`)
+- Poppler (`pdftoppm`) — PDF pra imagens

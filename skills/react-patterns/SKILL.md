@@ -132,3 +132,9 @@ Before recommending/implementing patterns:
 - **UI Design System** — provides tokens, this skill ensures they're applied correctly (server vs client)
 - **Trident** — run `--audit` before Trident review to catch React-specific issues
 - **SDD** — use `--scaffold` during the implement phase
+
+### Remotion Patterns
+Load `references/remotion-react-patterns.md` for React patterns specific to Remotion (video composition, timeline, animation sequences).
+
+### Motion Animations
+When building interactive UI with Framer Motion / Motion library, combine this skill's server/client boundaries with Motion's animation APIs — animations are client-only concerns.

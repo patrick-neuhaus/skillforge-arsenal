@@ -152,6 +152,21 @@ def validate_skill(skill_path, verbose=False):
     if 'anti-pattern' not in content_lower and 'anti pattern' not in content_lower:
         warn("No anti-patterns section found")
 
+    # Roteiro de perguntas (question framework)
+    has_questions = any(q in content_lower for q in ['ask:', 'pergunte:', 'roteiro de perguntas', 'key questions', 'question'])
+    if not has_questions:
+        warn("No question framework found — skills should ask structured questions when context is missing")
+
+    # GEO quality: action verbs in description
+    if isinstance(desc, str) and desc.strip():
+        action_verbs = ['create', 'build', 'improve', 'analyze', 'review', 'generate', 'fix',
+                        'optimize', 'audit', 'design', 'plan', 'implement', 'validate', 'check',
+                        'criar', 'melhorar', 'analisar', 'revisar', 'gerar', 'corrigir', 'otimizar',
+                        'auditar', 'planejar', 'implementar', 'validar', 'verificar', 'montar']
+        verb_count = sum(1 for v in action_verbs if v in desc.lower())
+        if verb_count < 3:
+            warn(f"Description has only {verb_count} action verbs — aim for 5+ for better GEO triggering")
+
     # Progressive loading references
     has_load_refs = 'load references/' in content_lower or 'consulte references/' in content_lower or 'references/' in content_lower
     refs_dir = skill_path / 'references'

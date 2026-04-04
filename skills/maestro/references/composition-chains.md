@@ -8,15 +8,18 @@ Consulte este arquivo no **Phase 2** quando o intent do usuário cruzar múltipl
 
 ### Feature Nova (do zero ao deploy)
 ```
-1. sdd --phase research       → prd.md (~30% context)
+1. code-dedup-scanner --check → reusables found
+2. sdd --phase research       → prd.md (~30% context)
+   └─ (optional) pattern-importer → pattern doc
    └─ /clear
-2. sdd --phase spec           → spec.md (~30% context)
+3. sdd --phase spec           → spec.md (~30% context)
    └─ /clear
-3. sdd --phase implement      → código (~40% context)
+4. sdd --phase implement      → código (~40% context)
    └─ /clear
-4. trident --mode all-local   → review findings (~35% context)
+5. architecture-guard --scan  → structural violations
+6. trident --mode all-local   → bug review (~35% context)
 ```
-**Handoff:** prd.md → spec.md → código → diff para trident
+**Handoff:** prd.md → spec.md → código → diff para guard + trident
 **Quando:** Feature complexa, >3 arquivos, precisa de planejamento
 
 ### Feature Nova (frontend React)
@@ -67,13 +70,16 @@ Consulte este arquivo no **Phase 2** quando o intent do usuário cruzar múltipl
 **Handoff:** Output do reference-finder → input do context-tree com scoring
 **Quando:** Pesquisando domínio novo, aprendendo área desconhecida
 
-### Criar Skill Nova
+### Criar Skill Nova (com GEO)
 ```
 1. reference-finder --find    → referências do domínio (~25% context)
 2. skill-builder --full       → SKILL.md + references/ (~40% context)
 3. prompt-engineer --validate → validação dos prompts internos (~20% context)
+   └─ /clear
+4. geo-optimizer --optimize   → description otimizada (~15% context)
+5. trident --skill            → review como produto (~25% context)
 ```
-**Handoff:** Referências → contexto para skill-builder → prompts para validação
+**Handoff:** Referências → contexto para skill-builder → prompts validados → description GEO → product review
 **Quando:** Criando skill para domínio que o usuário não domina completamente
 
 ### Bug Fix
@@ -137,3 +143,69 @@ Consulte este arquivo no **Phase 2** quando o intent do usuário cruzar múltipl
 | ui-design-system | component-architect | design.json |
 | product-discovery-prd | sdd | PRD completo |
 | component-architect | sdd --spec | component tree + interfaces |
+| code-dedup-scanner | sdd --research | reusables found |
+| pattern-importer | sdd --research | pattern document |
+| architecture-guard | trident | structural violations |
+| geo-optimizer | skill-builder | optimized description |
+| context-guardian --handoff | /clear | handoff document |
+
+---
+
+## Chains Novas (v2)
+
+### Evoluir Skill
+```
+1. skill-builder --evolve     → skill melhorada (~30% context)
+2. prompt-engineer --validate → prompts internos validados (~20% context)
+3. geo-optimizer --optimize   → description otimizada (~15% context)
+```
+**Quando:** Melhorar skill existente (description, structure, references)
+
+### Guard Pipeline (validação pré-merge)
+```
+1. code-dedup-scanner --check → verificar reutilizáveis
+2. architecture-guard --scan  → violações estruturais
+3. trident --mode all-local   → bugs e qualidade
+```
+**Quando:** Validação completa antes de merge. Cada pode rodar independente.
+
+### Context Management
+```
+1. context-guardian --check   → status 🟢/🟡/🔴
+2. (se 🔴) context-guardian --handoff → handoff document
+3. /clear
+4. Retomar com handoff como primeiro prompt
+```
+**Quando:** Conversa longa, chains pesadas, entre fases SDD
+
+### API → CLI → Skill
+```
+1. cli-skill-wrapper --analyze → design da CLI
+2. cli-skill-wrapper --wrap    → script + SKILL.md básico
+3. skill-builder --evolve      → melhorar SKILL.md gerado
+4. geo-optimizer --optimize    → description GEO
+```
+**Quando:** Wrapar API pesada (MCP replacement ou API nova)
+
+---
+
+## Meta-Orchestration — Evoluindo o Arsenal
+
+Chains especiais pra criar/evoluir/publicar skills do próprio arsenal.
+
+### Criar Nova Skill
+```
+reference-finder → skill-builder --full → prompt-engineer --validate
+→ /clear → geo-optimizer → trident --skill
+```
+
+### Evoluir Skill Existente
+```
+skill-builder --evolve → prompt-engineer --validate → geo-optimizer
+→ validate.py
+```
+
+### Publicar Skill no skills.sh
+```
+geo-optimizer --optimize → validate.py → (publicação manual no skills.sh)
+```
