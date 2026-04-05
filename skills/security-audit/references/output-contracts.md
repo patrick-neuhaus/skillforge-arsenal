@@ -71,8 +71,27 @@ priority: Corrigir imediatamente — dados de usuários expostos
 | **MEDIO** | Sem critical/high, mas achados medium que, combinados, aumentam risco. |
 | **BAIXO** | Apenas achados low/info. Boas práticas não seguidas mas sem risco imediato. |
 
+## Campos específicos — Modo Web
+
+No Modo Web, o campo `location` usa URL/path em vez de arquivo:linha:
+
+```
+location: https://TARGET/.env (HTTP 200 — conteúdo acessível)
+location: Header CSP ausente em https://TARGET/
+location: CORS Access-Control-Allow-Origin: * em https://TARGET/api/
+location: Bundle JS https://TARGET/assets/index-D6ch1W1j.js (service_role key encontrada)
+```
+
+Exemplos de severidade Web:
+- critical: `/.env` acessível com conteúdo, `.git/` exposto, CORS wildcard em endpoint autenticado, service_role no bundle
+- high: XSS refletido, CORS origin reflection, certificado expirado
+- medium: CSP ausente, HSTS ausente, SPF ausente, X-Frame-Options ausente
+- low: Server header expondo versão, scripts sem SRI, CAA ausente
+- info: SUPABASE_ANON_KEY no bundle (pública por design), tecnologia identificável
+
 ## Caps e limites
 
 - **Scanner:** máximo 15 achados, máximo 4 SUSPICIOUS (resto deve ser CONFIRMED)
 - **Verifier:** verifica todos os achados do Scanner, foco de esforço em critical/high
 - **Arbiter:** re-inspeciona todos critical + achados disputados (Scanner ≠ Verifier)
+- **Modo Web:** mesmos caps. Foco de esforço: Information Disclosure (críticos), Headers, SSL, depois DNS/Email

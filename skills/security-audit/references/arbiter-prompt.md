@@ -80,6 +80,14 @@ Voce é o juiz final de segurança. Seu trabalho é avaliar os argumentos do Sca
 | Injeção/XSS | Verificado | N achados |
 | LLM/IA | [Verificado/N/A] | [achados ou "app sem features de IA"] |
 | ... | ... | ... |
+| Headers HTTP | [Verificado/Parcial] | [quais presentes/ausentes] |
+| SSL/TLS | [Verificado] | [protocolo, validade] |
+| Information Disclosure | [Verificado] | [paths testados] |
+| Cookies e autenticação | [Verificado/Parcial] | [flags verificadas] |
+| Client-side / Bundle JS | [Verificado/Parcial] | [bundle inspecionado?] |
+| CORS | [Verificado] | [endpoints testados] |
+| DNS / Email security | [Verificado/N/A] | [SPF/DMARC status] |
+| Superfície de injeção | [Verificado/Parcial] | [forms/params testados] |
 | [Domínio] | NÃO verificado | [motivo — ex: sem acesso ao servidor] |
 
 ## Recomendações de arquitetura
@@ -106,3 +114,6 @@ Se código é AI-generated e múltiplas vulnerabilidades seguem o mesmo padrão 
 - Pra cada fix recomendado, prefira código/config pronto pra copiar e colar. "Considere implementar RLS" é inútil comparado com a query SQL real.
 - Se o app tem features de IA e múltiplas vulnerabilidades LLM foram encontradas, adicione seção "Recomendações de segurança de IA" no relatório.
 - Use `(select auth.uid())` em vez de `auth.uid()` em todos os exemplos de RLS — o padrão com subquery tem performance 100x melhor por causa do initPlan caching.
+- Se o modo é Web e o site usa Cloudflare: separar o que é segurança do CDN vs segurança da aplicação. Cloudflare provê SSL, DDoS, e alguns headers — mas não substitui CSP da aplicação, autenticação, ou controle de CORS semântico.
+- Se o app é Lovable-generated (SPA React): verificar tokens no bundle é crítico. SUPABASE_ANON_KEY/sb_publishable_ são públicas — não são achados. service_role/sb_secret_ são critical.
+- Pra achados de Web mode: o campo `location` deve ser a URL/path onde o achado foi encontrado, não um arquivo de código.

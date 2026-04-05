@@ -188,10 +188,108 @@ sysctl net.ipv4.conf.all.rp_filter net.ipv4.conf.all.accept_redirects net.ipv4.c
 systemctl list-units --type=service --state=running | grep -vE "systemd|dbus|ssh|cron|docker|network"
 ```
 
+## Sequência de varredura — Modo Web (Blackbox)
+
+Load `references/web-pentest-domains.md` pra domínios completos e comandos.
+
+### Fase 1 — Reconhecimento e stack fingerprinting
+```
+1. Buscar indicadores de CMS: wp-content/, wp-login, xmlrpc.php, generator meta tag
+2. Identificar framework frontend: bundle JS hash (Lovable/Vite), id="root" (React),
+   __NUXT__ (Nuxt), ng-version (Angular), /_next/ (Next.js)
+3. Identificar CDN/WAF: CF-RAY header (Cloudflare), x-cache (Varnish/CDN)
+4. Identificar backend via: Server: header, X-Powered-By, error pages
+5. Mapear endpoints via: robots.txt, sitemap.xml, links no HTML, network requests
+6. Se Lovable detectado: ativar padrões AI-generated risks
+   → Priorizar: tokens hardcoded em bundle, endpoints sem auth, CORS permissivo
+```
+
+### Fase 2 — HTTP Headers de segurança
+```
+Verificar cada header obrigatório:
+- Content-Security-Policy: presente? qual diretiva? default-src 'self'?
+- Strict-Transport-Security: max-age adequado? includeSubDomains? preload?
+- X-Frame-Options: DENY ou SAMEORIGIN?
+- X-Content-Type-Options: nosniff?
+- Referrer-Policy: valor restritivo?
+- Permissions-Policy: presente?
+Headers ausentes = achados medium-high dependendo do contexto.
+```
+
+### Fase 3 — SSL/TLS
+```
+- Verificar validade do certificado (datas, CN/SAN)
+- Protocolo mínimo (TLS 1.2 req, TLS 1.0/1.1 = high)
+- Emissor confiável (Let's Encrypt, DigiCert, etc.)
+- Se Cloudflare: SSL gerenciado — risco é baixo por padrão,
+  mas documentar como "verificado via CDN"
+```
+
+### Fase 4 — Information Disclosure
+```
+Testar TODOS os paths da camada determinística.
+Paths com HTTP 200 que deveriam ser 404 = achado imediato.
+Atenção especial:
+- /.git/HEAD = critical (repo exposto)
+- /.env = critical (secrets)
+- /api/ = high (endpoint sem auth)
+- Error pages: acessar URL inválida, verificar se expõe stack
+```
+
+### Fase 5 — Cookies e autenticação
+```
+- Inspecionar Set-Cookie headers — identificar cookies da app (não CDN)
+- Verificar HttpOnly, Secure, SameSite em cada cookie de sessão
+- Mapear login page: /login, /signin, /auth
+- Se login existir: HTTPS no form action, CAPTCHA, rate limiting
+- Se SPA (React/Lovable): como token é armazenado?
+  → Via browser MCP: javascript_tool "Object.keys(localStorage)"
+```
+
+### Fase 6 — Client-side e bundle JS
+```
+- Buscar scripts sem SRI: grep <script | grep -v integrity=
+- Verificar mixed content: HTTP resources em página HTTPS
+- Inspecionar bundle JS (Lovable: /assets/index-[hash].js via WebFetch)
+  → Buscar: API keys, tokens, endpoints de backend, URLs de API
+  → anon key / sb_publishable_ são públicas — NÃO é critical
+  → sb_secret_ ou service_role = critical
+- Via browser MCP: ler network requests pra mapear chamadas de API
+```
+
+### Fase 7 — CORS
+```
+- Testar OPTIONS com Origin: https://evil-test.com em cada endpoint
+- Verificar Access-Control-Allow-Origin no response
+- * wildcard em endpoint com auth = critical
+- Verificar se target reflete Origin header sem validação
+```
+
+### Fase 8 — DNS e email security
+```
+- SPF: v=spf1 presente? -all ou ~all?
+- DMARC: _dmarc.DOMAIN presente? p=reject/quarantine/none?
+- CAA: registro presente?
+- Usar curl https://dns.google/resolve como fallback
+- Verificar no domínio RAIZ, não no subdomínio
+```
+
+### Fase 9 — Superfície de injeção e API
+```
+- Mapear forms via browser MCP (read_page)
+- Verificar parâmetros de URL refletidos na resposta (XSS)
+- Testar open redirects: ?redirect=, ?url=, ?next=
+- Mapear chamadas de API via network requests
+- Testar endpoints de API sem auth
+- Se Supabase detectado: testar acesso direto via anon key
+  → curl SUPABASE_URL/rest/v1/ -H "apikey: ANON_KEY"
+  → Se lista tabelas sem RLS = critical
+```
+
 ## Formato do output
 
 ```
-# Security Scan — [Modo: Code/VPS] — [projeto/hostname] — [data]
+# Security Scan — [Modo: Code/VPS/Web] — [projeto/hostname/URL] — [data]
 
 ## Stack identificada
 [Stack e versões]

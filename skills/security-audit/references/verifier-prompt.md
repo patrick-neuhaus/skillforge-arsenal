@@ -88,9 +88,48 @@ Voce é um verificador de segurança cético. Seu trabalho é pegar cada achado 
 - INSUFFICIENT_EVIDENCE: Z achados
 ```
 
+### Pra achados de Web (Blackbox):
+
+#### Headers HTTP:
+- [ ] O header realmente está ausente ou só não apareceu no grep? Verificar com curl -sI completo.
+- [ ] Header está sendo fornecido pelo CDN (Cloudflare, Fastly)? Se sim, contar como presente.
+- [ ] X-Frame-Options ausente mas CSP tem frame-ancestors? CSP frame-ancestors é equivalente moderno — aceitar como mitigação.
+- [ ] HSTS ausente no response mas Cloudflare com Always Use HTTPS? Risco prático baixo — NEEDS_HUMAN_CHECK.
+
+#### SSL/TLS:
+- [ ] Certificado expirado ou CA não confiável? Re-verificar com openssl s_client.
+- [ ] Site usa Cloudflare? SSL gerenciado automaticamente — risco baixo por padrão.
+
+#### Information Disclosure:
+- [ ] Path que retornou 200 realmente tem conteúdo sensível ou é redirect/soft 404?
+  → Verificar conteúdo real com curl -s | head -20
+- [ ] /.git/HEAD retornou 200 mas é string inócua? Verificar /.git/config pra confirmar.
+- [ ] /api/ retornou 200 mas é landing page sem endpoints reais?
+
+#### Cookies:
+- [ ] Cookie sem HttpOnly é cookie de sessão/auth ou de analytics/preferência?
+  → Cookie de analytics sem HttpOnly não é vulnerabilidade relevante.
+- [ ] __cf_bm é cookie do Cloudflare — já tem HttpOnly e Secure. Não reportar como achado da app.
+
+#### CORS:
+- [ ] Endpoint com CORS wildcard requer auth ou é público por design?
+  → Wildcard em endpoint público sem dados sensíveis = info/low
+- [ ] Origin é refletida mas endpoint só retorna dados públicos?
+
+#### DNS/Email:
+- [ ] SPF ausente no subdomínio? Verificar no domínio raiz — SPF é verificado lá.
+- [ ] DMARC p=none está ativo ou é placeholder? Verificar rua/ruf tags.
+
+#### Bundle JS (Lovable/SPA):
+- [ ] Token encontrado é SUPABASE_ANON_KEY ou sb_publishable_*? São públicas por design.
+- [ ] Token é sb_secret_ ou service_role? = critical, sem mitigação válida.
+- [ ] API endpoint descoberto no bundle retorna dados sensíveis sem auth?
+
 ## Notas
 
 - Se o Scanner encontrou um secret hardcoded e você confirma que é real (não é public key), confirme como CONFIRMED sem hesitar. Secrets não têm contra-argumento válido.
 - Se OWASP A01 (Broken Access Control) e o acesso é via frontend direto ao Supabase sem RLS, confirme. Não existe mitigação válida no frontend — a proteção TEM que estar no banco.
 - Pra achados de severidade info, uma verificação leve é suficiente. Concentre esforço nos critical e high.
 - Se a camada determinística (grep/SAST) já confirmou o achado, concentre na verificação de contexto: "a vulnerabilidade existe, mas é exploitável neste app?"
+- Pra achados de Modo Web: verificar se proteção está no CDN (Cloudflare) vs na aplicação. Proteção via CDN conta como NEEDS_HUMAN_CHECK, não como REJECTED — CDN config pode mudar ou ser bypassada.
+- Cookie __cf_bm é do Cloudflare, não da aplicação. Nunca reportar suas flags como achado do app.
