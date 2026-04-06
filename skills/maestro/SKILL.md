@@ -70,6 +70,14 @@ Map to categories:
 | "communicate/client message" | People | comunicacao-clientes |
 | "manage project/team" | People | tech-lead-pm |
 | "organize knowledge" | Meta | context-tree |
+| "copy/copywriting/headline/landing page text/email sequence/ad copy" | Marketing | copy |
+| "product positioning/ICP/marketing context/target audience/ideal customer" | Marketing | product-marketing-context |
+| "AI SEO/GEO/AEO/AI Overviews/otimizar para IA/aparecer no ChatGPT/Perplexity" | Marketing | ai-seo |
+| "site architecture/page hierarchy/sitemap/IA/navegação/URL structure" | Marketing | site-architecture |
+| "competitor page/vs page/alternative page/comparação/battle card" | Marketing | competitor-alternatives |
+| "sales collateral/pitch deck/one-pager/objection handling/demo script" | Marketing | sales-enablement |
+| "free tool/engineering as marketing/lead gen tool/calculator/grader" | Marketing | free-tool-strategy |
+| "launch/GTM/Product Hunt/go-to-market/feature release/waitlist" | Marketing | launch-strategy |
 
 ## Phase 2: Route
 
@@ -156,6 +164,16 @@ If the request crosses domains, load `references/composition-chains.md` and pres
 ### Workflow
 - **schedule** — Tarefas agendadas
 - **pattern-importer** — Técnica .tmp: importar padrões de repos externos
+
+### Marketing
+- **copy** — Copywriting para qualquer canal (landing, social, email, ads, UX)
+- **product-marketing-context** — Documento de posicionamento/ICP que todas as skills de marketing referenciam
+- **ai-seo** — Otimização para IA (GEO/AEO): aparecer em AI Overviews, ChatGPT, Perplexity
+- **site-architecture** — Arquitetura de site: hierarquia de páginas, navegação, URLs, IA
+- **competitor-alternatives** — Páginas de comparação e alternativas para SEO e vendas
+- **sales-enablement** — Materiais de vendas: pitch deck, one-pager, objection handling, demo script
+- **free-tool-strategy** — Estratégia de ferramentas gratuitas para lead gen e SEO (engineering as marketing)
+- **launch-strategy** — Estratégia de lançamento: GTM, Product Hunt, feature release, waitlist
 ```
 
 ## Anti-Patterns

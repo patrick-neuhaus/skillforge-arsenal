@@ -1,6 +1,6 @@
 ---
 name: security-audit
-description: "Three-agent security audit pipeline for web applications and VPS servers. Scan, verify, and judge vulnerabilities with independent 3-agent verification against OWASP Top 10 2025. Use when user asks to: audit security, review security, scan for vulnerabilities, check OWASP compliance, detect exposed secrets, inspect RLS policies, analyze authentication flow, assess attack surface, validate Supabase security, fix security issues, 'tá seguro?', 'tem vulnerabilidade?', 'dados expostos', 'token vazando', 'meu app é seguro?', 'revisa a segurança', 'antes de lançar quero garantir segurança'. Three modes: Code (GitHub repo — OWASP, RLS, secrets, XSS, injection, auth), VPS (SSH — hardening, ports, containers, firewall), and Web (blackbox pentest de site ao vivo — headers, SSL, paths, CORS, DNS, bundle JS). Stack: React/TypeScript + Supabase (Lovable), adaptável. Includes OWASP LLM Top 10 for AI features, supply chain, AI-generated code risks. Unlike trident (functional bugs) and vps-infra-audit (infra/performance), this focuses exclusively on security vulnerabilities."
+description: "Three-agent security audit pipeline (Scanner → Verifier → Arbiter). Three modes: Code (OWASP Top 10, RLS, secrets, XSS, injection, auth), VPS (hardening, ports, containers, firewall), Web (blackbox pentest — headers, SSL, CORS, DNS). Use when: 'audit security', 'tem vulnerabilidade?', 'tá seguro?', 'revisa a segurança'. Stack: React/Supabase, adaptável. Includes OWASP LLM Top 10 for AI features."
 ---
 
 # Security Audit v2

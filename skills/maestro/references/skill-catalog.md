@@ -289,6 +289,76 @@ Consulte este arquivo no **Phase 2** quando for rotear o intent do usuário para
 
 ---
 
+## Marketing
+
+### copy
+- **O que faz:** Escreve, revisa e otimiza copy para qualquer canal com 8 modos (landing, social, email, cold-email, whatsapp, blog-seo, ux, ads). Usa frameworks AIDA, PAS, SB7, Value Equation e os 5 níveis de consciência de Schwartz
+- **Triggers PT-BR:** "escreve copy", "melhora esse texto", "headline pra landing", "email sequence", "copy de anúncio", "texto pra landing page", "escreve um post", "cria um email"
+- **Triggers EN:** write copy, improve this copy, landing page copy, email sequence, ad copy, social post copy, headline
+- **Modes:** --mode landing/social/email/cold-email/whatsapp/blog-seo/ux/ads, --edit, --brief, --framework
+- **Input:** Objetivo + canal + audiência + produto (ou copy existente para edição)
+- **Output:** Copy estruturado com anotações explicando as escolhas + alternativas de headline
+- **Iron Law:** NUNCA escreva copy sem classificar o nível de consciência da audiência (Schwartz) antes de escolher o framework
+- **Quando NÃO usar:** Estratégia de posicionamento (product-marketing-context), auditoria SEO técnica (seo), fluxo UX completo (ux-audit), mensagens com clientes (comunicacao-clientes)
+
+### product-marketing-context
+- **O que faz:** Cria e mantém o documento `.agents/product-marketing-context.md` com posicionamento, ICP, proposta de valor e messaging — contexto base que todas as outras skills de marketing referenciam para evitar repetição
+- **Triggers PT-BR:** "contexto de produto", "contexto de marketing", "posicionamento", "quem é meu público-alvo", "descreve meu produto", "ICP", "perfil de cliente ideal", "configurar contexto"
+- **Triggers EN:** product context, marketing context, set up context, positioning, who is my target audience, describe my product, ICP, ideal customer profile
+- **Input:** Projeto existente (pode auto-draftar lendo o repo) ou informações fornecidas em conversa
+- **Output:** `.agents/product-marketing-context.md` com posicionamento, ICP, diferenciais, pricing, messaging e personas
+- **Quando NÃO usar:** Escrever copy diretamente (copy), discovery de produto/PRD (product-discovery-prd)
+
+### ai-seo
+- **O que faz:** Otimiza conteúdo para ser citado por sistemas de IA (Google AI Overviews, ChatGPT, Perplexity, Claude, Gemini, Copilot). Cobre GEO, AEO, LLMO — estratégias para aparecer em respostas geradas por IA
+- **Triggers PT-BR:** "AI SEO", "GEO", "AEO", "LLMO", "otimizar para IA", "aparecer no ChatGPT", "aparecer no Perplexity", "AI Overviews", "citações de IA", "visibilidade em IA", "zero-click search"
+- **Triggers EN:** AI SEO, AEO, GEO, LLMO, answer engine optimization, generative engine optimization, LLM optimization, AI Overviews, optimize for ChatGPT, optimize for Perplexity, AI citations, AI visibility, LLM mentions
+- **Input:** Site/conteúdo + queries-alvo + objetivo de visibilidade em IA
+- **Output:** Estratégia de otimização para IA com recomendações de conteúdo, estrutura e autoridade
+- **Quando NÃO usar:** SEO técnico tradicional (seo), dados estruturados/schema (seo --technical), auditoria on-page clássica (seo --audit)
+
+### site-architecture
+- **O que faz:** Planeja hierarquia de páginas, navegação, estrutura de URLs, breadcrumbs e internal linking de sites. Foco em IA de informação (information architecture) para UX e SEO
+- **Triggers PT-BR:** "sitemap", "estrutura do site", "hierarquia de páginas", "arquitetura de site", "IA do site", "navegação", "estrutura de URLs", "o que páginas preciso", "como organizar meu site"
+- **Triggers EN:** sitemap, site map, visual sitemap, site structure, page hierarchy, information architecture, IA, navigation design, URL structure, breadcrumbs, internal linking strategy, website planning
+- **Input:** Tipo de site + objetivos + audiências + estado atual (novo ou reestruturação)
+- **Output:** Hierarquia de páginas, estrutura de navegação, padrões de URL, estratégia de internal linking
+- **Quando NÃO usar:** Sitemap XML técnico (seo --technical), auditoria SEO (seo --audit), dados estruturados (seo --technical)
+
+### competitor-alternatives
+- **O que faz:** Cria páginas de comparação e alternativas para SEO e sales enablement. Cobre 4 formatos: alternativa singular, alternativas plural, você vs concorrente, concorrente vs concorrente
+- **Triggers PT-BR:** "página de alternativa", "página vs", "comparação com concorrente", "página de comparação", "como nos comparamos com X", "battle card", "teardown de concorrente", "alternativas ao [produto]"
+- **Triggers EN:** alternative page, vs page, competitor comparison, comparison page, [Product] vs [Product], [Product] alternative, competitive landing pages, battle card, competitor teardown
+- **Input:** Produto + concorrentes a cobrir + diferenciais + ICP
+- **Output:** Páginas de comparação/alternativa com estrutura SEO, tabelas de comparação, posicionamento e CTAs
+- **Quando NÃO usar:** Materiais internos de vendas (sales-enablement), auditoria SEO geral (seo)
+
+### sales-enablement
+- **O que faz:** Cria materiais de vendas B2B que reps realmente usam: pitch decks, one-pagers, docs de objeções, demo scripts, playbooks e propostas
+- **Triggers PT-BR:** "deck de vendas", "pitch deck", "one-pager", "leave-behind", "objeções", "análise de ROI", "script de demo", "talk track", "playbook de vendas", "template de proposta", "materiais de vendas", "o que dar pra minha equipe de vendas"
+- **Triggers EN:** sales deck, pitch deck, one-pager, leave-behind, objection handling, deal-specific ROI analysis, demo script, talk track, sales playbook, proposal template, buyer persona card, sales materials
+- **Input:** Produto + motion de vendas + personas + ativos específicos necessários
+- **Output:** Materiais de vendas estruturados (decks, docs, scripts) prontos para uso pelos reps
+- **Quando NÃO usar:** Páginas de comparação para SEO (competitor-alternatives), copy para site de marketing (copy), cold outreach (copy --mode cold-email)
+
+### free-tool-strategy
+- **O que faz:** Planeja, avalia e define estratégia para ferramentas gratuitas de marketing (engineering as marketing) — calculadoras, geradores, graders, audit tools — para geração de leads, SEO e brand awareness
+- **Triggers PT-BR:** "engineering as marketing", "ferramenta gratuita", "ferramenta de marketing", "calculadora", "gerador", "ferramenta interativa", "ferramenta de lead gen", "recurso gratuito", "calculadora de ROI", "grader tool", "audit tool", "devo construir uma ferramenta gratuita"
+- **Triggers EN:** engineering as marketing, free tool, marketing tool, calculator, generator, interactive tool, lead gen tool, free resource, ROI calculator, grader tool, audit tool, should I build a free tool, tools for lead gen
+- **Input:** Produto + público-alvo + objetivo (leads/SEO/awareness) + recursos disponíveis para construir
+- **Output:** Estratégia de ferramenta: conceito validado, tipo de ferramenta, stack sugerida, plano de promoção e métricas
+- **Quando NÃO usar:** Lead magnets estáticos (ebooks, checklists — use copy), ferramentas internas sem objetivo de marketing
+
+### launch-strategy
+- **O que faz:** Planeja lançamentos de produto, anúncios de feature e estratégias GTM. Cobre Product Hunt, beta launch, early access, waitlists e releases contínuos
+- **Triggers PT-BR:** "lançamento", "Product Hunt", "feature release", "anúncio", "go-to-market", "beta launch", "early access", "waitlist", "atualização de produto", "como lanço isso", "checklist de lançamento", "plano GTM", "vamos shipar"
+- **Triggers EN:** launch, Product Hunt, feature release, announcement, go-to-market, beta launch, early access, waitlist, product update, how do I launch this, launch checklist, GTM plan, we're about to ship
+- **Input:** Produto/feature a lançar + audiência + canais disponíveis + timeline
+- **Output:** Plano de lançamento com checklist, cronograma, mensagens por canal e estratégia de momentum
+- **Quando NÃO usar:** Marketing contínuo pós-lançamento (use copy + seo), materiais de vendas (sales-enablement)
+
+---
+
 ## Maestro (esta skill)
 - **O que faz:** Orquestra e roteia entre todas as skills
 - **Triggers:** "qual skill usar?", "o que posso fazer?", "me ajuda a decidir"
