@@ -45,10 +45,10 @@ Tech Lead Progress:
 
 O usuário está em transição de 100% operacional para liderança. Primeira vez gerenciando pessoas. Equipe junior e crescendo.
 
-- **Willy:** chefe/mentor — espera crescimento como líder
-- **Hygor:** freela junior, precisa de contexto claro mas executa
-- **Jonas:** quase estagiário, precisa acompanhamento próximo
-- **Novas contratações:** vão entrar, processo precisa escalar
+- **Willy:** chefe/mentor — decisões estratégicas passam por ele
+- **Hygor:** freela junior experiente, executa com contexto claro
+- **Jonas:** junior inexperiente, precisa acompanhamento próximo
+- **Novas contratações:** podem entrar, processo precisa escalar
 - **Ferramentas:** ClickUp (kanban), WhatsApp/Telegram (comunicação)
 
 ## Princípios
