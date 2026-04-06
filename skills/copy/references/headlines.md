@@ -104,6 +104,8 @@
 
 ### Por Urgência / Escassez
 
+> ⚠️ **ATENÇÃO:** Fórmulas #22-23 de urgência/escassez APENAS para Schwartz 4-5 (Product Aware / Most Aware). Em Schwartz 1-2, urgência AFASTA. Não use.
+
 22. `Última chance: [oferta] encerra [deadline]`
     > "Última chance: acesso vitalício encerra sexta às 23h59"
 

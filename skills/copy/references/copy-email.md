@@ -157,3 +157,45 @@ Dia 21-28 → Breakup email ("última mensagem — posso fechar esse lead?")
 
 [P.S.: segundo CTA ou urgência — muito lido]
 ```
+
+---
+
+## Carrinho Abandonado — 3 Emails
+
+| # | Email | Quando | Foco | Tom |
+|---|-------|--------|------|-----|
+| 1 | Lembrete suave | 1-3 horas | Lembrar do item + facilitar volta | Amigável, sem pressão |
+| 2 | Objeção + prova | 24 horas | Endereçar objeção principal + testimonial | Empático + social proof |
+| 3 | Incentivo + urgência | 48-72 horas | Desconto/bônus + deadline | Direto + escassez real |
+
+**Email 1 — Template:**
+```
+Subject: esqueceu algo?
+Preview: seu [produto] ainda tá esperando
+
+Oi [nome],
+
+Vi que você quase [ação — ex: garantiu seu acesso].
+
+Seu [produto/plano] ainda tá salvo no carrinho.
+
+[CTA: Voltar pro carrinho]
+
+Qualquer dúvida, responde esse email.
+```
+
+**Email 3 — Template:**
+```
+Subject: última chance: [incentivo]
+Preview: expira em [prazo]
+
+[Nome], última mensagem sobre isso.
+
+Seu [produto] ainda tá no carrinho — e consegui [incentivo: 15% off / bônus X / extensão de trial].
+
+Mas só até [deadline real].
+
+[CTA: Garantir com [incentivo]]
+
+Depois disso, preço normal volta.
+```

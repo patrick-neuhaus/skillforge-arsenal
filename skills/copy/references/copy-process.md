@@ -134,6 +134,37 @@ Após cada afirmação, pergunte: "E daí? O que o leitor ganha com isso?"
 - Prova social específica (número + categoria de cliente)
 - Explicação clara do próximo passo ("Você receberá X em Y minutos")
 
+### Sweep 6 — Heightened Emotion (Detalhamento)
+
+Se o copy está "sem vida" ou lê como manual técnico, aplique:
+
+**1. Linguagem Sensorial**
+- Substitua abstrações por experiências: "melhorar produtividade" → "finalmente sair do escritório às 18h"
+- Use verbos sensoriais: ver, sentir, ouvir, tocar, perceber
+- Descreva o MOMENTO da transformação, não o resultado abstrato
+
+**2. Antes/Depois Emocional**
+- Antes: "Você fica até tarde, ansioso, checando WhatsApp a cada 5 minutos"
+- Depois: "Você dorme tranquilo sabendo que cada cliente foi respondido"
+- A distância emocional entre antes e depois = intensidade do desejo
+
+**3. Life Force 8 (Ca$hvertising)**
+Conecte ao desejo biológico primário mais relevante:
+- Sobrevivência / extensão de vida
+- Liberdade do medo e da dor
+- Condições de vida confortáveis
+- Ser superior / vencer / não ficar pra trás
+- Cuidar e proteger entes queridos
+- Aprovação social / status
+
+**4. Pratfall Effect**
+- Mostre vulnerabilidade estratégica: "Antes de descobrir isso, eu perdia 3 clientes por semana"
+- Competência + falha = mais simpático e confiável
+
+**5. Peak-End Rule**
+- O clímax emocional E o final do copy são os mais lembrados
+- CTA final deve ser o momento de maior emoção/motivação
+
 ---
 
 ## Word-Level Quick Checks (Edição Final)

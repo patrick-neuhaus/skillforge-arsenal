@@ -150,3 +150,36 @@ Copy: Alta motivação sem facilidade = frustração. Reduza o primeiro passo ao
 - **Preemptive handling** — endereça objeção ANTES dela aparecer no copy
 - **Risk reversal** — transfere risco do comprador pro vendedor
 - **Guarantee stacking** — múltiplas garantias em camadas
+
+---
+
+## B2B Psychology — Modelos Adicionais
+
+| Modelo | O que é | Como aplicar |
+|--------|---------|-------------|
+| **Risk-to-Career** | Decisor corporativo não arrisca a carreira | Reduza risco pessoal: cases de empresas similares, garantias corporativas, SLA, compliance |
+| **TCO Framing** | Total Cost of Ownership > preço mensal | Compare TCO com e sem a solução (tempo perdido, erro humano, custo de oportunidade) |
+| **Consensus Building** | Múltiplos stakeholders precisam concordar | Forneça materiais pra cada persona: CFO quer ROI, CTO quer segurança, COO quer eficiência |
+| **Procurement Objections** | Departamento de compras tem checklist próprio | Antecipe: segurança de dados, compliance, SLA, suporte, escalabilidade, integração |
+| **ROI Calculator** | Decisor precisa justificar internamente | Forneça números prontos: "Economia de X horas/mês × custo/hora = ROI de Y% em Z meses" |
+
+---
+
+## Pricing Page — Estrutura Recomendada
+
+```
+1. Âncora — mostrar valor total sem o produto OU plano mais caro primeiro
+2. 3 Tiers lado a lado — destaque visual no plano recomendado (Decoy Effect)
+   - Menor: versão limitada (âncora de comparação)
+   - Médio: TARGET (melhor custo-benefício, badge "mais popular")
+   - Maior: premium (âncora de preço)
+3. Feature comparison — tabela com ✓/✗ por plano
+4. Breakdown de preço — "R$X/dia" ou "R$X por usuário" (Mental Accounting)
+5. FAQ de objeções de preço — 3-5 perguntas comuns (Preemptive Handling)
+6. Guarantee + CTA — risco zero + ação clara
+```
+
+**Quick checks de pricing:**
+- Rule of 100: abaixo de R$100 → desconto em %. Acima → desconto em R$.
+- Charm Pricing: terminado em 7 ou 9 pra transacional. Número redondo pra premium.
+- Anchoring: preço "de" riscado antes do preço "por" atual.
