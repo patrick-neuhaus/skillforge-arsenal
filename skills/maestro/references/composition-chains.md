@@ -4,6 +4,24 @@ Consulte este arquivo no **Phase 2** quando o intent do usuário cruzar múltipl
 
 ---
 
+## Modelo recomendado por fase de chain
+
+Quando uma chain envolve **plan → implement → review**, troca de modelo entre fases é o padrão correto. Não use Opus high pra tudo — desperdiça budget e degrada contexto.
+
+| Fase | Modelo recomendado | Thinking | Por quê |
+|------|-------------------|----------|---------|
+| Research / Discovery | Sonnet medium ou Opus high | think hard | Investigação ampla, ainda não decisional |
+| Spec / Plano | **Opus high** | **ultrathink** | Decisões caras, multi-sistema, custo de errar é alto |
+| Implement | **Sonnet medium** (fresh session com a spec) | default | Spec elimina ambiguidade. Sonnet executa bem o que tá bem-bounded. Use `/model opusplan` pra automatizar o handoff. |
+| Review (trident) | Sonnet medium ou Sonnet high | think hard | 3-agent pipeline já compensa raciocínio |
+| Architecture decisions | Opus high | ultrathink | Decisão única, custo alto se errar |
+
+**Anti-padrão:** rodar a chain inteira em Opus high → queima usage limit em ~1h e degrada contexto bem antes do compact (degradação reportada a partir de ~40% pelo próprio Opus 4.6 1M).
+
+**Regra de bump:** bump thinking antes de bump model. Sonnet medium + ultrathink frequentemente > Opus high + default.
+
+---
+
 ## Chains por Cenário
 
 ### Feature Nova (do zero ao deploy)
@@ -90,6 +108,17 @@ Consulte este arquivo no **Phase 2** quando o intent do usuário cruzar múltipl
 4. trident --mode all-local   → confirmar fix (~30% context)
 ```
 **Quando:** Bug reportado ou encontrado em review
+
+### Conteúdo SEO + IA (Google + LLMs)
+```
+1. seo --keyword              → keyword research + canibalização (~25% context)
+2. seo --content              → estratégia de conteúdo (~20% context)
+3. copy --mode blog-seo       → draft do conteúdo (~25% context)
+4. ai-seo                     → otimização pra citação em LLMs (~15% context)
+```
+**Handoff:** Keywords → estrutura de conteúdo → copy → otimização AEO/GEO/LLMO
+**Quando:** Conteúdo precisa rankear no Google E ser citado por ChatGPT/Perplexity/Claude
+**Por que não só seo:** Google ranking ≠ LLM citation. ai-seo cuida da camada de visibilidade em respostas geradas por IA.
 
 ### Produto Novo
 ```

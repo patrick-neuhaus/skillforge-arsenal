@@ -4,6 +4,36 @@ Consulte este arquivo no **Phase 2** quando for rotear o intent do usuário para
 
 ---
 
+## Routing Priorities (regras hard)
+
+Quando o intent do usuário pode acionar 2+ skills, use estas regras antes de propor. Elas existem porque overlaps reais já causaram routing errado em sessões anteriores.
+
+| Intent | Skill correta | NÃO usar |
+|--------|---------------|----------|
+| Code review (bugs, qualidade, DRY/KISS, security, SOLID) | **trident** | ❌ `simplify` (built-in Anthropic) — cobertura inferior, sem 3-agent verification |
+| Design review code-level (CSS, layout, perf, a11y no código) | **trident --design** | ❌ ux-audit (essa é experiência, não código) |
+| Auditoria de UX/experiência (fluxos, heurísticas, dark patterns, WCAG) | **ux-audit** | ❌ trident --design (essa é code-level) |
+| Review de skill como produto (estrutura, GEO, distribuição) | **trident --skill** | ❌ geo-optimizer (esse é só description cirúrgico) |
+| Otimização cirúrgica de description pra GEO | **geo-optimizer** | ❌ trident --skill (review holístico, não cirúrgico) |
+| Mensagem operacional 1:1 pra cliente (cobrança, update, aprovação) | **comunicacao-clientes** | ❌ copy --mode whatsapp (essa é persuasão/conversão) |
+| Copy persuasiva pra audiência (WhatsApp marketing, broadcast, vendas) | **copy --mode whatsapp** | ❌ comunicacao-clientes (essa é relacionamento operacional) |
+| Importar padrão de outro repo (clone, extrai, limpa .tmp) | **pattern-importer** | ❌ reference-finder (essa é livros/frameworks teóricos) |
+| Encontrar livros/frameworks/metodologias consagradas | **reference-finder** | ❌ pattern-importer (esse é código/repo concreto) |
+| SEO tradicional (technical, on-page, programático) | **seo** | — |
+| Aparecer em respostas de IA (AEO/GEO/LLMO) | **ai-seo** | — |
+| Conteúdo que precisa Google + LLMs | **chain seo --content → ai-seo** | — |
+
+### IRON LAW de roteamento (do maestro)
+
+**Antes de propor uma skill ou chain, leia o SKILL.md das skills candidatas.** Não confie só no nome ou na sua memória — descriptions evoluem, modes mudam, boundaries se redefinem. Esta lei existe porque falhas de routing já aconteceram (ex: propor `simplify` quando `trident` era a skill certa). Custo: ~1k tokens. Economia: evitar refazer trabalho com skill errada.
+
+### Quando usar maestro vs chamar skill direto
+
+- **Chama direto** se: tu sabe a skill, intent é claro, é 1 skill só
+- **Roda maestro** se: 2+ skills candidatas, intent ambíguo, vai compor chain de 2+ skills, ou nunca usou essa skill antes
+
+---
+
 ## Code Review
 
 ### trident

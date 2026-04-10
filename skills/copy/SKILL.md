@@ -7,6 +7,13 @@ description: "Write, review, improve, and optimize copy for any channel. 8 modes
 
 IRON LAW: NUNCA escreva copy sem antes classificar o contexto da audiência. Para modos de conversão direta (landing, cold-email), isso é o nível Schwartz (1-5). Para outros modos, cada um tem seu próprio sistema de classificação — veja Phase 0.
 
+## Boundary com comunicacao-clientes
+
+- **copy** = persuasão, conversão, broadcast, marketing. Audiência ≠ pessoa específica. Saída pode ser usada em landing, anúncio, sequência de email, post social, ou WhatsApp marketing pra base.
+- **comunicacao-clientes** = relacionamento operacional 1:1 com cliente específico (cobrança, update de status, mudança de escopo, aprovação, reclamação). Saída é uma mensagem única pra um cliente conhecido.
+
+Se a tarefa é "responder o cliente X sobre Y" → use `comunicacao-clientes`, não `copy --mode whatsapp`.
+
 ## Options
 
 | Option | Description | Default |

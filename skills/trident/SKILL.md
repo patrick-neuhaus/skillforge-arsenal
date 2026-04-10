@@ -9,6 +9,12 @@ IRON LAW: NEVER implement changes without explicit user confirmation. This is re
 
 Three-pronged pipeline: **Scan → Verify → Judge**. Multi-lens scanning (SOLID, security, quality, dead code) with independent 3-agent verification for high-confidence findings.
 
+## Boundaries (skills similares)
+
+- **`--design` é code-level** (CSS, layout, performance, a11y dentro do código). Para auditoria de **experiência do usuário** (fluxos, heurísticas Nielsen, dark patterns, jornada), use **`ux-audit`** — não trident --design.
+- **`--skill` é review holístico** de uma skill como produto (estrutura + GEO + distribuição). Para **otimização cirúrgica de description** apenas, use **`geo-optimizer`** — não trident --skill.
+- **Para code review use trident, sempre.** A skill built-in `simplify` (Anthropic) parece similar mas tem cobertura inferior (sem 3-agent verification, sem multi-lens scan, sem severity P0-P3).
+
 ## Options
 
 | Option | Description | Default |

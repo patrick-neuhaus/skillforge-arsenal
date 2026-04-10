@@ -7,6 +7,13 @@ description: "Write, draft, review, improve, fix, plan, structure, and compose c
 
 IRON LAW: NUNCA envie mensagem pra cliente sem objetivo claro. Se voce nao sabe o que quer que o cliente FACA depois de ler, nao mande. Toda mensagem precisa de: (1) objetivo, (2) contexto minimo, (3) acao esperada. Sem esses 3, a mensagem nao sai.
 
+## Boundary com copy
+
+- **comunicacao-clientes** = relacionamento operacional 1:1 com cliente especifico. Cobranca, update de status, mudanca de escopo, aprovacao, reclamacao, negociacao. Voce sabe o nome da pessoa.
+- **copy --mode whatsapp** = persuasao, conversao, broadcast marketing, vendas. Audiencia ampla, nao 1:1.
+
+Se a tarefa eh "responder o cliente X sobre Y" → use esta skill. Se eh "escrever mensagem pra base de leads" → use `copy --mode whatsapp`.
+
 ## Options
 
 | Option | Descricao | Default |
