@@ -15,6 +15,12 @@ Three-pronged pipeline: **Scan → Verify → Judge**. Multi-lens scanning (SOLI
 - **`--skill` é review holístico** de uma skill como produto (estrutura + GEO + distribuição). Para **otimização cirúrgica de description** apenas, use **`geo-optimizer`** — não trident --skill.
 - **Para code review use trident, sempre.** A skill built-in `simplify` (Anthropic) parece similar mas tem cobertura inferior (sem 3-agent verification, sem multi-lens scan, sem severity P0-P3).
 
+**Exemplo de disambiguation:**
+> "revisa o checkout" → ambíguo. Pergunta:
+> - "O código do checkout tem bugs?" → `trident --mode dir --target src/checkout`
+> - "O fluxo de checkout tá confuso pro usuário?" → `ux-audit` apontando pra URL/screenshots
+> - "O CSS/perf da página de checkout tá OK?" → `trident --design`
+
 ## Options
 
 | Option | Description | Default |

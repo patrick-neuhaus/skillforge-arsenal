@@ -27,10 +27,28 @@ Quando o intent do usuário pode acionar 2+ skills, use estas regras antes de pr
 
 **Antes de propor uma skill ou chain, leia o SKILL.md das skills candidatas.** Não confie só no nome ou na sua memória — descriptions evoluem, modes mudam, boundaries se redefinem. Esta lei existe porque falhas de routing já aconteceram (ex: propor `simplify` quando `trident` era a skill certa). Custo: ~1k tokens. Economia: evitar refazer trabalho com skill errada.
 
+### Tiebreaker quando 2+ regras matcham o mesmo intent
+
+1. **Regra mais específica ganha** (ex: "review de skill" mais específico que "code review genérico")
+2. **Skill com maior cobertura do domínio ganha** (ex: trident cobre mais que simplify)
+3. **Em empate real, listar ambas** e perguntar ao Patrick
+
 ### Quando usar maestro vs chamar skill direto
 
 - **Chama direto** se: tu sabe a skill, intent é claro, é 1 skill só
 - **Roda maestro** se: 2+ skills candidatas, intent ambíguo, vai compor chain de 2+ skills, ou nunca usou essa skill antes
+
+**Exemplo de aplicação:**
+> Patrick: "revisa esse PR pra ver se tem bugs e se o design tá OK"
+> Intent detectado: "review PR" + "design OK"
+> 2 regras matcham: trident (code review) + trident --design (design code-level)
+> Aplicação: roda trident `--mode pr` primeiro, depois trident `--design` no mesmo escopo. Mesma skill, 2 modos.
+
+### Manutenção desta tabela
+
+- Atualizar quando skill nova entra no arsenal — responsabilidade do `skill-builder --full` (Step 5 deve adicionar entry aqui)
+- Revisar quando Patrick reportar routing errado em sessão — virar gap documentado
+- Revisão completa trimestral
 
 ### Skills built-in vs locais (v3 — 2026-04-10)
 
