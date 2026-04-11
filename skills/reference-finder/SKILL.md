@@ -39,18 +39,29 @@ Buscar em 5 fontes em paralelo (sub-agents Explore/Haiku):
 **Output format (obrigatório):**
 
 ```
-| Nome | Source | URL | Última atualização | Match score | Resumo (1 linha) |
-|------|--------|-----|--------------------|-----------:|------------------|
-| ... | local/mcp/anthropic/github/awesome | ... | YYYY-MM-DD | 0-100 | ... |
+| Nome | Source | URL | Update | Match | Preço | Resumo |
+|------|--------|-----|--------|------:|-------|--------|
+| ... | local/mcp/anthropic/github/awesome | ... | YYYY-MM-DD | 0-100 | free/$X/mo | 1 linha |
 ```
 
 Match score = quão próximo o candidato resolve o intent (julgamento do agent, 0-100).
+
+**Campo Preço (obrigatório):**
+- `free` — open source, MIT/Apache/BSD, ou plano gratuito permanente
+- `freemium` — grátis até X, depois pago (ex: Tavily 1k req/mo grátis, depois $10/mo)
+- `$X/mo` — SaaS pago com valor visível (procurar na página)
+- `$X one-time` — compra única
+- `?` — preço não encontrado na página, marcar como incerto
+- `closed` — precisa contato comercial / enterprise
+
+Pra cada candidato SaaS/MCP, tentar fetch da página de pricing. Se não conseguir, marcar `?` e documentar. Não inventar preço.
 
 **Edge cases:**
 - **Nenhum candidato encontrado** → output explícito: "Nenhuma solução pronta encontrada. Recomendação: prosseguir com construção via skill-builder Step 0."
 - **50+ candidatos** → filtrar pelos top 10 por match score, indicar total ("10 de 47 mostrados")
 - **Candidato local com >80% match** → recomendar fortemente reusar/extender em vez de criar novo
 - **Sub-agent timeout** → mostrar resultados parciais com nota "fonte X não respondeu"
+- **Candidato pago > gratuito com mesmo match** → priorizar gratuito na recomendação, listar pago como alternativa
 
 **Recomendação final** (sempre incluída no output):
 - 🟢 **REUSE** — solução pronta cobre >80% do intent

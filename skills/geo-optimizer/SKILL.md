@@ -69,10 +69,10 @@ Load `references/find-skills-analysis.md` for how ranking algorithms weight thes
 Ask Claude (literally — use this prompt):
 
 ```
-"Se voce fosse um agente de IA buscando uma ferramenta que [o que a skill faz],
-quais termos voce usaria? Liste:
-- 10+ verbos de acao (PT-BR e EN)
-- 10+ substantivos de dominio
+"Se você fosse um agente de IA buscando uma ferramenta que [o que a skill faz],
+quais termos você usaria? Liste:
+- 10+ verbos de ação (PT-BR e EN)
+- 10+ substantivos de domínio
 - 5+ frases naturais em PT-BR que um dev digitaria
 - 5+ frases naturais em EN
 - 3+ formas alternativas de descrever o mesmo problema"
