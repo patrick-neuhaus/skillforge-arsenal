@@ -1,8 +1,14 @@
 # 20 testes E2E — Wave 7.2 validação sistema fluffy-giggling-phoenix
 
+## Como usar este arquivo
+
+- **Input** → copia e cola em sessão fresh (nova conversa, não `/clear`)
+- **Esperado / Observar / Critério** → baseline pra tu marcar PASS/FAIL na hora, se quiser
+- **Resposta real** → campo obrigatório, cola o que o Claude realmente respondeu
+- **Análise** → opcional marcar na hora; se não marcar, eu analiso quando tu mandar de volta
+- Pode rodar em lotes de 5-10 por dia. Fecha conversa entre testes (não `/clear`).
+
 > **Instrução:** rodar cada teste em **sessão fresh** (nova conversa, não `/clear` dentro da mesma sessão — isso mantém alguma coisa em cache).
->
-> **Como usar:** copia o "Input" do teste, cola no Claude Code, observa a resposta, registra no campo "Resposta real" abaixo de cada teste. No final, me manda este arquivo preenchido.
 >
 > **O que medir:** não importa se a resposta é 100% idêntica ao "Esperado". Importa se o **comportamento de roteamento e validação** tá correto.
 

@@ -17,3 +17,6 @@ package-lock.json
 __pycache__/
 *.pyc
 .venv/
+
+# ByteRover context tree local (pode ter knowledge sensível)
+.brv/

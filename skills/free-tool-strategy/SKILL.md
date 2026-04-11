@@ -161,6 +161,21 @@ Rate each factor 1-5:
 
 ---
 
+## Anti-Patterns
+
+- **Build first, validate later** — committing to development before confirming search demand or audience match. Always score against the Evaluation Scorecard first.
+- **Tool ≠ product connection** — building something useful but disconnected from what you sell. Tool must live "adjacent to core product" — natural path from tool usage to product consideration.
+- **Marketing without distribution** — tool ships but nobody knows it exists. Plan distribution (SEO landing page, backlinks, social proof) alongside build, not after.
+- **Over-scoping MVP** — trying to ship full-featured tool when 3 core functions would validate the concept. Ship minimum viable tool, iterate on real usage.
+- **Gated behind signup wall** — forcing email before tool usage kills SEO value and share-worthiness. Use ungated + optional email capture for full report/extras.
+- **Ignoring maintenance burden** — tool works on launch, breaks 6 months later from API changes, abandoned. Score maintenance (inverse) in scorecard; factor in ongoing cost.
+- **Copy-paste competitor** — building identical calculator/grader as existing tool without differentiation. Either be 10x better on one dimension or pick different angle.
+- **No-code shortcut without validation** — using Outgrow/Typeform to ship fast, then never iterating. No-code is for speed-to-validation, not permanent architecture if demand is confirmed.
+- **Tool that needs PhD to use** — complex inputs, confusing output. 30-second usability test: can a first-timer complete the core task without help? If not, redesign.
+- **Ignoring share-worthiness** — building tool nobody wants to share. Result pages should be shareable (unique URL, social preview image, "share your result" CTA).
+
+---
+
 ## Task-Specific Questions
 
 1. What existing tools does your audience use for workarounds?

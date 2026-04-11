@@ -158,6 +158,53 @@ Salvar como `pattern-[nome].md` no projeto (ou incluir no prd.md do SDD):
 2. [insight aplicável — como implementar]
 ```
 
+### Exemplo real: extraindo padrão de rich text editor do Notion clone
+
+**Input do usuário:**
+> "Preciso implementar editor rich text no nosso app Next.js. Quero ver como um repo open source faz isso bem."
+
+**Step 1 — Identify:** padrão = rich text editor com blocks. Stack usuário = Next.js 15 + shadcn. Repo escolhido: `https://github.com/steven-tey/novel` (Notion-like editor com Tiptap).
+
+**Step 2 — Clone:**
+```bash
+npx degit steven-tey/novel/packages/headless .tmp/novel-headless
+```
+
+**Step 3 — Analyze:** lê `.tmp/novel-headless/src/` focando em `editor.tsx`, `extensions/`, `ui/`.
+
+**Step 4 — Pattern document gerado:**
+
+```markdown
+# Pattern: Block-based Rich Text Editor (Novel/Tiptap)
+**Source:** github.com/steven-tey/novel
+**Analyzed:** 2026-04-11
+**Files studied:** src/editor.tsx, src/extensions/slash-command.tsx, src/ui/menus/
+
+## Pattern Summary
+Editor usa Tiptap como engine (ProseMirror under the hood) + extensions modulares pra
+cada tipo de block (heading, list, image, code). Slash command "/" abre menu de blocks
+contextual. UI é React puro com shadcn.
+
+## Key Decisions
+- Tiptap > Slate > Lexical: Tiptap tem mais extensions prontas, API estável
+- Headless: editor não impõe styling, user define via shadcn components
+- Slash command via extension separada (não hardcoded no editor core)
+
+## Adaptation Notes
+- No repo: Zustand pra state global. No nosso: React Query já cobre, usa Context
+- No repo: Tailwind inline. No nosso: shadcn tokens do design system existente
+- Bundle size ~180kb gzip — aceitável pro nosso caso
+
+## Applicable to Our Project
+1. Instalar `@tiptap/react @tiptap/starter-kit` + 3-4 extensions core
+2. Copiar estrutura `src/components/editor/` com extensions modulares
+3. Slash command custom integrado com nosso menu component existente
+```
+
+**Step 4 cleanup:** `rm -rf .tmp/novel-headless` → ✓ Clean
+
+**Tempo total:** 18 min (clone 1min, análise 10min, document 5min, cleanup 2min).
+
 ### Cleanup (OBRIGATÓRIO)
 
 ```bash
