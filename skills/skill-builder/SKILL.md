@@ -7,12 +7,6 @@ description: "Create, improve, and optimize Claude Code skills with battle-teste
 
 IRON LAW: NEVER generate a skill without reading 2+ existing skills as reference first. Copying patterns from real skills that work beats inventing from scratch every time.
 
-**v3 changes (2026-04-10):**
-- New **Step 0: Pre-build Research** (8 questions, blocking gate, refuses creation if 3+ fail)
-- `--evolve` distinguishes light edits (boundary, example) from heavy refactor
-- Absorbs `--skill-prompt` mode from prompt-engineer (prompt-engineer covers prompts OUTSIDE SKILL.md, skill-builder covers everything INSIDE)
-- Explicit handoff to `prompt-engineer --validate --type system-prompt` for textual content within SKILL.md
-
 ## Options
 
 | Option | Description | Default |
@@ -73,53 +67,13 @@ If `--validate`: Skip to Step 7 only.
 
 ## Step 0: Pre-build Research ⚠️ REQUIRED ⛔ BLOCKING (v3)
 
-Before any skill creation, answer the 8 questions below. **If 3+ fail → REFUSE creation and recommend 2h spike instead.**
+Load `references/step-0-pre-build-research.md` for the 8 blocking questions + gate logic.
 
-Reasoning: user already has 40 skills. Innovation tokens are limited (Choose Boring Technology). Maybe a solution already exists. Skill 41 to solve "I built too many skills" is self-parody.
+**Purpose:** before creating a new skill, verify it makes sense vs using existing tools. User already has 40+ skills — innovation tokens are limited (Choose Boring Technology). Building "skill 41 to solve the problem of having too many skills" is self-parody.
 
-### The 8 questions
+**Gate:** if 3+ questions fail → REFUSE creation, recommend a 2h spike using `reference-finder --solution-scout <topic>` first. Return to skill-builder only after the spike produced evidence that no existing solution serves.
 
-1. **Qual a dor concreta?** (1 frase, exemplo real da última semana, NÃO hipotético)
-2. **Quantas vezes essa dor apareceu nos últimos 30 dias?** Se <3, espera acumular evidência.
-3. **Já procurei em todos esses lugares?**
-   - (a) Skills locais existentes do user (`grep -ri <topic> ~/skillforge-arsenal/skills/`)
-   - (b) Anthropic skills repo (`github.com/anthropics/skills`)
-   - (c) MCP registries (`mcp.so`, `glama.ai/mcp`, `smithery`)
-   - (d) GitHub topic `claude-skill`
-   - (e) `awesome-claude-code` lists
-   
-   **Auto-search:** invocar `reference-finder --solution-scout <topic>` faz isso pra ti.
-
-4. **Se existe algo parecido: por que não serve?** (resposta específica, não "não gostei")
-5. **Isso é core ou commodity?**
-   - **Core** = codifica jeito específico do user de decidir/trabalhar (worth building)
-   - **Commodity** = qualquer tech lead quereria (procura mais antes de construir)
-6. **Quantos innovation tokens isso custa?** (manutenção + carga cognitiva pra lembrar que existe + risco de quebrar). Vale?
-7. **Posso resolver com spike de 2h em vez de skill permanente?** Muita coisa que vira "skill" era só prompt bem escrito usado 1 vez.
-8. **Se construir, qual o critério pra DELETAR depois?** (sem critério de saída, vira lixo acumulado — user já tem 40)
-
-### Gate
-
-⛔ **BLOCKING:** Se passou nas 8 → prossegue pro Step 1.
-
-Se falhou em 3+ → output:
-```
-⛔ Pre-build Research failed (X/8 critérios não atendidos).
-
-Recomendação: spike de 2h em vez de skill nova.
-
-Buscas a fazer:
-- reference-finder --solution-scout <topic>
-- search awesome-claude-code list
-- search github topic claude-skill
-- ...
-
-Volte com resultados antes de tentar criar a skill.
-```
-
-**Quando pular Step 0:** apenas se `--evolve --light` (edição cirúrgica em skill existente que já passou pela Step 0 antes).
-
----
+**Skip only if:** `--evolve --light` (surgical textual edit on existing skill that already passed Step 0).
 
 ## Step 1: Understand ⚠️ REQUIRED
 
@@ -263,36 +217,27 @@ Run `scripts/validate.py <skill-path>` for automated checks, then the manual che
 
 ⛔ **Confirmation Gate:** Present the complete skill to the user. Get explicit approval before considering it done.
 
-## Integration with other skills
+## Integration & Boundaries
+
+### Skills invoked during workflow
 
 | Step | Skill | When |
 |------|-------|------|
-| 0 | **reference-finder --solution-scout** | Step 0 question 3: search existing solutions before building |
+| 0 | **reference-finder --solution-scout** | Step 0 Q3: search existing solutions before building |
 | 2 | **reference-finder** | Research domain frameworks and methodologies |
-| 5 | **prompt-engineer --validate --type system-prompt** | After writing SKILL.md text (IRON LAW, anti-patterns, instruction prose) — validates rubric scoring + anti-pattern detection |
-| 5 | **Tech domain skills** | If skill involves specific tech (Supabase, n8n, etc.) |
-| 7 | **prompt-engineer --validate** | Final validation pass on textual content before committing |
+| 5+7 | **prompt-engineer --validate --type system-prompt** | After writing SKILL.md text — validates rubric + detects anti-patterns (caps, all-negatives, encyclopedia). skill-builder owns structure; prompt-engineer owns textual quality. |
 
-### Handoff to prompt-engineer (v3)
+### Boundary with prompt-engineer (v3)
 
-**After editing textual content of SKILL.md** (IRON LAW, instructions, anti-patterns, examples), invoke `prompt-engineer --validate --type system-prompt <skill-path>/SKILL.md` to:
-- Apply system-prompt rubric (role clarity, output format, edge cases, calibration 4.x, etc)
-- Detect anti-patterns (caps lock, all-negatives, encyclopedia)
-- Score the content per criterion
-
-**Don't skip this** — skill-builder validates STRUCTURE (line count, frontmatter, references organization) but textual quality of instructions is prompt-engineer's domain.
-
-### Boundary com prompt-engineer (v3)
-
-| Tarefa | Skill |
-|--------|-------|
-| Estrutura de SKILL.md (line count, frontmatter, references org) | **skill-builder --validate** |
-| Texto interno de SKILL.md (IRON LAW, instructions, examples) | **prompt-engineer --validate --type system-prompt** |
-| Criar SKILL.md do zero | **skill-builder --full** |
-| Editar texto pequeno em SKILL.md (boundary, exemplo) | **skill-builder --evolve --light** |
-| Refactor major em SKILL.md (workflow, IRON LAW core) | **skill-builder --evolve --heavy** + prompt-engineer --validate |
-| Criar prompt FORA de SKILL.md (chatbot, agente, JSON) | **prompt-engineer --create** |
-| Validar prompt FORA de SKILL.md (CLAUDE.md, plano, IRON LAWS) | **prompt-engineer --validate --type <tipo>** |
+| Task | Skill |
+|------|-------|
+| Structure of SKILL.md (line count, frontmatter, references org) | **skill-builder --validate** |
+| Internal text of SKILL.md (Iron Law, instructions, examples) | **prompt-engineer --validate --type system-prompt** |
+| Create new SKILL.md from scratch | **skill-builder --full** |
+| Small textual edit in SKILL.md (boundary note, example) | **skill-builder --evolve --light** |
+| Major refactor of SKILL.md (workflow, Iron Law core) | **skill-builder --evolve --heavy** + prompt-engineer --validate |
+| Create prompt OUTSIDE SKILL.md (chatbot, agent, JSON) | **prompt-engineer --create** |
+| Validate prompt OUTSIDE SKILL.md (CLAUDE.md, plans, IRON LAWS) | **prompt-engineer --validate --type <type>** |
 
 ## When NOT to use
 

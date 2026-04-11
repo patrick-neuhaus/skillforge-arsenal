@@ -5,9 +5,11 @@ description: "Skill para criar, validar e otimizar prompts e contextos para qual
 
 # Prompt & Context Engineer v3
 
-IRON LAW: Never output a prompt without explaining WHY each section exists. A prompt the user doesn't understand is a prompt they can't maintain or improve.
+**Role:** craft, validate, and optimize prompts + contexts for any LLM (Claude, Gemini, GPT). Covers system prompts, agent instructions, CLAUDE.md files, JSON schemas, extraction prompts, and technical plan validation.
 
-**v3 changes (2026-04-10):** `--validate` agora wrappa **promptfoo + ccinspect** com rubrics por tipo. Score sheet automático. Retroalimentação via `gaps/` folder. `--skill-prompt` migrado pra `skill-builder` (overlap eliminado).
+**Context:** the prompt is one component — tools, docs, examples, history all compete for attention in the context window. This skill treats the full context as the unit of work, not just the text between XML tags.
+
+**Iron Law:** Never output a prompt without explaining why each section exists. A prompt the user doesn't understand is a prompt they can't maintain or improve.
 
 ## Options
 
@@ -33,7 +35,7 @@ Prompt Engineer Progress:
   - [ ] 2.2 Load model-specific guide if needed
 - [ ] Step 3: Build / Validate ⚠️ REQUIRED
   - [ ] 3.1 Build prompt OR analyze existing prompt
-  - [ ] 3.2 Explain each section (IRON LAW)
+  - [ ] 3.2 Explain each section (Iron Law)
   - [ ] ⛔ GATE: Present to user for feedback
 - [ ] Step 4: Optimize & Deliver
   - [ ] 4.1 Run quality checklist
@@ -122,7 +124,7 @@ The rubric only grows via documented gaps. When you find a real gap not caught b
 2. Document: prompt tested, what rubric missed, real consequence, proposed criterion
 3. Run `prompt-engineer --update-rubric --gap <file>` (semi-auto, asks for approval before editing the YAML)
 4. On approval: criterion added with new ID, version bumped, regression test created
-5. **NEVER add criteria without a documented gap** — speculative criteria bloat the rubric
+5. **Do not add criteria without a documented gap** — speculative criteria bloat the rubric
 
 Reasoning: Constitutional AI lesson — Anthropic doesn't let the model edit its own principles. Auto-edition leads to silent drift. Manual semi-auto with human approval is the realistic pattern (research 2026-04-10).
 
@@ -167,23 +169,11 @@ If targeting Claude 4.x: Load `references/claude-4x-guide.md` — critical diffe
 7. Include scenarios: happy path, edge case, error — each with expected behavior
 8. List dependencies and constraints upfront (not buried in instructions)
 
-### Validating (--validate) — DEPRECATED checklist (v3 uses promptfoo + rubrics)
+### Validating (--validate)
 
-**v3:** validation now goes through promptfoo + ccinspect with type-specific rubrics. See "--validate workflow (v3)" section above.
+v3 runs via promptfoo + ccinspect with type-specific rubrics (see "--validate workflow" section above). No manual checklist.
 
-The checklist below is **legacy** — kept here for `--create` mode reference (when designing new prompts, these are good universal criteria), but `--validate` no longer runs this manually.
-
-| Criterion | Ask yourself | Red flag |
-|-----------|-------------|----------|
-| Context/Role | Does the model know WHO it is and FOR WHAT? | Generic, personality-less output |
-| Specific instructions | Clear actions or vague direction? | Model invents behavior |
-| Output format | Precisely defined? | Inconsistent between runs |
-| Examples (few-shot) | At least 1 input→output? | Model guesses format |
-| Edge cases | Handles invalid, empty, unexpected? | Silent failure in production |
-| What NOT to do | Explicit anti-patterns? Phrased positively? | Undesired behaviors |
-| Attention budget | Too long? Redundant? | Diluted attention, high cost |
-| Language calibration | Excess caps lock? ("MUST", "NEVER") | Overtriggering in 4.x |
-| Tool management | Minimal, no overlap? | Model confuses tools |
+For `--create` universal criteria (role, format, instructions, edge cases, few-shot, anti-patterns, calibration), load `references/create-criteria.md`.
 
 ⛔ **Confirmation Gate:** Present the prompt with explanation of each section. Get user feedback before finalizing.
 
@@ -252,31 +242,30 @@ Máx 3 parágrafos. Tom: profissional mas acolhedor. *Negrito* pra info-chave.
 </output_format>
 ```
 
-## Integration with other skills
+## Integration & Boundaries
 
-| Skill | When |
-|-------|------|
-| **n8n Architect** | Nodes de IA precisam de prompts. Use esta pra prompt, n8n pra arquitetura |
-| **Skill Builder** | Se quer instruções persistentes com SKILL.md → redirecione |
-| **Product Discovery & PRD** | Prompts pro Lovable são inputs do PRD |
-| **Security Audit** | Agente com tools → considere OWASP LLM Top 10 |
+### When to use (this skill)
 
-## When NOT to use
+| Task | Use |
+|------|-----|
+| Validate CLAUDE.md, technical plan, iron-laws files | **prompt-engineer --validate --type <type>** |
+| Create new prompt (chatbot, agent, extraction, JSON) | **prompt-engineer --create** |
+| Optimize GEO of description (standalone) | **prompt-engineer --geo** or **geo-optimizer** (surgical) |
 
-- **Editar texto DENTRO de SKILL.md existente** → use **skill-builder --validate** (v3: `--skill-prompt` foi migrado pra lá)
-- **Criar SKILL.md do zero** → use skill-builder
-- **Prompt simples de 1 linha** → faz direto
-- **Conteúdo do prompt** (lógica de negócio) → use skill de domínio (PRD, n8n)
-- **AGENTS.md pra Lovable específico** → use lovable-knowledge
-- Confused about which skill to use → invoke maestro
+### When NOT to use (delegate)
 
-## Boundary com skill-builder (v3)
+| Task | Use instead |
+|------|-------------|
+| Edit text inside an existing SKILL.md | **skill-builder --evolve --light** |
+| Create new SKILL.md from scratch | **skill-builder --full** |
+| Validate SKILL.md structure | **skill-builder --validate** |
+| One-line prompt | answer directly, no skill needed |
+| AGENTS.md for Lovable | **lovable-knowledge** |
+| Prompt logic (business rules) | domain skill (PRD, n8n, etc.) |
 
-| Tarefa | Skill |
-|--------|-------|
-| Validar CLAUDE.md, plano técnico, IRON LAWS | **prompt-engineer --validate --type <tipo>** |
-| Criar prompt novo (chatbot, agente, extração, JSON) | **prompt-engineer --create** |
-| Validar SKILL.md (estrutura + conteúdo) | **skill-builder --validate** |
-| Criar SKILL.md nova | **skill-builder --full** |
-| Editar texto interno de SKILL.md (boundary, IRON LAW, anti-pattern) | **skill-builder --evolve** (chama prompt-engineer internamente se necessário) |
-| Otimizar GEO de description | **prompt-engineer --geo** OU **geo-optimizer** (geo-optimizer é cirúrgico) |
+### Composition (use alongside)
+
+- **n8n Architect** — AI nodes need prompts. Use this skill for the prompt, n8n for the architecture
+- **Product Discovery & PRD** — prompts for Lovable are inputs of the PRD
+- **Security Audit** — agents with tools → consider OWASP LLM Top 10
+- **maestro** — when unclear which skill applies

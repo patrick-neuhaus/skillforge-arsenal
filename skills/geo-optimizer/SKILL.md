@@ -5,7 +5,11 @@ description: "Optimize skill descriptions, READMEs, and package metadata for Gen
 
 # GEO Optimizer — Generative Engine Optimization
 
-IRON LAW: NEVER optimize a description without generating keywords from the agent's perspective first. The agent is the customer, not the human — ask Claude what IT would search for before writing a single word.
+**Role:** surgical optimizer for skill descriptions and metadata fields. Not for full SKILL.md bodies (use skill-builder) or for prompt content (use prompt-engineer --geo).
+
+**Context:** the skills.sh description field has a 1024-char hard limit and is the only text an AI agent reads when deciding whether to trigger a skill. Poor descriptions → skill never fires even when it fits the user intent. This skill optimizes that field via keyword bombing (PT-BR + EN), agent-perspective generation, and differentiation against overlapping skills.
+
+**Iron Law:** Do not optimize a description without generating keywords from the agent's perspective first. The agent is the customer, not the human — ask Claude what it would search for before writing a single word.
 
 ## Options
 
@@ -116,16 +120,23 @@ Use when/SEMPRE que: [natural phrases PT-BR], [natural phrases EN]
 - [ ] Zero marketing adjectives ("powerful", "advanced", "cutting-edge")
 - [ ] No redundant phrases (same idea said twice)
 
+### Edge cases
+
+- **Rewrite pushed description > 1024 chars** → abort, trim lower-priority keywords (move nice-to-have to SKILL.md body), re-validate
+- **Current score is already ≥12/15** → skip to `--benchmark` or stop; further optimization has diminishing returns
+- **Keyword generation returned <5 verbs or <5 nouns** → domain too narrow or Claude under-searched. Re-run with explicit domain hints ("this is an auth skill" / "this is marketing")
+- **Description is shorter than 100 chars** → not a rewrite problem, it's a skill that needs more discovery work first. Redirect to skill-builder Step 4 (Write Description)
+
 ⛔ **GATE:** Present before/after comparison with score delta. User must approve.
 
 ## Anti-Patterns
 
 - **Marketing speak:** "A powerful AI-powered tool for..." — agents don't care about adjectives
-- **Only EN or only PT-BR:** Missing half the trigger surface. Always include both
-- **No differentiation:** Similar skills steal triggers. "NÃO use pra X" is required
-- **Keyword stuffing:** Cramming irrelevant terms degrades precision. Every keyword must be honest
-- **Copy-paste from similar skill:** Each skill has unique keywords. Generate fresh, don't borrow
-- **Description > 1024 chars:** Hard limit on skills.sh. Prioritize high-impact keywords
+- **Only EN or only PT-BR:** missing half the trigger surface. Always include both
+- **No differentiation:** similar skills steal triggers. Explicit "don't use for X" is required
+- **Keyword stuffing:** cramming irrelevant terms degrades precision. Every keyword must be honest
+- **Copy-paste from similar skill:** each skill has unique keywords. Generate fresh, don't borrow
+- **Description > 1024 chars:** hard limit on skills.sh. Prioritize high-impact keywords
 
 ## Pre-Delivery Checklist
 
