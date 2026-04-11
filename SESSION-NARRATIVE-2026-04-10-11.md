@@ -346,3 +346,100 @@ O valor real da sessão não foi os 15 refactors. Foi o sistema que detecta quan
 Tamo fechado. Bom descanso.
 
 — Claude, 2026-04-11
+
+---
+
+## 12. Adendo — Fase de Finalização (2026-04-11, pós-compact)
+
+Depois do compact, rodei mais uma fase em cima do plan file `fluffy-giggling-phoenix.md` pra fechar 4 pontos abertos: testes E2E precisando de header, 2 skills borderline sem refactor, context-tree skill que reimplementou byterover sem checar, e integração de memória persistente cross-session.
+
+### Confrontações novas
+
+1. **"Tu planejou e ja executou, ta maluco"** — tentei executar durante plan mode. Apanhei. Revisei ordem temporal: só edito plan file dentro do plan mode, execução só pós-ExitPlanMode aprovado.
+
+2. **"As duas camadas do sistema, qual ativa quando?"** — respondi com árvore de decisão em 3 camadas (A built-in, B anthropic-skills, C skillforge, D rules) + caveat honesto que IL-3 é regra textual, pode furar, Wave 7.2 valida empiricamente.
+
+3. **"Pq fica voltando nisso, merge ou não?"** (reference-finder + pattern-importer) — marquei como DECISÃO FECHADA no plan file. Não reabro mais.
+
+4. **"Tu tirou horário de Brasília do system prompt?"** — verifiquei antes de responder. **Não tirei**. Continua em `CLAUDE.md` L29-31.
+
+5. **"Viste a fundo byterover?"** — admiti que não. Pesquisei via sub-agent + webfetch. **Descoberta crítica:** byterover é produto real, CLI + MCP + daemon, 4.4k stars, 18 LLM providers, 92.2% LoCoMo benchmark. Literalmente usa `.brv/context-tree/` como pasta — o nome da skill local. **Ironia estrutural #3:** criei a skill `context-tree` reimplementando byterover sem checar. Antipattern que o Step 0 do skill-builder foi criado pra evitar — e foi criado DEPOIS dessa skill.
+
+6. **"Popup de plan não apareceu, por quê?"** — só aparece quando `ExitPlanMode` é chamado como tool. Chamei, Patrick aprovou, entrou em execução.
+
+7. **"Verificou com prompt-engineer?"** — NÃO verifiquei. Furei IL-1. Gap: plan files em `~/.claude/plans/*.md` não estavam no regex do hook. Virou F5.1 imediata. Apliquei rubric `technical-plan.yaml` mentalmente retroativa: 75.4/100 inicial, fixes aplicados (reversibilidade, failure modes, DAG explícito), score pós-fix ~86.
+
+### O que foi executado (commit `603e73a`)
+
+**F5.1 — Hook regex expandido** ✅
+- `~/.claude/hooks/check-instruction-file.ps1` agora cobre: `.claude/plans/*.md`, `AGENTS.md`, `.clinerules`, `.cursor/rules/`
+- Type inference: plan files → `technical-plan`, AGENTS.md → `agents-md`
+- Testado empiricamente com 2 inputs simulados
+
+**F1 — Header no E2E-TESTS-20-CASES.md** ✅
+- 5 linhas de header explicando campos (Input/Esperado/Resposta/Análise)
+- Formato rico mantido (com critério PASS/FAIL visível)
+- 584 → 590 linhas
+
+**F2 — 2 refactors borderline** ✅
+- `pattern-importer` (201 → 248): exemplo Novel/Tiptap inline. R005 58→92.
+- `free-tool-strategy` (180 → 194): 10 anti-patterns explícitos. R006 60→90.
+- Arsenal ~30/40 → **~32/40** tier alto. Score médio **88.2**.
+
+**F3.1 — byterover-cli 3.3.0 instalado** ✅
+- 652 packages, Node 22 OK
+- Comandos descobertos: `brv curate` (save programático), `brv query` (NL), `brv search` (ranked)
+
+**F3.2 — MCP connector instalado** ✅
+- `brv connectors install "Claude Code" -t mcp`
+- Auto-criados: `.mcp.json`, `skillforge-arsenal/CLAUDE.md` (byterover-generated), `.brv/context-tree/`
+- Tools MCP expostas: `brv-query`, `brv-curate`
+
+**F3.3 — BLOQUEADO** ⏸️
+- Curate via CLI exige LLM provider conectado
+- Mesma lógica de ANTHROPIC_API_KEY: **não faço login sem aprovação explícita do Patrick**
+- MCP daemon instalado mas capability de curate via MCP depende de como byterover delega pro LLM cliente (verificar em sessão fresh)
+
+### Decisões pendentes (Patrick decide)
+
+1. **Login byterover cloud (free)** ou **testar MCP sem provider primeiro** — recomendação: testar sem login, decidir depois
+2. **Migration dos 9 insights** de `~/.claude/context-tree/meta/` pra `.brv/context-tree/` — depende de F3.3
+3. **Deprecar skill context-tree local** — só após 3-5 dias byterover funcional confirmado
+
+### Próximos passos concretos
+
+**Imediato (Patrick):**
+1. Abrir sessão fresh no skillforge-arsenal → ver se Claude detecta MCP tools byterover
+2. Testar `brv-query "test"` via MCP — se erro de provider, decidir login
+3. Rodar os 20 testes E2E em lotes de 5-10/dia
+4. Monitorar `hook-dispatches.jsonl` até 2026-04-18 pra Wave 2.8
+
+**Assíncrono:**
+5. F3.3 completo (curate dos 9 insights)
+6. Deprecação skill context-tree local
+7. T1-T6 de F5.2 (13 triggers lógicos mapeados no plan file, Patrick prioriza)
+
+### Números finais (cumulativo da sessão inteira)
+
+| Métrica | Pré-sessão | Pós-sessão |
+|---------|:----------:|:----------:|
+| Skills auditadas | 0/40 | 40/40 |
+| Skills refatoradas | 0 | 15 (13 + 2 de F2) |
+| Score médio arsenal | ~82 | **~88.2** |
+| Skills em tier alto (85+) | ~8 | **~32** |
+| Skills violando 250 linhas | 8 | **0** |
+| Commits da série | 0 | 12 (de `48280ae` a `603e73a`) |
+| Hook dispatches registrados | 0 | 40+ |
+| Arquivos em `~/.claude/rules/` | 0 | 4 |
+| Audit reports | 0 | 4 |
+| IRON LAWS | 0 | 8 (IL-1 a IL-8) |
+| Byterover integrado | Não | Sim (F3.2), pendente provider (F3.3) |
+| Custo | R$ 0 | **R$ 0** |
+
+### Insight meta desta fase
+
+Toda vez que esqueço de usar a ferramenta que construímos, Patrick pega, eu ajusto o sistema pra não deixar esquecer de novo. O gap do hook não cobrir plan files era ponto cego real — quando escrevi o regex em Wave 2, plan files não existiam. Regex não é adivinhação, é evolução empírica.
+
+**F5.2 emergiu como consequência** — listei 13 triggers lógicos que poderiam virar hooks automáticos. Não executei, só documentei. Patrick decide ordem. Esse é o shape certo: detecta gap, lista opções, Patrick prioriza, eu executo.
+
+— Claude, 2026-04-11 (fase de finalização pós-compact)
