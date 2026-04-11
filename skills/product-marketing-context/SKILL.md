@@ -232,10 +232,21 @@ After gathering information, create `.agents/product-marketing-context.md` with 
 
 ---
 
+## Anti-Patterns
+
+- **Polished descriptions over verbatim customer language** — the whole point is capturing how customers actually speak. Generic marketing copy defeats the purpose.
+- **Filling sections that don't apply** — B2C doesn't need full persona grid. Skip what's irrelevant; don't pad.
+- **One-shot creation then never updating** — this doc needs quarterly review minimum. Products evolve, customers evolve.
+- **Gathering info without confirming accuracy** — summarize each section back to the user before moving on
+- **Dumping all 12 sections at once** — walk through conversationally, one at a time. Don't overwhelm.
+- **Auto-drafting without reviewing codebase thoroughly** — if you skim, draft will be generic. Read README, landing pages, marketing copy, meta descriptions, existing docs.
+- **Saving without the customer language section** — this is the most valuable field for downstream skills. Don't skip it.
+- **Vague competitive landscape** — "there are competitors" is useless. Name them and explain how each falls short.
+
 ## Tips
 
-- **Be specific**: Ask "What's the #1 frustration that brings them to you?" not "What problem do they solve?"
-- **Capture exact words**: Customer language beats polished descriptions
+- **Be specific**: ask "What's the #1 frustration that brings them to you?" not "What problem do they solve?"
+- **Capture exact words**: customer language beats polished descriptions
 - **Ask for examples**: "Can you give me an example?" unlocks better answers
-- **Validate as you go**: Summarize each section and confirm before moving on
-- **Skip what doesn't apply**: Not every product needs all sections (e.g., Personas for B2C)
+- **Validate as you go**: summarize each section and confirm before moving on
+- **Skip what doesn't apply**: not every product needs all sections (e.g., Personas for B2C)
