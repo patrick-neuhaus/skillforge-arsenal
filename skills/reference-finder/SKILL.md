@@ -11,10 +11,55 @@ IRON LAW: NEVER cite a book, framework, or author you're not sure exists. When i
 
 | Option | Description | Default |
 |--------|-------------|---------|
-| `--find` | Find references for a topic | true |
+| `--find` | Find references for a topic (THEORETICAL — books, frameworks, methodologies, people) | true |
+| `--solution-scout` | Find existing PRACTICAL solutions before building (skills, MCPs, libraries, tools) | false |
 | `--save` | Save found references to references/ | auto (ask) |
 | `--connect` | Find connections with existing references | auto |
 | `--moc` | Generate a Map of Content for cross-domain topic | false |
+
+### When to use --find vs --solution-scout
+
+- **`--find`** = preciso ENTENDER um tema. Quero livros, frameworks, autores, papers. Output é fundamentação teórica.
+- **`--solution-scout`** = preciso CONSTRUIR algo. Quero saber se já existe pronto antes de codar. Output é tabela de soluções práticas executáveis.
+
+Exemplo:
+- "Quem é referência em prompt engineering?" → `--find`
+- "Tem skill pra validar prompts?" → `--solution-scout`
+
+### --solution-scout workflow
+
+Buscar em 5 fontes em paralelo (sub-agents Explore/Haiku):
+
+1. **Skills locais** — `grep -ri <topic> D:/DOCUMENTOS/Github/skillforge-arsenal/skills/` (matching em description e SKILL.md)
+2. **MCP registries** — webfetch em `mcp.so`, `glama.ai/mcp`, `smithery.ai`
+3. **Anthropic skills repo** — `github.com/anthropics/skills` (search via gh CLI ou webfetch)
+4. **GitHub topic** — `github.com/topics/claude-skill` + `claude-code-skill`
+5. **Awesome lists** — `awesome-claude-code` README
+
+**Output format (obrigatório):**
+
+```
+| Nome | Source | URL | Última atualização | Match score | Resumo (1 linha) |
+|------|--------|-----|--------------------|-----------:|------------------|
+| ... | local/mcp/anthropic/github/awesome | ... | YYYY-MM-DD | 0-100 | ... |
+```
+
+Match score = quão próximo o candidato resolve o intent (julgamento do agent, 0-100).
+
+**Edge cases:**
+- **Nenhum candidato encontrado** → output explícito: "Nenhuma solução pronta encontrada. Recomendação: prosseguir com construção via skill-builder Step 0."
+- **50+ candidatos** → filtrar pelos top 10 por match score, indicar total ("10 de 47 mostrados")
+- **Candidato local com >80% match** → recomendar fortemente reusar/extender em vez de criar novo
+- **Sub-agent timeout** → mostrar resultados parciais com nota "fonte X não respondeu"
+
+**Recomendação final** (sempre incluída no output):
+- 🟢 **REUSE** — solução pronta cobre >80% do intent
+- 🟡 **EXTEND** — solução pronta cobre 40-80%, vale forkar/configurar
+- 🔴 **BUILD** — nada cobre, prosseguir com skill-builder Step 0
+
+**Exemplo bom de invocação:**
+> Patrick: "tem skill pra validar prompts com rubric?"
+> Claude: invoca `reference-finder --solution-scout "prompt validation rubric scoring"` → retorna tabela com promptfoo (🟢 80 match), DSPy (🟡 60), ccinspect (🟡 50) → recomenda REUSE promptfoo + skill wrapper.
 
 ## Workflow
 
