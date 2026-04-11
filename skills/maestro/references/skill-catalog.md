@@ -32,6 +32,24 @@ Quando o intent do usuário pode acionar 2+ skills, use estas regras antes de pr
 - **Chama direto** se: tu sabe a skill, intent é claro, é 1 skill só
 - **Roda maestro** se: 2+ skills candidatas, intent ambíguo, vai compor chain de 2+ skills, ou nunca usou essa skill antes
 
+### Skills built-in vs locais (v3 — 2026-04-10)
+
+**Regra hard:** sempre usar a versão local do skillforge-arsenal quando existir equivalente. Built-ins Anthropic (`anthropic-skills:*`) podem estar desatualizadas, ter cobertura inferior, ou conflitar com versões locais.
+
+| Built-in (NÃO usar) | Local (USAR) | Motivo |
+|---------------------|--------------|--------|
+| `simplify` | `trident` | trident tem 3-agent verification, P0-P3, multi-lens scan |
+| `anthropic-skills:trident` | `trident` (local) | local pode estar à frente no versionamento |
+| `anthropic-skills:copy` | `copy` (local) | mesma razão |
+| `anthropic-skills:skill-builder` | `skill-builder` (local) | v3 tem Step 0 Pre-build Research + handoff com prompt-engineer |
+| `anthropic-skills:prompt-engineer` | `prompt-engineer` (local) | v3 tem 4 rubrics YAML + `--validate` refatorado |
+| `anthropic-skills:reference-finder` | `reference-finder` (local) | tem `--solution-scout` mode |
+| qualquer `anthropic-skills:X` onde X existe em `skillforge-arsenal/skills/` | local | versionamento, evolução |
+
+**Exceções:** built-ins SEM equivalente local seguem normais (ex: pdf, docx, pptx, xlsx — enquanto não existir versão local no repo).
+
+**Como verificar:** olhar `skillforge-arsenal/skills/<nome>/SKILL.md`. Se existe, usar local.
+
 ---
 
 ## Code Review
