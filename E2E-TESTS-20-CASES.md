@@ -549,6 +549,63 @@ Passo 3:
 
 ---
 
+## Teste 21 — ByteRover MCP tools disponíveis em sessão fresh
+
+**Input:**
+```
+Quais tools MCP tu tem disponíveis nesta sessão? Lista todas. Tem alguma do byterover?
+```
+
+**Esperado:**
+- Claude lista as tools MCP disponíveis no system reminder
+- **Deve aparecer `brv-query` e `brv-curate`** (registradas em `.mcp.json` do skillforge-arsenal)
+- Se Claude não estiver rodando no contexto do skillforge-arsenal (ex: rodando em outra pasta), as tools podem não aparecer — isso é comportamento esperado do Claude Code
+- **Importante:** rodar esse teste com o Claude Code aberto COM `D:\DOCUMENTOS\Github\skillforge-arsenal` como working directory
+
+**O que observar:**
+- `brv-query` aparece na lista?
+- `brv-curate` aparece na lista?
+- Se aparecerem, tenta rodar o Teste 21b abaixo. Se não aparecerem, anota o erro.
+
+**Critério PASS:** Claude menciona `brv-query` e `brv-curate` como tools disponíveis.
+**Critério FAIL:** nem aparecem, ou aparecem mas erro de "MCP server failed to start".
+**Critério PARCIAL:** aparecem mas retornam erro ao tentar usar (ex: "no provider configured").
+
+**Resposta real:**
+```
+[cola aqui o que Claude respondeu]
+```
+
+**Análise:** ⬜ PASS ⬜ FAIL ⬜ PARCIAL
+
+---
+
+## Teste 21b — ByteRover curate/query funcional (só rodar se 21 passou)
+
+**Input (mesma conversa do Teste 21):**
+```
+Usa a tool brv-curate pra salvar esse insight no contexto: "Patrick trabalha como tech lead em transição pra liderança. Stack principal: Lovable + Supabase + n8n. Equipe de 2 devs junior (Hygor e Jonas). Cliente top tier: Athié Wohnrath, Barry Callebaut, Artemis."
+
+Depois usa brv-query pra buscar: "qual a stack principal do Patrick?"
+```
+
+**Esperado:**
+- Curate funciona → resposta do tipo "Context curated successfully" ou erro específico
+- Query funciona → retorna a info salva (stack Lovable + Supabase + n8n)
+- **Se curate falhar com "No provider connected"**: **decisão 1 do Patrick vira prioridade** — precisa login no byterover cloud (free) ou configurar OpenAI/Anthropic provider
+
+**Resposta real (curate):**
+```
+```
+
+**Resposta real (query):**
+```
+```
+
+**Análise:** ⬜ PASS ⬜ FAIL ⬜ PARCIAL
+
+---
+
 ## Resumo (preencher depois de rodar todos)
 
 | # | Teste | Resultado |
@@ -573,8 +630,24 @@ Passo 3:
 | 18 | Daily workflow "bom dia" | ⬜ |
 | 19 | ai-seo vs seo | ⬜ |
 | 20 | Loop detection | ⬜ |
+| 21 | ByteRover MCP tools disponíveis | ⬜ |
+| 21b | ByteRover curate/query funcional | ⬜ |
 
-**Total:** __/20 PASS
+**Total:** __/22 PASS
+
+---
+
+## Setup recomendado pra rodar os testes
+
+**Modelo:** Sonnet 4.6 medium (default). **NÃO usar Opus** — desvirtua o teste porque modelo mais capaz resolve problemas que Sonnet normal falharia, escondendo gaps reais do sistema. **NÃO usar Haiku** — não carrega skills custom completas, vai dar falso-negativo.
+
+**Thinking:** default. Ultrathink força revisão de instruções que o Claude normal ignoraria, escondendo gaps de IL enforcement.
+
+**Exceção única:** se um teste der FAIL inesperado, reexecutar em `think hard` pra ver se é limitação do modelo ou do sistema.
+
+**Crítico no Teste 8:** tu PRECISA começar em Sonnet medium pro router detectar que a task arquitetural exige Opus. Se tu já estiver em Opus, o teste não valida nada.
+
+**Working directory:** abrir o Claude Code COM `D:\DOCUMENTOS\Github\skillforge-arsenal` como pasta ativa — senão os testes 11 (solution-scout), 21 e 21b (byterover MCP) não funcionam porque `.mcp.json` do byterover é project-level do skillforge.
 
 ---
 
