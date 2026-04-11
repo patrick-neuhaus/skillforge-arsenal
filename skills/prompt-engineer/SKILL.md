@@ -1,21 +1,23 @@
 ---
 name: prompt-engineer
-description: "Skill para criar, validar e otimizar prompts e contextos para qualquer LLM (Claude, Gemini, GPT). Use esta skill SEMPRE que o usuário mencionar: prompt, system prompt, context engineering, agente, chatbot, JSON Schema pra IA, 'como faço o modelo retornar X', 'o modelo tá respondendo errado', 'preciso melhorar esse prompt', 'quero criar um agente', 'instrução pro Lovable/Cursor', AGENTS.md, ou qualquer variação que envolva escrever instruções pra um modelo de IA. Também use quando o usuário estiver criando skills, configurando nodes de IA no n8n, ou montando agentes de WhatsApp. Se o usuário disser 'valida esse prompt' ou 'melhora isso', USE esta skill. Also triggers on: fix my prompt, improve this system message, write a prompt for. NÃO use se o usuário quer criar uma SKILL do Claude — use skill-builder. Prompt simples de uma linha, responda direto."
+description: "Skill para criar, validar e otimizar prompts e contextos para qualquer LLM (Claude, Gemini, GPT). Validação v3 usa promptfoo + ccinspect + rubrics por tipo (claude-md, technical-plan, iron-laws, system-prompt). Use esta skill SEMPRE que o usuário mencionar: prompt, system prompt, validar CLAUDE.md, validar plano técnico, validar IRON LAWS, context engineering, agente, chatbot, JSON Schema pra IA, 'como faço o modelo retornar X', 'o modelo tá respondendo errado', 'preciso melhorar esse prompt', 'quero criar um agente', 'instrução pro Lovable/Cursor', AGENTS.md. Também use ao criar/editar prompts em n8n nodes, agentes WhatsApp. Se o usuário disser 'valida esse prompt', 'valida CLAUDE.md', 'valida plano', 'score do prompt', USE esta skill. Also triggers on: fix my prompt, improve this system message, write a prompt for, score this prompt, validate prompt rubric. NÃO use pra editar texto DENTRO de SKILL.md (use skill-builder --validate). Prompt simples de uma linha, responda direto."
 ---
 
-# Prompt & Context Engineer v2
+# Prompt & Context Engineer v3
 
 IRON LAW: Never output a prompt without explaining WHY each section exists. A prompt the user doesn't understand is a prompt they can't maintain or improve.
+
+**v3 changes (2026-04-10):** `--validate` agora wrappa **promptfoo + ccinspect** com rubrics por tipo. Score sheet automático. Retroalimentação via `gaps/` folder. `--skill-prompt` migrado pra `skill-builder` (overlap eliminado).
 
 ## Options
 
 | Option | Description | Default |
 |--------|-------------|---------|
 | `--create` | Create a new prompt from scratch | true |
-| `--validate` | Validate/improve an existing prompt | false |
+| `--validate` | Validate existing prompt via promptfoo + ccinspect rubric | false |
+| `--type <t>` | Prompt type: claude-md, technical-plan, iron-laws, system-prompt, extraction, json-schema, agents-md, geo (auto-detect if omitted) | auto-detect |
 | `--geo` | Optimize text/description for agent discovery (GEO) | false |
-| `--skill-prompt` | Optimize prompts for SKILL.md format | false |
-| `--type <t>` | Prompt type: system, extraction, agents-md, json-schema, geo, skill-prompt | auto-detect |
+| `--update-rubric --gap <file>` | Promote a documented gap into the rubric (semi-auto, asks approval) | false |
 
 ## Workflow
 
@@ -39,7 +41,9 @@ Prompt Engineer Progress:
   - [ ] 4.3 Suggest 3+ test cases
 ```
 
-If `--validate`: Read existing → quality checklist → structured feedback → improved version.
+If `--validate`: Read existing → run ccinspect (if applicable) → run promptfoo with rubric for `--type` → combine outputs → score sheet + findings P0/P1/P2 → suggest fixes. **DO NOT use the legacy quality checklist below — it's kept for `--create` mode reference only.**
+
+If `--update-rubric --gap <file>`: Read gap file in `gaps/` → propose new criterion in YAML → present to user → on approval, edit rubric YAML and bump version.
 
 ## Principles
 
@@ -50,6 +54,79 @@ If `--validate`: Read existing → quality checklist → structured feedback →
 5. **Especifique o output.** JSON Schema, XML tags, templates explícitos. Nunca deixe o modelo adivinhar.
 6. **Calibre pro modelo.** Claude 4.x segue instruções literalmente. Caps lock excessivo causa overtriggering. Instrução clara e direta funciona melhor.
 7. **Teste antes de confiar.** Prompt que funciona 1 vez pode falhar na 10ª. Avalie sistematicamente.
+
+## --validate workflow (v3)
+
+```
+Validate Progress:
+
+- [ ] V.1 Detect type (auto or --type)
+  - [ ] Look at file path: CLAUDE.md → claude-md, plan/*.md → technical-plan, etc
+  - [ ] Look at content shape: IRON LAWS → iron-laws, role+context → system-prompt
+  - [ ] Confirm with user if ambiguous
+- [ ] V.2 Run ccinspect (if applicable)
+  - [ ] Applies to: CLAUDE.md, SKILL.md, .claude/settings.json, agents
+  - [ ] Command: `ccinspect lint <file>` or scoped to project dir
+  - [ ] Capture: errors, warnings, notes
+- [ ] V.3 Run promptfoo with rubric
+  - [ ] Find rubric: `prompt-engineer/rubric/<type>.yaml`
+  - [ ] Command: `promptfoo eval -c rubric/<type>.yaml --vars file=<path>`
+  - [ ] Capture JSON output: scores per criterion, findings P0/P1/P2
+- [ ] V.4 Combine + present
+  - [ ] Merge ccinspect (structural) + promptfoo (semantic) findings
+  - [ ] Aggregate score (weighted average)
+  - [ ] Format: see "Output format" below
+- [ ] V.5 Suggest fixes
+  - [ ] For each P0: concrete action
+  - [ ] For each P1: action if time permits
+  - [ ] P2: tech debt list
+```
+
+### Output format
+
+```
+## Validation: <file>
+Type: <claude-md | technical-plan | iron-laws | system-prompt>
+Score: X/100 [tier]
+Threshold: 75 (production)
+
+### ccinspect (structural)
+- <error/warning/note count>
+- <key findings>
+
+### promptfoo (semantic, by criterion)
+| ID | Criterion | Score | Tier |
+|----|-----------|-------|------|
+| R001 | Cross-section consistency | 80 | Core |
+| R002 | Physical vs textual gates | 60 | Core |
+| ... |
+
+### Findings P0 (block release)
+- ...
+
+### Findings P1 (fix if possible)
+- ...
+
+### Findings P2 (tech debt)
+- ...
+
+### Recommendation
+APPROVED (≥75) | APPROVED WITH RESERVATIONS | REJECTED (<60) | DO NOT EXECUTE
+```
+
+### Anti-drift rule (retroalimentation)
+
+The rubric only grows via documented gaps. When you find a real gap not caught by current rubric:
+
+1. Create file in `gaps/gap_YYYY-MM-DD_<topic>.md` (template in `gaps/_template.md`)
+2. Document: prompt tested, what rubric missed, real consequence, proposed criterion
+3. Run `prompt-engineer --update-rubric --gap <file>` (semi-auto, asks for approval before editing the YAML)
+4. On approval: criterion added with new ID, version bumped, regression test created
+5. **NEVER add criteria without a documented gap** — speculative criteria bloat the rubric
+
+Reasoning: Constitutional AI lesson — Anthropic doesn't let the model edit its own principles. Auto-edition leads to silent drift. Manual semi-auto with human approval is the realistic pattern (research 2026-04-10).
+
+---
 
 ## Step 1: Identify & Context ⚠️ REQUIRED
 
@@ -90,9 +167,11 @@ If targeting Claude 4.x: Load `references/claude-4x-guide.md` — critical diffe
 7. Include scenarios: happy path, edge case, error — each with expected behavior
 8. List dependencies and constraints upfront (not buried in instructions)
 
-### Validating (--validate)
+### Validating (--validate) — DEPRECATED checklist (v3 uses promptfoo + rubrics)
 
-Read the full prompt, then analyze with the quality checklist:
+**v3:** validation now goes through promptfoo + ccinspect with type-specific rubrics. See "--validate workflow (v3)" section above.
+
+The checklist below is **legacy** — kept here for `--create` mode reference (when designing new prompts, these are good universal criteria), but `--validate` no longer runs this manually.
 
 | Criterion | Ask yourself | Red flag |
 |-----------|-------------|----------|
@@ -184,8 +263,20 @@ Máx 3 parágrafos. Tom: profissional mas acolhedor. *Negrito* pra info-chave.
 
 ## When NOT to use
 
-- **Skill do Claude** (SKILL.md persistente) → use skill-builder
+- **Editar texto DENTRO de SKILL.md existente** → use **skill-builder --validate** (v3: `--skill-prompt` foi migrado pra lá)
+- **Criar SKILL.md do zero** → use skill-builder
 - **Prompt simples de 1 linha** → faz direto
 - **Conteúdo do prompt** (lógica de negócio) → use skill de domínio (PRD, n8n)
 - **AGENTS.md pra Lovable específico** → use lovable-knowledge
 - Confused about which skill to use → invoke maestro
+
+## Boundary com skill-builder (v3)
+
+| Tarefa | Skill |
+|--------|-------|
+| Validar CLAUDE.md, plano técnico, IRON LAWS | **prompt-engineer --validate --type <tipo>** |
+| Criar prompt novo (chatbot, agente, extração, JSON) | **prompt-engineer --create** |
+| Validar SKILL.md (estrutura + conteúdo) | **skill-builder --validate** |
+| Criar SKILL.md nova | **skill-builder --full** |
+| Editar texto interno de SKILL.md (boundary, IRON LAW, anti-pattern) | **skill-builder --evolve** (chama prompt-engineer internamente se necessário) |
+| Otimizar GEO de description | **prompt-engineer --geo** OU **geo-optimizer** (geo-optimizer é cirúrgico) |

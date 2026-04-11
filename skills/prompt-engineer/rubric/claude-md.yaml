@@ -1,0 +1,196 @@
+# Rubric: claude-md
+# Para: CLAUDE.md, system prompts híbridos com behavioral + operational + memory + routing
+# Threshold pra produção: 75/100
+# Provider default: anthropic:claude-sonnet-4-5
+# Use: promptfoo eval -c rubric/claude-md.yaml --vars file_content=@<path-to-claude-md>
+
+description: "Validation rubric for CLAUDE.md and hybrid system prompts"
+
+prompts:
+  - |
+    Você está validando um arquivo CLAUDE.md (instruções persistentes pra Claude Code).
+    Aplique os critérios abaixo, retorne score 0-100 ponderado, e liste findings P0/P1/P2.
+
+    ARQUIVO A VALIDAR:
+    ---
+    {{file_content}}
+    ---
+
+providers:
+  - id: anthropic:messages:claude-sonnet-4-5
+    config:
+      max_tokens: 4000
+      temperature: 0.2
+
+tests:
+  - vars:
+      file_content: file://{{file}}
+    assert:
+      # ============================================================
+      # CRITÉRIOS CORE (peso 80-100, deal-breakers)
+      # Derivados dos 5 gaps estruturais documentados em 0A
+      # ============================================================
+
+      # R001 — Consistência inter-seção (peso 100)
+      - type: llm-rubric
+        value: |
+          O arquivo NÃO TEM contradições entre seções diferentes?
+
+          PROCURE especificamente por padrões como:
+          - Uma seção diz "fique silencioso/conciso" e outra diz "abra um bloco/explique antes de agir"
+          - Uma seção diz "leitura cirúrgica/mínima" e outra exige "95% de confiança antes de agir"
+          - Uma seção diz "respostas curtas, 2 linhas" e outra exige "fazer N perguntas antes"
+          - Regras que pedem comportamentos opostos sem critério explícito de qual prevalece
+
+          Se encontrar 0 contradições → score 100
+          Se encontrar 1 contradição implícita resolvível com nota → score 70
+          Se encontrar 1 contradição direta sem resolução → score 40
+          Se encontrar 2+ contradições → score 0
+
+          Liste as contradições encontradas com referência à seção.
+
+      # R002 — Gate físico vs textual (peso 90)
+      - type: llm-rubric
+        value: |
+          As regras COMPORTAMENTAIS críticas têm reforço estrutural (hooks, validators,
+          tooling automático) ou dependem só de o modelo lembrar?
+
+          Pra cada IRON LAW / regra crítica encontrada, pergunte:
+          - Existe hook do Claude Code que dispara antes de violar?
+          - Existe ferramenta (linter, validator) que checa automaticamente?
+          - Existe outro mecanismo estrutural?
+
+          Se TODAS as regras críticas têm gate estrutural → score 100
+          Se >50% têm → score 70
+          Se <50% têm → score 40
+          Se nenhuma tem → score 0
+
+          Regras textuais sem gate viram sugestão e o modelo pula em modo execução.
+          Liste as regras críticas SEM gate físico.
+
+      # R003 — Redundância semântica (peso 85)
+      - type: llm-rubric
+        value: |
+          Existe alguma IDEIA/REGRA que aparece em 2+ seções diferentes com palavras
+          diferentes mas significado igual?
+
+          Exemplos a procurar:
+          - "Confronta direto" + "questione a premissa" + "PENSA antes de fazer" — 3 versões da mesma ideia
+          - "Direto ao ponto" + "respostas objetivas" + "não enrolação" em seções separadas
+          - Mesma instrução comportamental em "Tom" e "Como trabalhar comigo"
+
+          Se 0 redundâncias → score 100
+          Se 1-2 redundâncias menores → score 75
+          Se 3+ redundâncias ou 1 redundância grande (>5 linhas duplicadas) → score 40
+
+          Liste as ideias redundantes com referência às seções.
+
+      # ============================================================
+      # CRITÉRIOS USEFUL (peso 50-79)
+      # ============================================================
+
+      # R004 — Distinção de tipo de seção (peso 70)
+      - type: llm-rubric
+        value: |
+          Cada seção tem TIPO claro? Tipos esperados:
+          - BEHAVIORAL: regras de comportamento do modelo (tom, confrontação, decisão)
+          - OPERATIONAL: instruções de processo (workflows, checklists, formatos)
+          - MEMORY: state do projeto (stakeholders, IDs, configs, applied learnings)
+          - ROUTING: árvores de decisão (qual skill usar, qual modelo, fluxograma)
+          - REFERENCE: tabelas de lookup (prefixos, IDs, comandos)
+
+          Seções com tipo misturado (ex: behavioral DENTRO de uma seção operational)
+          confundem o modelo.
+
+          Se TODAS as seções têm tipo claro → score 100
+          Se 1-2 misturadas → score 70
+          Se >2 misturadas → score 40
+
+      # R005 — Pruning awareness (peso 60)
+      - type: llm-rubric
+        value: |
+          O arquivo tem mecanismo (ou nota) sobre quando REMOVER regras antigas?
+
+          Procure por:
+          - Datas de criação/revisão de regras
+          - "Applied learning" com critério de quando arquivar
+          - Notas tipo "rever em X dias se não aplicado"
+          - Bullet points sem contexto (sinal de regra que ninguém sabe de onde veio)
+
+          Se tem mecanismo de pruning → score 100
+          Se não tem mas regras parecem novas/relevantes → score 70
+          Se tem regras claramente antigas sem revisão → score 30
+
+      # ============================================================
+      # CRITÉRIOS UNIVERSAIS (também relevantes pra outros tipos)
+      # ============================================================
+
+      # U001 — Linguagem calibrada para Claude 4.x (peso 60)
+      - type: llm-rubric
+        value: |
+          O arquivo evita caps lock excessivo ("MUST", "NEVER", "ANTES", "NÃO")?
+          Claude 4.x interpreta caps literalmente — overtriggering.
+
+          Conta ocorrências de palavras em CAPS LOCK isoladas (não siglas).
+          0-2 → score 100
+          3-5 → score 70
+          6-10 → score 40
+          >10 → score 0
+
+      # U002 — Token budget razoável (peso 50)
+      - type: llm-rubric
+        value: |
+          O arquivo está dentro do limite recomendado de tokens pra startup load?
+
+          - <2000 tokens → score 100
+          - 2000-3500 → score 80
+          - 3500-5000 → score 50
+          - >5000 → score 20
+
+          Tokens carregados em CADA prompt — orçamento crítico.
+
+      # U003 — Cada regra explica WHY (peso 70)
+      - type: llm-rubric
+        value: |
+          Regras importantes (IRON LAWS, comportamentos críticos) explicam POR QUÊ
+          existem? Não basta "faz X" — precisa "faz X porque Y".
+
+          Se >80% das regras importantes têm WHY → score 100
+          50-80% → score 60
+          <50% → score 30
+
+          WHY ajuda o modelo a julgar edge cases. Sem WHY, vira regra cega.
+
+  # ============================================================
+  # OUTPUT FORMAT (esperado do LLM-as-judge)
+  # ============================================================
+defaultTest:
+  options:
+    rubricPrompt: |
+      Você é um auditor de prompts. Avalie o conteúdo seguindo o critério dado.
+
+      Output OBRIGATÓRIO (formato JSON):
+      {
+        "score": <0-100>,
+        "tier": "<core|useful|marginal>",
+        "findings": [
+          {
+            "severity": "<P0|P1|P2>",
+            "criterion_id": "<R001|R002|...>",
+            "issue": "<descrição curta>",
+            "location": "<seção/linha se aplicável>",
+            "fix": "<ação concreta sugerida>"
+          }
+        ],
+        "rationale": "<1-2 frases justificando o score>"
+      }
+
+      Critério a avaliar:
+      ---
+      {{rubric}}
+      ---
+
+      Conteúdo:
+      ---
+      {{output}}
+      ---

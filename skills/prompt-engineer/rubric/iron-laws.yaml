@@ -1,0 +1,204 @@
+# Rubric: iron-laws
+# Para: blocos de IRON LAWS, routing tables, regras comportamentais explícitas
+# Threshold pra produção: 75/100
+# Use: promptfoo eval -c rubric/iron-laws.yaml --vars file_content=@<file>
+
+description: "Validation rubric for IRON LAWS blocks and routing tables"
+
+prompts:
+  - |
+    Você está validando um bloco de IRON LAWS, regras comportamentais ou tabela
+    de roteamento de skills/intent. Aplique os critérios abaixo.
+
+    BLOCO A VALIDAR:
+    ---
+    {{file_content}}
+    ---
+
+providers:
+  - id: anthropic:messages:claude-sonnet-4-5
+    config:
+      max_tokens: 4000
+      temperature: 0.2
+
+tests:
+  - vars:
+      file_content: file://{{file}}
+    assert:
+      # ============================================================
+      # CRITÉRIOS CORE — derivados dos 6 gaps documentados em 0A
+      # ============================================================
+
+      # R001 — Cobertura de intents (peso 90)
+      - type: llm-rubric
+        value: |
+          A tabela/conjunto de regras cobre os intents prováveis do usuário?
+
+          Pra cada caso de uso comum no domínio do bloco, existe regra que pega?
+
+          Se o bloco é routing de skills:
+          - "edita arquivo X" tem trigger?
+          - "review código" tem trigger?
+          - "pesquisa Y" tem trigger?
+          - "decide entre A e B" tem trigger?
+
+          Se cobertura ampla (>80% dos casos comuns) → score 100
+          Cobertura média → score 60
+          Cobertura baixa → score 30
+
+          Liste intents comuns que ficaram fora.
+
+      # R002 — Exclusividade mútua (peso 100)
+      - type: llm-rubric
+        value: |
+          Existem 2+ regras que matcham o MESMO intent sem hierarquia explícita?
+
+          Exemplos do mal:
+          - "edita SKILL.md" matcha "skill-builder --validate" E "prompt-engineer --validate"
+            sem dizer qual roda primeiro/qual prevalece
+          - "review código" matcha "trident" E "code review tool X" sem ordem
+          - 2 IRON LAWS contradizendo o mesmo comportamento
+
+          Se TODAS as regras são mutuamente exclusivas → score 100
+          1-2 sobreposições com hierarquia documentada → score 80
+          1-2 sobreposições sem hierarquia → score 40
+          3+ sobreposições → score 0
+
+          Liste sobreposições encontradas.
+
+      # R003 — Hierarquia entre regras conflitantes (peso 90)
+      - type: llm-rubric
+        value: |
+          Quando 2+ regras podem disparar simultaneamente, o bloco declara qual prevalece?
+
+          Procure por:
+          - "Se IL-1 e IL-3 conflitam, IL-1 prevalece"
+          - "Quando ambos matcham, primeiro X depois Y"
+          - Ordem de prioridade explícita
+          - Critério de tiebreaker
+
+          Se hierarquia explícita pra TODOS conflitos → score 100
+          Hierarquia parcial → score 60
+          Sem hierarquia mas sem conflitos óbvios → score 80
+          Sem hierarquia + conflitos óbvios → score 0
+
+      # R004 — Triggers semânticos (peso 70)
+      - type: llm-rubric
+        value: |
+          Os triggers cobrem variações naturais de palavra/frase, não só keyword exata?
+
+          Exemplo bom:
+          | "atualiza/edita/ajusta CLAUDE.md" → skill X (cobre 3 verbos)
+
+          Exemplo ruim:
+          | "atualiza CLAUDE.md" → skill X
+          (perde "edita CLAUDE.md", "muda CLAUDE.md", "ajusta CLAUDE.md")
+
+          Triggers só com palavra exata viram falsos negativos.
+
+          >80% dos triggers são semânticos → 100
+          50-80% → 60
+          <50% → 30
+
+      # ============================================================
+      # CRITÉRIOS USEFUL
+      # ============================================================
+
+      # R005 — Falsos positivos identificados (peso 60)
+      - type: llm-rubric
+        value: |
+          O bloco identifica EXPLICITAMENTE casos onde a regra NÃO se aplica
+          (mesmo parecendo)?
+
+          Exemplo: "DRY/KISS → trident, EXCETO se for sobre simplificar prompt
+          (esse é prompt-engineer, não código)"
+
+          Reduz falso positivo onde keyword bate mas contexto difere.
+
+          Cada regra ambígua tem clarificação → 100
+          Algumas têm → 60
+          Nenhuma → 30
+
+      # R006 — Maintenance debt declarado (peso 50)
+      - type: llm-rubric
+        value: |
+          Existe nota sobre como manter a tabela atualizada quando skills/intents
+          mudam? Quem atualiza? Quando?
+
+          Bom: "Atualizar quando skill nova entrar no arsenal — responsabilidade
+                do skill-builder Phase 0"
+
+          Tem mecanismo → 100
+          Não tem → 50
+
+      # ============================================================
+      # CRITÉRIOS UNIVERSAIS
+      # ============================================================
+
+      # U001 — Each rule explica WHY (peso 80)
+      - type: llm-rubric
+        value: |
+          Cada IRON LAW / regra tem campo "Por quê"?
+
+          IRON LAW sem WHY vira regra cega — modelo não sabe julgar edge cases.
+
+          >80% têm WHY → 100
+          50-80% → 60
+          <50% → 30
+
+      # U002 — Reframe positivo (peso 60)
+      - type: llm-rubric
+        value: |
+          As regras são frasadas POSITIVAMENTE ("FAZ X", "USA Y") ou
+          NEGATIVAMENTE ("NÃO faz X", "NUNCA Y")?
+
+          Anti-pattern do prompt-engineer: all-negatives.
+          Modelo foca no que NÃO fazer e perde foco do que fazer.
+
+          >80% positivas → 100
+          50-80% → 60
+          <50% → 30
+
+      # U003 — Exemplos input→output por regra (peso 70)
+      - type: llm-rubric
+        value: |
+          Cada regra crítica tem exemplo "quando X, faz Y"?
+
+          Bom:
+          IL-1: edita CLAUDE.md → invoca prompt-engineer --validate primeiro
+          Exemplo: "Patrick: 'adiciona regra X' → eu: rascunha → valida → Write"
+
+          Cada regra tem exemplo → 100
+          Algumas têm → 60
+          Nenhuma → 30
+
+defaultTest:
+  options:
+    rubricPrompt: |
+      Você é auditor de regras comportamentais e routing tables. Avalie o critério.
+
+      Output JSON:
+      {
+        "score": <0-100>,
+        "tier": "<core|useful|marginal>",
+        "findings": [
+          {
+            "severity": "<P0|P1|P2>",
+            "criterion_id": "<R001|...|U001|...>",
+            "issue": "<descrição>",
+            "location": "<regra/linha>",
+            "fix": "<ação>"
+          }
+        ],
+        "rationale": "<1-2 frases>"
+      }
+
+      Critério:
+      ---
+      {{rubric}}
+      ---
+
+      Bloco:
+      ---
+      {{output}}
+      ---

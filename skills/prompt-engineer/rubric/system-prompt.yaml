@@ -1,0 +1,206 @@
+# Rubric: system-prompt
+# Para: system prompts de chatbots/agents, SKILL.md, prompts de produção
+# Threshold pra produção: 75/100
+# Use: promptfoo eval -c rubric/system-prompt.yaml --vars file_content=@<file>
+
+description: "Validation rubric for system prompts (chatbots, agents, SKILL.md)"
+
+prompts:
+  - |
+    Você está validando um system prompt (chatbot, agente, SKILL.md de produção).
+    Aplique os critérios abaixo.
+
+    PROMPT A VALIDAR:
+    ---
+    {{file_content}}
+    ---
+
+providers:
+  - id: anthropic:messages:claude-sonnet-4-5
+    config:
+      max_tokens: 4000
+      temperature: 0.2
+
+tests:
+  - vars:
+      file_content: file://{{file}}
+    assert:
+      # ============================================================
+      # CRITÉRIOS CORE — formaliza o quality checklist atual da skill
+      # ============================================================
+
+      # R001 — Role/contexto explícito (peso 100)
+      - type: llm-rubric
+        value: |
+          O prompt declara explicitamente QUEM é o agente e PARA QUE serve?
+
+          Bom: "<role>Você é assistente da clínica X</role><context>...</context>"
+          Ruim: "Você é um assistente útil"
+
+          Role específico + contexto de domínio → 100
+          Role genérico → 50
+          Sem role → 0
+
+      # R002 — Output format precisamente definido (peso 95)
+      - type: llm-rubric
+        value: |
+          O prompt define EXATAMENTE o formato esperado de output?
+
+          Bom: JSON Schema, XML tags explícitas, template literal, estrutura markdown
+          Bom: "Máximo 3 parágrafos. Use *negrito* pra info-chave"
+          Ruim: "responda de forma profissional"
+
+          Format explícito + estruturado → 100
+          Format mencionado mas vago → 60
+          Sem format → 20
+
+      # R003 — Instruções específicas, não vagas (peso 90)
+      - type: llm-rubric
+        value: |
+          Instruções são ações claras ou direção vaga?
+
+          Bom: "1. Cumprimente pelo nome. 2. Identifique intenção..."
+          Ruim: "Seja útil e preste atenção ao usuário"
+
+          Numeradas e específicas → 100
+          Mistura → 60
+          Vagas → 20
+
+      # R004 — Edge cases tratados (peso 85)
+      - type: llm-rubric
+        value: |
+          O prompt diz o que fazer com inputs inválidos, vazios, ambíguos, fora de escopo?
+
+          Bom: "Se não souber: 'Vou verificar e retorno em 2h'"
+          Bom: "Se cliente em emergência médica: passe telefone (XX) XXXX"
+          Bom: "Se input em outro idioma: responda em PT-BR pedindo confirmação"
+
+          Edge cases cobertos → 100
+          Alguns → 60
+          Nenhum → 20
+
+      # ============================================================
+      # CRITÉRIOS USEFUL
+      # ============================================================
+
+      # R005 — Few-shot example (peso 70)
+      - type: llm-rubric
+        value: |
+          Tem pelo menos 1 exemplo input→output dentro do prompt?
+
+          Few-shot >>> zero-shot pra calibrar formato.
+
+          1+ exemplo concreto → 100
+          Exemplo abstrato → 60
+          Nenhum → 30
+
+      # R006 — Anti-patterns explícitos (peso 60)
+      - type: llm-rubric
+        value: |
+          O prompt declara o que NÃO fazer (em forma positiva)?
+
+          Bom: "Sempre responda baseado em fatos verificáveis"
+              (em vez de "Nunca invente")
+          Bom: "Mantenha tom profissional e direto"
+              (em vez de "Não seja informal")
+
+          Anti-patterns presentes e positivos → 100
+          Presentes mas negativos → 70
+          Ausentes → 40
+
+      # ============================================================
+      # CRITÉRIOS CALIBRAÇÃO CLAUDE 4.x (gap apontado em 0A)
+      # ============================================================
+
+      # C001 — Caps lock controlado (peso 80)
+      - type: llm-rubric
+        value: |
+          Caps lock excessivo causa overtriggering em Claude 4.x. Conta caps:
+
+          0-3 palavras em CAPS → 100
+          4-8 → 70
+          9-15 → 40
+          >15 → 0
+
+      # C002 — Não tem prefilling deprecated patterns (peso 60)
+      - type: llm-rubric
+        value: |
+          Claude 4.x deprecou prefilling. Procure por:
+          - "Assistant:" no meio do prompt como simulação de resposta
+          - Tags <assistant> ou similar
+          - Tentativas de "começar a resposta por X"
+
+          Use system prompt + user message, deixa Claude responder do zero.
+
+          Sem prefilling → 100
+          Tem mas mínimo → 60
+          Tem evidente → 30
+
+      # C003 — KV cache strategy (peso 50)
+      - type: llm-rubric
+        value: |
+          Pra prompts usados em produção (prompt cacheable):
+          - Conteúdo estável NO INÍCIO (system prompt fixo)
+          - Conteúdo variável NO FIM (input do usuário, contexto dinâmico)
+
+          Estrutura cache-friendly → 100
+          Mistura estável/variável → 60
+          Não aplicável (one-off) → ignora critério
+
+      # ============================================================
+      # CRITÉRIOS UNIVERSAIS
+      # ============================================================
+
+      # U001 — Tool management (peso 70)
+      - type: llm-rubric
+        value: |
+          Se o prompt usa tools:
+          - Tools são mínimas e não-overlapping?
+          - Cada tool tem propósito único?
+          - Não há 5+ tools quando 2 resolveriam?
+
+          Tools enxutas → 100
+          Algumas overlap → 60
+          Muito overlap → 30
+          Sem tools → não se aplica
+
+      # U002 — Attention budget (peso 60)
+      - type: llm-rubric
+        value: |
+          O prompt está dentro de orçamento razoável?
+
+          <500 tokens → 100
+          500-1500 → 80
+          1500-3000 → 60
+          >3000 → 30
+
+defaultTest:
+  options:
+    rubricPrompt: |
+      Você é auditor de system prompts. Avalie o critério.
+
+      Output JSON:
+      {
+        "score": <0-100>,
+        "tier": "<core|useful|marginal>",
+        "findings": [
+          {
+            "severity": "<P0|P1|P2>",
+            "criterion_id": "<R001|...|C001|...|U001|...>",
+            "issue": "<descrição>",
+            "location": "<seção/linha>",
+            "fix": "<ação>"
+          }
+        ],
+        "rationale": "<1-2 frases>"
+      }
+
+      Critério:
+      ---
+      {{rubric}}
+      ---
+
+      Prompt:
+      ---
+      {{output}}
+      ---

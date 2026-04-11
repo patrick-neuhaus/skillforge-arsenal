@@ -1,0 +1,200 @@
+# Rubric: technical-plan
+# Para: planos de implementação, PRDs, specs, planos de refactor
+# Threshold pra produção: 75/100
+# Use: promptfoo eval -c rubric/technical-plan.yaml --vars file_content=@<plan-file>
+
+description: "Validation rubric for technical plans, PRDs, implementation specs"
+
+prompts:
+  - |
+    Você está validando um plano técnico (plano de implementação, PRD, ou spec).
+    Aplique os critérios abaixo, retorne score 0-100 ponderado, e liste findings.
+
+    PLANO A VALIDAR:
+    ---
+    {{file_content}}
+    ---
+
+providers:
+  - id: anthropic:messages:claude-sonnet-4-5
+    config:
+      max_tokens: 4000
+      temperature: 0.2
+
+tests:
+  - vars:
+      file_content: file://{{file}}
+    assert:
+      # ============================================================
+      # CRITÉRIOS CORE — derivados dos 4 erros de aplicação documentados em 0A
+      # ============================================================
+
+      # R001 — DAG de dependências entre fases (peso 100)
+      - type: llm-rubric
+        value: |
+          Cada fase do plano declara EXPLICITAMENTE seus pré-requisitos?
+
+          Procure por:
+          - "Pré-requisito: Fase X completa"
+          - "Depende de Y"
+          - Diagrama de dependências
+          - Ordem clara de execução
+
+          Se TODAS as fases >0 declaram pré-req → score 100
+          Se a maioria declara → score 70
+          Se só algumas → score 40
+          Se nenhuma → score 0
+
+          Plano sem DAG vira execução cega que erra ordem.
+          Liste fases sem pré-requisitos declarados.
+
+      # R002 — Reversibilidade (peso 90)
+      - type: llm-rubric
+        value: |
+          Pra cada fase que envolve ação destrutiva ou hard-to-undo, existe seção
+          explícita de "como reverter" ou "rollback"?
+
+          Ações que precisam de rollback documentado:
+          - Edits em arquivos críticos (CLAUDE.md, settings.json, SKILL.md)
+          - Commits de mudança
+          - Instalação de ferramentas globais
+          - Mudanças em hooks ou config
+
+          Se TODAS têm rollback → score 100
+          Se >60% têm → score 70
+          Se <30% têm → score 30
+
+          Liste fases destrutivas sem plano de rollback.
+
+      # R003 — Critério de sucesso por fase (peso 95)
+      - type: llm-rubric
+        value: |
+          Cada fase declara critério de sucesso VERIFICÁVEL? Verificável =
+          alguém externo consegue dizer "completou ou não" sem julgamento.
+
+          Bom: "ccinspect lint não retorna erros nos arquivos X, Y"
+          Bom: "score do prompt-engineer --validate >= 75"
+          Bom: "git status retorna clean"
+          Ruim: "tudo funcionando bem"
+          Ruim: "Patrick aprova" (subjetivo, não verificável)
+
+          Se TODAS as fases têm critério verificável → score 100
+          Se a maioria → score 70
+          Se poucas/nenhuma → score 30
+
+          Liste fases sem critério de sucesso verificável.
+
+      # R004 — Chicken-and-egg lógico (peso 100)
+      - type: llm-rubric
+        value: |
+          Existe alguma fase X que depende do output de fase Y, e fase Y depende
+          do output de fase X? Loop circular de dependência?
+
+          Exemplos a procurar:
+          - "Crie a rubric usando os gaps detectados pela rubric" (loop)
+          - "Valide o plano com a ferramenta que esse plano vai criar" (loop)
+          - "Refatore X usando Y, mas Y precisa de X refatorado primeiro"
+
+          Se 0 loops lógicos → score 100
+          Se 1 loop documentado mas com workaround → score 50
+          Se 1+ loops sem resolução → score 0
+
+          Liste loops encontrados.
+
+      # ============================================================
+      # CRITÉRIOS USEFUL
+      # ============================================================
+
+      # R005 — Failure modes consistentes (peso 70)
+      - type: llm-rubric
+        value: |
+          Cada fase crítica declara o que fazer se ela FALHAR?
+
+          Procure por:
+          - "Failure mode: ..."
+          - "Se X falhar, faça Y"
+          - Tabela consolidada de failure modes
+          - Critério de quando parar vs quando iterar
+
+          Se TODAS as fases críticas têm → score 100
+          Se >60% → score 70
+          Se <30% → score 30
+
+      # R006 — Decisões pra humano com formato comparável (peso 60)
+      - type: llm-rubric
+        value: |
+          Quando o plano pede decisão humana, apresenta opções de forma comparável?
+
+          Bom: "Opção A vs Opção B vs Opção C — recomendo X porque Y"
+          Ruim: "Patrick decide" (sem opções)
+          Ruim: "Você prefere?" (sem listar alternativas)
+
+          Se TODAS as decisões são comparáveis → score 100
+          Se a maioria → score 70
+          Se poucas → score 30
+
+      # R007 — Estimativa de esforço (peso 50)
+      - type: llm-rubric
+        value: |
+          Cada fase tem estimativa de dificuldade ou tempo (alta/média/baixa, 30min/1h/4h)?
+
+          Estimativas ajudam priorização e budget de contexto.
+
+          TODAS → 100
+          Maioria → 70
+          Poucas/nenhuma → 30
+
+      # ============================================================
+      # CRITÉRIOS MARGINAL
+      # ============================================================
+
+      # M001 — "O que NÃO está neste plano" explícito (peso 30)
+      - type: llm-rubric
+        value: |
+          O plano tem seção declarando O QUE NÃO ESTÁ no escopo (escopo negativo)?
+
+          Evita scope creep e expectativas erradas.
+
+          Tem seção dedicada → 100
+          Menciona em algumas fases → 60
+          Nada → 30
+
+      # M002 — Checkpoints humanos marcados (peso 40)
+      - type: llm-rubric
+        value: |
+          Pontos onde humano precisa decidir/aprovar estão claramente marcados?
+
+          Bom: "[CHECKPOINT HUMANO] Patrick aprova X antes de continuar"
+          Bom: "⛔ GATE: ..."
+          Ruim: enterrado em prosa
+
+defaultTest:
+  options:
+    rubricPrompt: |
+      Você é um auditor de planos técnicos. Avalie o conteúdo seguindo o critério.
+
+      Output OBRIGATÓRIO (formato JSON):
+      {
+        "score": <0-100>,
+        "tier": "<core|useful|marginal>",
+        "findings": [
+          {
+            "severity": "<P0|P1|P2>",
+            "criterion_id": "<R001|R002|...>",
+            "issue": "<descrição curta>",
+            "location": "<fase/seção>",
+            "fix": "<ação concreta>"
+          }
+        ],
+        "rationale": "<1-2 frases>"
+      }
+
+      Critério:
+      ---
+      {{rubric}}
+      ---
+
+      Plano:
+      ---
+      {{output}}
+      ---
