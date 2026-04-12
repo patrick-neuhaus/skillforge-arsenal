@@ -23,6 +23,7 @@ IRON LAW: NEVER recommend a skill without reading its SKILL.md first — descrip
 Maestro Progress:
 
 - [ ] Phase 1: Understand Intent ⚠️ REQUIRED
+  - [ ] 1.0 Pre-check: does this request match any "When NOT to use" exclusion? If yes, skip maestro entirely.
   - [ ] 1.1 Parse user request for domain keywords
   - [ ] 1.2 Identify primary need (build, review, audit, find, plan, create)
   - [ ] 1.3 Check if request crosses multiple domains
@@ -37,7 +38,7 @@ Maestro Progress:
   - [ ] 3.1 Show recommended skill(s) with one-line rationale
   - [ ] 3.2 If chain: show execution order + context window budget + /clear handoff points (via context-guardian)
   - [ ] 3.3 If alternatives exist: list primary + alternatives with distinguishing criteria
-  - [ ] ⛔ GATE: Maestro stops here. Recommend + await user confirmation. The user's next message triggers skill invocation directly — maestro does NOT invoke on behalf of the user.
+  - [ ] ⛔ GATE: Maestro stops here. Recommend + await user confirmation. The user's next message triggers skill invocation directly — maestro does NOT invoke on behalf of the user. If user rejects the recommendation, re-run Phase 1.1 with refined intent from user feedback.
 ```
 
 ## Phase 1: Understand Intent
@@ -83,6 +84,8 @@ Map to categories:
 | "sales collateral/pitch deck/one-pager/objection handling/demo script" | Marketing | sales-enablement |
 | "free tool/engineering as marketing/lead gen tool/calculator/grader" | Marketing | free-tool-strategy |
 | "launch/GTM/Product Hunt/go-to-market/feature release/waitlist" | Marketing | launch-strategy |
+| "lovable knowledge/workspace knowledge/project knowledge" | Implementation | lovable-knowledge |
+| "schedule task/recurring/cron/agendar" | Workflow | schedule |
 
 ## Phase 2: Route
 
@@ -90,7 +93,7 @@ Map to categories:
 Before matching, check `mtime` of `references/skill-catalog.md`. If older than 7 days, emit warning:
 > ⚠️ skill-catalog.md is stale (>7d). Falling back to reading individual SKILL.mds per IRON LAW.
 
-Then skip the catalog and read the SKILL.md files directly for candidate skills.
+Then skip the catalog and read the SKILL.md files directly for candidate skills. Note: the Phase 1 routing table embedded in THIS file is always current (updated with each refactor). Staleness only affects the external skill-catalog.md reference file.
 
 ### Step 2.2: Read SKILL.md (IRON LAW enforcement)
 For every candidate skill identified in 2.1, read the actual `skills/<name>/SKILL.md` file before proposing. Do not rely on description frontmatter alone — the YAML description may diverge from current behavior after refactors. This step is mandatory, not optional.
@@ -104,7 +107,7 @@ If one skill clearly matches, present:
 ```
 
 ### Step 2.4: Multi-Skill Chain
-If the request crosses domains, load `references/composition-chains.md` and present:
+If the request crosses domains, load `references/composition-chains.md` and present. **Cap: if chain requires >3 skills, warn user to split into waves via context-guardian --handoff between waves.** Do not build unbounded chains.
 ```
 **Pipeline recomendado:**
 1. [skill-1] — [o que faz neste contexto] (~X% context window)
@@ -115,15 +118,8 @@ If the request crosses domains, load `references/composition-chains.md` and pres
 **Handoff:** [skill-1] gera [documento], que [skill-2] consome.
 ```
 
-### Step 2.5: Alternatives (conditional)
-If 2+ candidates score similarly (within ~15% match delta), include an `**Alternativas:**` block BEFORE the primary recommendation so the user can choose:
-```
-**Alternativas consideradas:**
-- [skill-a] — better for [criterion X]
-- [skill-b] — better for [criterion Y]
-
-**Primário:** [skill-a] — [rationale]
-```
+### Step 2.5: Alternatives detection (routing flag)
+If 2+ candidates score similarly (within ~15% match delta), flag . Do NOT present alternatives here — Phase 3.3 is the sole authority for alternative presentation and ordering. This step only detects, Phase 3 presents.
 
 ### Context Window Budget (per-skill table)
 
@@ -137,13 +133,14 @@ Replace the old "20-40% flat" heuristic with category-based estimates sourced fr
 | Typical implementation skill (react-patterns, n8n-architect, etc.) | ~15-20% | Single-pass reasoning |
 | Reference lookup (reference-finder, context-tree) | ~10-15% | Load + match |
 | Meta skills (skill-builder, prompt-engineer, maestro) | ~10-20% | Small scope, high reasoning density |
+| Marketing skills (copy, ai-seo, site-architecture, etc.) | ~15-25% | Research + content generation |
 | Content (pdf, docx, pptx, xlsx) | ~5-10% | Utility-class |
 
 **Chain rule:** if projected cumulative budget exceeds 70%, insert `context-guardian --handoff` before `/clear` between phases. Do not just recommend `/clear` — handoff preserves state.
 
 ## Phase 3: Present
 
-⛔ **GATE clarification:** Maestro **recommends + awaits user confirmation**. It does NOT invoke the recommended skill. After the user confirms, their next message triggers direct invocation of the skill — maestro exits the loop at the recommendation step.
+⛔ **GATE clarification:** Maestro **recommends + awaits user confirmation**. It does NOT invoke the recommended skill. After the user confirms, their next message triggers direct invocation of the skill — maestro exits the loop at the recommendation step. This GATE applies equally to --suggest, --chain, and --loose modes.
 
 This separation exists because:
 1. User may have hidden context that changes the recommendation
@@ -237,7 +234,9 @@ Runs diagnostics on the arsenal and reports drift between catalog and filesystem
      - Validate SKILL.md exists + YAML frontmatter has name + description
      - Check references/ dir exists if referenced in workflow
   5. Check skill-catalog.md mtime → warn if >7 days
-  6. Output structured report: ✅ healthy | ⚠️ warnings | 🔴 broken
+  5b. Validate references/composition-chains.md exists + mtime <=7d
+  6. Cross-check Phase 1 routing table skills vs catalog skills (detect drift)
+  7. Output structured report: ✅ healthy | ⚠️ warnings | 🔴 broken
 ```
 
 ### --loose Workflow (bounded)
@@ -267,7 +266,7 @@ Loose orchestration gives the user emergent composition across skills, with expl
 ## Pre-Delivery Checklist
 
 Antes de recomendar:
-- [ ] Li o SKILL.md da skill recomendada (enforcement já em Phase 2.2)
+- [ ] Li o SKILL.md de todas as skills candidatas avaliadas (enforcement em Phase 2.2)
 - [ ] A skill resolve o problema real do usuário (não o problema que parece)
 - [ ] Se chain: ordem de execução faz sentido e handoffs estão claros
 - [ ] Context window budget calculado via tabela per-skill (ver Phase 2)
@@ -278,6 +277,7 @@ Antes de recomendar:
 - Usuário já sabe qual skill quer → invocar direto
 - Tarefa trivial que não precisa de skill → responder direto
 - Pergunta sobre como usar uma skill específica → ler o SKILL.md da skill
+- Já está em sessão maestro (self-route via "validate skill choice") → responder direto sem re-invocar maestro
 - **Tiebreaker auto-activation:** auto-activation applies only when the request is non-trivial AND no single skill is obvious. Trivial tasks skip maestro entirely, even if the router detects 2+ candidates.
 
 ## Integration

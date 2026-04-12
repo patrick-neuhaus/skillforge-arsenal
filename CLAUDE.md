@@ -25,6 +25,13 @@ Este é o repositório de skills customizadas do Patrick (40 skills atualmente).
 
 IL-1 do `~/.claude/rules/iron-laws.md` aplica: validar com rubric antes do Write/Edit, criar marker via `~/.claude/hooks/write-validation-marker.ps1`, V2 hook bloqueia sem marker fresh.
 
+## Routing: brv-query vs context-tree skill
+
+- `brv-query` (byterover MCP): knowledge do PROJETO atual (.brv/context-tree/)
+- `context-tree` skill (local): knowledge USER-LEVEL (~/.claude/context-tree/meta/) + unified read
+- Pra knowledge operacional do Patrick (decisions, learnings, wave history): preferir context-tree skill
+- Pra knowledge tecnico do projeto (code patterns, architecture): preferir brv-query
+
 <!-- BEGIN BYTEROVER RULES -->
 
 # Workflow Instruction

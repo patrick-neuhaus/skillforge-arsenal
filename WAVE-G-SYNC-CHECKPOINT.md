@@ -4,7 +4,7 @@ Tracking file pra saber em que estado cada ambiente (Claude Code local, anthropi
 
 ## Última atualização
 
-- **Data/hora:** 2026-04-11 ~20:15 (UTC-3, horário de São Paulo)
+- **Data/hora:** 2026-04-12 ~00:30 (Wave H) (UTC-3, horário de São Paulo)
 - **Git commit base:** d3c2eb29d79a881b2488dcb5e8b17d368ed5c990 (Wave G ainda não commitada)
 - **Executor:** Wave G (post-E2E corrections)
 - **Skills modificadas:** 19 (re-upadas + o resto das Waves 1-6 que nunca tinha sido upado)
@@ -16,7 +16,7 @@ Tracking file pra saber em que estado cada ambiente (Claude Code local, anthropi
 - ✅ Todas as 40 skills presentes em `skills/`
 - ✅ maestro/SKILL.md: 14 bugs Trident corrigidos (G2)
 - ✅ context-tree/SKILL.md: unified reader + nota byterover built-in (G3)
-- ✅ Zero `.bak` files (limpeza feita 2026-04-11 ~20:15)
+- ✅ Zero `.bak` files (limpeza feita 2026-04-12 ~00:30 (Wave H))
 
 ### anthropic-skills marketplace
 
@@ -45,13 +45,13 @@ As skills `pdf`, `xlsx`, `pptx`, `docx` do skillforge-arsenal têm nomes idênti
 
 Erro operacional meu: ao fazer backup `SKILL.md.bak-pre-G2` antes do refactor, esqueci de limpar antes do zip. O `zip-skills.py` pegou o .bak junto. Resultado: `maestro.zip` original tinha 15302 bytes SKILL.md + 9988 bytes .bak dentro.
 
-**Resolvido 2026-04-11 ~20:15:** .bak removido do dir, maestro re-zipado limpo (3 files: SKILL.md + 2 references). Patrick precisa re-upar SOMENTE o maestro.zip novo.
+**Resolvido 2026-04-12 ~00:30 (Wave H):** .bak removido do dir, maestro re-zipado limpo (3 files: SKILL.md + 2 references). Patrick precisa re-upar SOMENTE o maestro.zip novo.
 
 **MD5 do maestro.zip corrigido:** efcfe3f6d55c7f1133cae0e80fd0a791
 
 ### 3. Bak files em outras skills
 
-Verificado 2026-04-11 ~20:15: nenhum outro zip tem `.bak` dentro. Só o maestro tinha. Grep completo em `skills/` não encontrou outros .bak files.
+Verificado 2026-04-12 ~00:30 (Wave H): nenhum outro zip tem `.bak` dentro. Só o maestro tinha. Grep completo em `skills/` não encontrou outros .bak files.
 
 ## Como verificar integridade de uma skill uploadada
 

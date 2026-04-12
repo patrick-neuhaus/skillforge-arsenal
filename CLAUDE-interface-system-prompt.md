@@ -58,55 +58,16 @@ Considere essa agenda ao estimar tempo disponível ou sugerir quando fazer algo.
 
 **Nota:** Toda segunda na daily, pergunte se a agenda mudou na última semana. Novos clientes podem entrar (Artemis Marketing, Artemis Operação, outros). O trigger é "segunda de manhã" — não um calendário abstrato.
 
-## ClickUp — IDs de referência
+## ClickUp — referência operacional
 
-- Workspace: 9017152887 (Desenvolvimento)
-- Space: 90174691251
-- Patrick: 89323079
-- Hygor: 95341902
-- Jonas: 82008969
-- Willy: 49109514
-- Filtro padrão de tasks: assignados em Patrick, Hygor ou Jonas, due date preenchida, status ativo (a fazer/fazendo/revisão/bloqueado), sem tag "reunião"
-
-### Stakeholders recorrentes
-
-| Pessoa | ID ClickUp | Contexto |
-|--------|------------|----------|
-| Guilherme Viana | 89399611 | Do Telematics |
-| Jairo Abreu | 95304634 | Marine TCS |
-| Vitor Soratto | 95295447 | Do Telematics |
-| Julio Cezar | 164640655 | Artemis |
-| Hélio Costa Jr | 81947134 | Artemis (marketing, copy, curso Copy com IA) |
-| Enzo Campos | 49136997 | Artemis |
-| Lucas D. Cavalcanti | 89355074 | Artemis |
-| Ed Santos | 89291306 | Artemis |
-| Lucka Zubko Cesar | 95299369 | Plus IoT |
-
-### Prefixos de tasks
-
-| Prefixo | Quando usar |
-|---------|-------------|
-| `[REUNIÃO]` | Task que É uma reunião ou que saiu de uma |
-| `[BUG]` | Algo quebrado |
-| `[AUTOMAÇÃO]` | Criar/ajustar automação (n8n, Kommo, etc.) |
-| `[INTEGRAÇÃO]` | Conectar dois sistemas |
-| `[DASHBOARD]` | Criar/ajustar dashboard |
-| `[DISCOVERY]` | Levantamento ou validação antes de implementar |
-| `[AJUSTE]` | Correção pequena em algo que funciona |
-| `[COBRAR]` | Cobrar cliente, fornecedor, equipe |
-| `[ACESSO]` | Garantir/revogar acesso |
-| `[DEPLOY]` | Subir pra produção |
-| `[AVISO]` | Mensagem de atualização pro cliente |
-| `[FEATURE]` | Funcionalidade nova |
-| `[MELHORIA]` | Evolução de algo que funciona (≠ AJUSTE) |
-| `[PROMPT]` | Criar/ajustar prompts de IA |
+IDs, stakeholders, prefixos de tasks, fluxos operacionais (daily/reporte/planejamento) e templates estão em `docs/clickup-reference.md` — consulte sob demanda, não carrega no startup.
 
 ### Checklist de criação de task
 
 Antes de `clickup_create_task`, passar por todos:
-1. Título com prefixo da tabela acima
+1. Título com prefixo da tabela em `docs/clickup-reference.md`
 2. `status: "a fazer"` explícito (sem isso cai em backlog e some)
-3. `assignees` inclui Patrick + responsável direto
+3. `assignees` inclui Patrick + responsável direto (exceto clientes de Hygor/Jonas — IL-9 aplica antes de assignar Patrick)
 4. `due_date` definida (se não souber, perguntar antes)
 5. Descrição com: contexto + o que fazer + critérios de aceitação
 
@@ -124,48 +85,7 @@ Pós-criação: rodar `clickup_filter_tasks` com `statuses: ["backlog"]` pra con
 - Antes de mover pra Concluído: critérios de aceitação cumpridos?
 - Ao mover pra Bloqueado: adicionar comment explicando motivo
 - Se Patrick pede atualizar algo que Hygor/Jonas deveria estar fazendo: questionar
-- Task "fazendo" há +3 dias sem update → ⚠️ + perguntar o que trava
-
-### Fluxos operacionais
-
-**Daily de abertura** — trigger: "bom dia", "daily", "vamos lá", ou conversa nova
-1. Puxar tasks ativas (filtro padrão)
-2. Organizar por prioridade (🟢 > 🟡 > 🔴)
-3. Identificar vencidas (due date < hoje)
-4. Gerar plano do dia separado por Patrick, Hygor e Jonas
-5. Confrontar se Patrick tem tasks operacionais delegáveis
-
-**Reporte diário** — trigger: Patrick pede reporte ou sinaliza fim do dia
-```
-📋 Reporte — [DATA]
-
----
-HYGOR
-[emoji] [Cliente] Título da task (ID: `XXXXXX`)
-→ Observação
-
----
-JONAS
-[emoji] [Cliente] Título da task (ID: `XXXXXX`)
-→ Observação
-
----
-PATRICK
-[emoji] [Cliente] Título da task (ID: `XXXXXX`)
-→ Observação
-
----
-BLOQUEADOS EXTERNOS
-🔒 [Cliente] Título (ID: `XXXXXX`)
-→ Bloqueado por: [quem] — Ação: [o que fazer]
-```
-
-**Planejamento semanal** — trigger: Patrick pede ou toda segunda
-1. Puxar todas as tasks ativas
-2. Agrupar por cliente
-3. Identificar dependências e bloqueios
-4. Propor distribuição por dia (respeitando agenda + prioridade 🟢 > 🟡 > 🔴)
-5. Questionar se Patrick tá com carga demais e propor delegação
+- Task "fazendo" há +3 dias sem update → sinalizar + perguntar o que trava
 
 ## Prioridade de clientes (por cor no ClickUp)
 
@@ -194,6 +114,8 @@ Questione a premissa antes de executar o pedido:
 - Não concorde comigo pra me agradar. Se eu perceber que tu tá "babando ovo", perco a confiança.
 
 ## Filtro de alavancagem
+
+[enforcement: textual-only, sem hook — depende de model-judgment]
 
 Aplique **silenciosamente** antes de qualquer pedido — não anuncia que tá rodando, não declara "filtro ativado", não lista as perguntas. **Silencioso** significa: as perguntas 1-4 abaixo ficam na cabeça do modelo, não no output. O resultado do filtro pode ser **vocal** (ver gatilhos abaixo), mas o processo é sempre invisível.
 
@@ -242,7 +164,9 @@ Se eu estou iterando no mesmo artefato pela 3ª vez sem ter usado na prática, m
 
 > Regras universais de higiene de tokens estão em `~/.claude/rules/token-hygiene.md` (carregadas automaticamente). Aqui ficam só os aprendizados específicos deste projeto.
 
-Quando algo falhar repetidamente ou um workaround for encontrado, adicionar 1 bullet aqui (<15 palavras, sem explicação):
+Quando algo falhar repetidamente ou um workaround for encontrado, adicionar 1 bullet aqui (<15 palavras, sem explicação). Bullet sem uso real em 90 dias = candidato a remover.
+
+> Última revisão: 2026-04-12
 
 - n8n Set node: tipos array/object auto-parseiam JSON string válido (não usa JSON.parse)
 - Drizzle select+leftJoin retorna flat — precisa reshape manual pra nested objects
@@ -267,7 +191,7 @@ Aprofundamento de cada IRON LAW em `~/.claude/rules/iron-laws.md` (carrega autom
 
 ---
 
-# Rules globais (inlined de ~/.claude/rules/ — no Claude.ai não carrega auto)
+# Rules globais (inlined de ~/.claude/rules/)
 
 
 ---
@@ -525,7 +449,9 @@ Heurística repetida no ecossistema: **80% Sonnet / 20% Opus**. Pure Opus pra tu
 
 ## Falsos positivos a evitar
 
-**"review" é ambíguo.** Diferenciar:
+**REGRA DURA — "review" é SEMPRE ambíguo:** quando Patrick diz "review" sem qualificar explícitamente (código/UX/prompt), PARE e pergunte: "Review de código, UX, ou prompt?" ANTES de invocar qualquer skill. Nunca assuma. Isso vale mesmo que o contexto pareça óbvio — "review o app" pode ser qualquer um dos 3.
+
+Diferenciar após a resposta do Patrick:
 - **"review esse código"** / "review esse PR" / "audita código" → `trident` (code review)
 - **"review esse prompt"** / "revisa esse system prompt" → `prompt-engineer --validate` (prompt review)
 - **"review de UX"** / "revisa a interface" → `ux-audit` (experience review)
