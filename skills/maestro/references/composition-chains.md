@@ -29,11 +29,11 @@ Quando uma chain envolve **plan → implement → review**, troca de modelo entr
 1. code-dedup-scanner --check → reusables found
 2. sdd --phase research       → prd.md (~30% context)
    └─ (optional) pattern-importer → pattern doc
-   └─ /clear
+   └─ context-guardian --handoff → /clear
 3. sdd --phase spec           → spec.md (~30% context)
-   └─ /clear
+   └─ context-guardian --handoff → /clear
 4. sdd --phase implement      → código (~40% context)
-   └─ /clear
+   └─ context-guardian --handoff → /clear
 5. architecture-guard --scan  → structural violations
 6. trident --mode all-local   → bug review (~35% context)
 ```
@@ -43,13 +43,13 @@ Quando uma chain envolve **plan → implement → review**, troca de modelo entr
 ### Feature Nova (frontend React)
 ```
 1. sdd --phase research       → prd.md
-   └─ /clear
+   └─ context-guardian --handoff → /clear
 2. component-architect --plan → component tree + interfaces
 3. sdd --phase spec           → spec.md (incorpora component tree)
-   └─ /clear
+   └─ context-guardian --handoff → /clear
 4. react-patterns --scaffold  → componentes base
 5. sdd --phase implement      → código completo
-   └─ /clear
+   └─ context-guardian --handoff → /clear
 6. trident --mode all-local   → review
 ```
 **Quando:** Feature de UI complexa com múltiplos componentes
@@ -126,7 +126,7 @@ Quando uma chain envolve **plan → implement → review**, troca de modelo entr
    └─ /clear
 2. ui-design-system --generate → design.json
 3. sdd --phase spec           → spec técnico baseado no PRD
-   └─ /clear
+   └─ context-guardian --handoff → /clear
 4. sdd --phase implement      → MVP
 ```
 **Quando:** Validando ideia de produto, construindo MVP
@@ -189,7 +189,7 @@ Quando uma chain envolve **plan → implement → review**, troca de modelo entr
 | code-dedup-scanner | sdd --research | reusables found |
 | pattern-importer | sdd --research | pattern document |
 | architecture-guard | trident | structural violations |
-| geo-optimizer | skill-builder | optimized description |
+| skill-builder | geo-optimizer | SKILL.md draft pra otimizar description |
 | context-guardian --handoff | /clear | handoff document |
 
 ---
@@ -239,16 +239,16 @@ Chains especiais pra criar/evoluir/publicar skills do próprio arsenal.
 ### Criar Nova Skill
 ```
 reference-finder → skill-builder --full → prompt-engineer --validate
-→ /clear → geo-optimizer → trident --skill
+→ context-guardian --handoff → /clear → geo-optimizer → trident --skill
 ```
 
 ### Evoluir Skill Existente
 ```
 skill-builder --evolve → prompt-engineer --validate → geo-optimizer
-→ validate.py
+→ prompt-engineer --validate + skill-builder --validate
 ```
 
 ### Publicar Skill no skills.sh
 ```
-geo-optimizer --optimize → validate.py → (publicação manual no skills.sh)
+geo-optimizer --optimize → prompt-engineer --validate + skill-builder --validate → (publicação manual no skills.sh)
 ```

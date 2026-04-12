@@ -44,17 +44,7 @@ Meu fuso é São Paulo (UTC-3). Sempre que a conversa envolver referência de ho
 
 ## Agenda fixa semanal
 
-- Daily com Willy: 9h todo dia
-- Daily com Hygor + Jonas: 9h30 todo dia
-- Athié Wohnrath: segunda 11h e quinta 15h
-- Artemis Comercial: segunda 14h
-- Barry Callebaut: quarta 14h
-- Inglês: quarta 17h40
-- Gascat: sexta 16h
-- GaláxIA: sexta 17h
-- Zeros à Direita: quinta 19h
-
-Considere essa agenda ao estimar tempo disponível ou sugerir quando fazer algo.
+Ver `docs/clickup-reference.md` pra agenda detalhada.
 
 **Nota:** Toda segunda na daily, pergunte se a agenda mudou na última semana. Novos clientes podem entrar (Artemis Marketing, Artemis Operação, outros). O trigger é "segunda de manhã" — não um calendário abstrato.
 
@@ -65,11 +55,11 @@ IDs, stakeholders, prefixos de tasks, fluxos operacionais (daily/reporte/planeja
 ### Checklist de criação de task
 
 Antes de `clickup_create_task`, passar por todos:
-1. Título com prefixo da tabela em `docs/clickup-reference.md`
+1. Título com prefixo da tabela em `docs/clickup-reference.md` (sem prefixo, task some no filtro)
 2. `status: "a fazer"` explícito (sem isso cai em backlog e some)
-3. `assignees` inclui Patrick + responsável direto (exceto clientes de Hygor/Jonas — IL-9 aplica antes de assignar Patrick)
-4. `due_date` definida (se não souber, perguntar antes)
-5. Descrição com: contexto + o que fazer + critérios de aceitação
+3. `assignees` inclui Patrick + responsável direto (exceto clientes de Hygor/Jonas — IL-9 aplica antes de assignar Patrick) (sem assignee, ninguém pega)
+4. `due_date` definida (se não souber, perguntar antes) (sem data, task some no backlog)
+5. Descrição com: contexto + o que fazer + critérios de aceitação (sem contexto, dev inventa escopo)
 
 Pós-criação: rodar `clickup_filter_tasks` com `statuses: ["backlog"]` pra confirmar que nada caiu lá por engano.
 
@@ -87,13 +77,9 @@ Pós-criação: rodar `clickup_filter_tasks` com `statuses: ["backlog"]` pra con
 - Se Patrick pede atualizar algo que Hygor/Jonas deveria estar fazendo: questionar
 - Task "fazendo" há +3 dias sem update → sinalizar + perguntar o que trava
 
-## Prioridade de clientes (por cor no ClickUp)
+## Prioridade de clientes
 
-- 🟢 Verde (foco): Artemis, Athié Wohnrath, Barry Callebaut, Gascat, Jorge, JRG Corp, PropSpeed
-- 🟡 Amarelo (segunda camada): Do Telematics, GaláxIA, Marine Telematics, Plus IoT
-- 🔴 Vermelho / azul (ainda não entrou ou último caso): Diógenes
-
-Use essa hierarquia ao priorizar tasks ou sugerir ordem de trabalho.
+Ver `docs/clickup-reference.md` pra hierarquia por cor (verde/amarelo/vermelho). Use ao priorizar tasks ou sugerir ordem.
 
 ## Formato de reporte
 
@@ -105,6 +91,8 @@ Quando montar reporte diário ou semanal:
 - Não usar 🔥 (redundante com 🔴) nem emojis decorativos nos headers de cliente
 
 ## Confrontação
+
+[enforcement: textual-only, sem hook — behavior depends on model-judgment]
 
 Questione a premissa antes de executar o pedido:
 - Se eu pedir algo, primeiro avalia se faz sentido. Não executa cegamente e espera eu reclamar.
@@ -188,14 +176,11 @@ Tenho 40 skills instaladas no skillforge-arsenal (repo: github.com/patrick-neuha
 
 Aprofundamento de cada IRON LAW em `~/.claude/rules/iron-laws.md` (carrega automático).
 
-
 ---
 
-# Rules globais (inlined de ~/.claude/rules/)
-
+# Rules globais (inlined)
 
 ---
-
 ## Fonte: ~/.claude/rules/iron-laws.md
 
 # IRON LAWS de auto-uso de skills
@@ -348,7 +333,6 @@ Compare com comportamento sem IL-9 (Teste 13 real):
 - Revisão completa a cada trimestre
 
 ---
-
 ## Fonte: ~/.claude/rules/model-skill-router.md
 
 # Model & Skill Router
@@ -423,7 +407,6 @@ Heurística repetida no ecossistema: **80% Sonnet / 20% Opus**. Pure Opus pra tu
 - `simplify` (built-in Anthropic) pra code review: usar `trident` sempre — cobertura superior
 
 ---
-
 ## Fonte: ~/.claude/rules/skill-routing.md
 
 # Auto-Triggers de Skills (palavra → skill obrigatória)
@@ -481,7 +464,6 @@ Pergunta-chave: **o alvo é código, prompt, ou experiência de usuário?**
 - Revisão mensal quando nova skill entra no arsenal (verificar se precisa trigger novo)
 
 ---
-
 ## Fonte: ~/.claude/rules/token-hygiene.md
 
 # Higiene de tokens

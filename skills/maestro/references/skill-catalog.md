@@ -426,6 +426,10 @@ Quando o intent do usuário pode acionar 2+ skills, use estas regras antes de pr
 ---
 
 ## Maestro (esta skill)
-- **O que faz:** Orquestra e roteia entre todas as skills
-- **Triggers:** "qual skill usar?", "o que posso fazer?", "me ajuda a decidir"
-- **Modes:** --suggest, --chain, --catalog, --health, --loose
+- **O que faz:** Orquestra e roteia entre todas as skills. Analisa intent, matcha com skills, planeja chains multi-skill com context budget.
+- **Triggers:** "qual skill usar?", "o que posso fazer?", "me ajuda a decidir", "que skills tenho?", "quero fazer X mas nao sei por onde comecar"
+- **Modes:** --suggest (default), --chain, --catalog, --health, --loose
+- **Input:** Intent do usuario em linguagem natural
+- **Output:** Recomendacao estruturada com rationale + GATE de confirmacao
+- **Iron Law:** NUNCA recomendar skill sem ler o SKILL.md dela primeiro
+- **Quando NAO usar:** usuario ja sabe qual skill quer, tarefa trivial, pergunta sobre como usar skill especifica

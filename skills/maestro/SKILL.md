@@ -61,6 +61,7 @@ Map to categories:
 | "find references/books/frameworks" | Knowledge | reference-finder, context-tree |
 | "create/improve skill" | Meta | skill-builder, prompt-engineer |
 | "validate skill choice/which skill/help me pick" | Meta | maestro (--suggest) |
+| "revisa/melhora/cria prompt/prompt ta ruim/valida prompt" | Meta | prompt-engineer |
 | "optimize description/GEO" | Optimization | geo-optimizer |
 | "wrap API/create CLI tool" | Optimization | cli-skill-wrapper |
 | "import pattern/.tmp" | Workflow | pattern-importer, sdd |
@@ -107,7 +108,7 @@ If one skill clearly matches, present:
 ```
 
 ### Step 2.4: Multi-Skill Chain
-If the request crosses domains, load `references/composition-chains.md` and present. **Cap: if chain requires >3 skills, warn user to split into waves via context-guardian --handoff between waves.** Do not build unbounded chains.
+If the request crosses domains, load `references/composition-chains.md` and present. **Note: chains >3 skills requerem context-guardian --handoff entre fases. Se context budget projetado >70%, recomende split em waves.** Chains de 4-6 skills sao validas quando documentadas em composition-chains.md com handoff points explicitos.
 ```
 **Pipeline recomendado:**
 1. [skill-1] — [o que faz neste contexto] (~X% context window)
@@ -141,6 +142,12 @@ Replace the old "20-40% flat" heuristic with category-based estimates sourced fr
 ## Phase 3: Present
 
 ⛔ **GATE clarification:** Maestro **recommends + awaits user confirmation**. It does NOT invoke the recommended skill. After the user confirms, their next message triggers direct invocation of the skill — maestro exits the loop at the recommendation step. This GATE applies equally to --suggest, --chain, and --loose modes.
+
+### Step 3.3: Alternatives presentation (when flagged by Phase 2.5)
+If Phase 2.5 flagged alternatives_detected, present alternatives with distinguishing criteria before the primary recommendation:
+- List 2-3 candidates with 1-line rationale each explaining WHEN each is better
+- Highlight the primary recommendation with explicit reasoning for why it wins
+- If candidates are truly equivalent, say so and let the user decide
 
 This separation exists because:
 1. User may have hidden context that changes the recommendation
