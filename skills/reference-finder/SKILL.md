@@ -30,7 +30,7 @@ Exemplo:
 
 Buscar em 5 fontes em paralelo (sub-agents Explore/Haiku):
 
-1. **Skills locais** — `grep -ri <topic> D:/DOCUMENTOS/Github/skillforge-arsenal/skills/` (matching em description e SKILL.md)
+1. **Skills locais** — `grep -ri <topic> C:/Users/Patrick Neuhaus/Documents/Github/skillforge-arsenal/skills/` (matching em description e SKILL.md)
 2. **MCP registries** — webfetch em `mcp.so`, `glama.ai/mcp`, `smithery.ai`
 3. **Anthropic skills repo** — `github.com/anthropics/skills` (search via gh CLI ou webfetch)
 4. **GitHub topic** — `github.com/topics/claude-skill` + `claude-code-skill`

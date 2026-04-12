@@ -59,7 +59,7 @@ Pra confirmar que uma skill no anthropic-skills/Claude.ai bate com a versão loc
 
 ```bash
 # Unzippa o zip local e compara com a versão remota
-cd /tmp && unzip "D:/DOCUMENTOS/Github/skillforge-arsenal/dist/<skill>.zip" -d <skill>-check
+cd /tmp && unzip "C:/Users/Patrick Neuhaus/Documents/Github/skillforge-arsenal/dist/<skill>.zip" -d <skill>-check
 # Compara com a versão que o Claude reporta quando invoca a skill
 # Se houver divergência, re-zipa e re-upa
 ```
