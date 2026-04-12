@@ -1,8 +1,8 @@
 # Narrativa da sessão 2026-04-10/11 — fluffy-giggling-phoenix
 
-> **Propósito:** diferente do `session-2026-04-10-continuity-doc.md` (que é state save técnico pro Claude de uma sessão futura retomar), este arquivo é a **narrativa humana** da sessão. Como nós pensamos, o que debatemos, onde Patrick me confrontou, decisões que tomamos juntos, o que aprendi contigo observando, e como a sessão evoluiu em ~20 horas de trabalho distribuído.
+> **Propósito:** narrativa humana das sessões do skillforge-arsenal. Como pensamos, o que debatemos, onde Patrick confrontou, decisões tomadas, e como o sistema evoluiu. Continuity doc técnico foi absorvido no context-tree (apr 12).
 >
-> Se for ler 1 arquivo pra lembrar dessa sessão, é esse.
+> Se for ler 1 arquivo pra lembrar de todo o projeto, é esse.
 
 ---
 
@@ -443,3 +443,37 @@ Toda vez que esqueço de usar a ferramenta que construímos, Patrick pega, eu aj
 **F5.2 emergiu como consequência** — listei 13 triggers lógicos que poderiam virar hooks automáticos. Não executei, só documentei. Patrick decide ordem. Esse é o shape certo: detecta gap, lista opções, Patrick prioriza, eu executo.
 
 — Claude, 2026-04-11 (fase de finalização pós-compact)
+
+---
+
+## 13. Wave G — correções pós-E2E tests (2026-04-11)
+
+Patrick rodou os 22 E2E tests em sessão fresh com Sonnet 4.6 medium. Resultado: 14 PASS, 7 PARCIAL, 1 FAIL. Os 5 gaps sistêmicos que emergiram viraram Wave G:
+
+- **G1:** Applied learning n8n estava factualmente errado (Patrick corrigiu: "auto-parseia se tipo for array/object")
+- **G2:** Maestro/SKILL.md refatorado (14 bugs do Trident corrigidos). Introduziu 12 novos — flagged pro Wave H.
+- **G3:** Context-tree virou unified reader (user-level + byterover project-level)
+- **G4:** CLAUDE.md recebeu Precedência de regras, stack atualizada, trigger semanal concreto, boundary Filtro/Confrontação clarificado, Skills customizadas com árvore de decisão
+- **G5:** IL-9 criada — confronto vocal obrigatório antes de criar task assignada a Patrick em clientes de Hygor/Jonas
+- **G7:** V2 hook bloqueio hard via marker files. Helper `write-validation-marker.ps1` criado. Dead-lock circular descoberto e resolvido (escape hatch via Bash `cat > file`). Workflow byte-identical documentado.
+- **G8:** ByteRover setup. **Descoberta crítica:** free tier tem built-in provider zero-cost (`brv providers connect byterover`). Curate + query funcionais end-to-end.
+- **G10:** `CLAUDE-interface-system-prompt.md` (583L consolidado pra Claude.ai)
+
+Retests (11): 5 PASS, 5 PARCIAL, 1 FAIL. CLAUDE.md score PIOROU (72→63) por adição sem remoção de tokens. Wave H necessária.
+
+## 14. Limpeza do repositório (2026-04-12)
+
+Repo tinha 18 .md na raiz — cruft histórico de cada wave. Limpeza aplicada:
+
+**Absorvidos (curados em context-tree + byterover, depois deletados):**
+- `DISCOVERY.md`, `session-2026-04-10-continuity-doc.md`, `audit-overlaps-2026-04-10.md`
+- `audit-quality-2026-04-11-wave-6-{1,2,3,4}.md`, `plan-validation-2026-04-10.md`
+- `prompt-engineer-gaps-2026-04-10.md`, `ccinspect-baseline-2026-04-10.txt`
+- `E2E-TESTS-20-CASES.md` (138K — maior arquivo, agora 3 entries no context-tree)
+- `WAVE-G-FINAL-INSTRUCTIONS.md` (mergeado no SYNC-CHECKPOINT)
+
+**Resultado:** 18 .md → 7 .md na raiz. Learnings preservados em `~/.claude/context-tree/meta/` (3 entries novos: wave-history-summary, e2e-tests-learnings, quality-audit-baseline) + byterover (7 curates queued).
+
+**Decisão de cwd:** byterover MCP só carrega quando cwd=skillforge-arsenal (`.mcp.json` é per-project). Precisa registrar global em `~/.claude.json` pra funcionar em qualquer cwd. Flagged pra Wave H.
+
+— Claude, 2026-04-12 (limpeza + absorção de knowledge)

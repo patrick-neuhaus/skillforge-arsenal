@@ -60,18 +60,25 @@ Patrick: "atualiza o CLAUDE.md pra adicionar Y"
    [ ] Se SKILL.md core: skill-builder --validate rodado tambem?
    [ ] ccinspect lint rodado pra detectar contradicoes estruturais?
    ```
-3. Claude deve parar, aplicar a rubric correspondente (`~/.claude/skills/prompt-engineer/rubric/<tipo>.yaml`), rodar ccinspect, e só então editar.
-4. Se Claude ignorar o aviso e editar direto, tu pega e confronta.
+3. **V2 HARD BLOCK (ativo desde Wave G, 2026-04-11):** hook retorna `permissionDecision: deny`. Claude NÃO consegue editar.
+4. Claude deve: rascunhar conteúdo → aplicar rubric → criar marker via `write-validation-marker.ps1` → retry Edit (hash match → allow).
+5. Se marker expirou (>5min) ou hash não bate → bloqueia de novo. Sem atalhos.
 
-**O hook loga cada dispatch em** `~/.claude/logs/hook-dispatches.jsonl`. Se ver que Claude tá ignorando sistematicamente, é sinal pra escalar V1→V2 (bloqueio hard). Em 7 dias dá pra rodar:
+**Workflow do marker (IL-1 atualizada):**
+```bash
+# Opção A: printf sem trailing newline (recomendado)
+printf '%s' 'conteudo exato do new_string' | powershell -ExecutionPolicy Bypass -File ~/.claude/hooks/write-validation-marker.ps1 -Score 85 -RubricType system-prompt
 
-```powershell
-$e = Get-Content ~/.claude/logs/hook-dispatches.jsonl | ForEach-Object { $_ | ConvertFrom-Json }
-$e | Group-Object outcome | Select-Object Count, Name
-$e | Where-Object { $_.outcome -eq "warned" } | Group-Object file | Sort-Object Count -Descending | Select-Object Count, Name
+# Opção B: heredoc + strip newline
+cat > /tmp/draft.txt << 'EOF'
+conteudo
+EOF
+head -c -1 /tmp/draft.txt | powershell -ExecutionPolicy Bypass -File ~/.claude/hooks/write-validation-marker.ps1 -Score 85 -RubricType claude-md
 ```
 
-Detalhes em `C:\Users\Patrick Neuhaus\.claude\logs\README.md`.
+**Escape hatch:** se precisar editar o próprio hook/helper, usar `Bash cat > file << EOF` (hook só matcha Write/Edit tools).
+
+**O hook loga cada dispatch em** `~/.claude/logs/hook-dispatches.jsonl`.
 
 ---
 

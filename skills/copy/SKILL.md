@@ -162,6 +162,18 @@ Load `references/framework-selection.md` para:
 
 Load `references/framework-selection.md` pra tabela de Seven Sweeps adaptativos ao tamanho do output, depois `references/copy-process.md` pro detalhe dos 7 sweeps + `references/power-words.md` pro polish final.
 
+## Exemplo de Headline
+
+**Contexto:** Landing page de consultoria B2B, Schwartz 3 (Solution Aware), framework PAS.
+
+**Rascunho:**
+> "Você sabe que precisa de copy melhor. Só que contratar uma agência leva 3 semanas e custa R$5.000 — antes de ver uma linha."
+
+**Quick Test aplicado:**
+- Específico? ✅ (tempo + preço concretos)
+- Benefício implícito? ✅ (solução mais rápida e barata)
+- Audiência reconhece o problema? ✅ (Schwartz 3 = sabe que existe solução)
+
 ## Anti-Patterns
 
 - Escrever copy sem classificar contexto da audiência

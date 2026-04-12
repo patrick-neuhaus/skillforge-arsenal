@@ -20,3 +20,8 @@ __pycache__/
 
 # ByteRover context tree local (pode ter knowledge sensível)
 .brv/
+
+# Secrets (API keys, tokens)
+.env
+.env.local
+.env.*.local

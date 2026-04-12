@@ -1,3 +1,30 @@
+# skillforge-arsenal — contexto do projeto
+
+Este é o repositório de skills customizadas do Patrick (40 skills atualmente). Regras gerais do usuário vivem no CLAUDE.md parent (`D:\DOCUMENTOS\Github\CLAUDE.md`) e nas `~/.claude/rules/*.md` — este arquivo só cobre o específico do skillforge-arsenal.
+
+## Estrutura
+
+- `skills/<nome>/SKILL.md` — source of truth de cada skill (YAML frontmatter + workflow)
+- `skills/<nome>/references/` — scripts, templates, exemplos carregados sob demanda
+- `dist/` — zips gerados pelo `zip-skills.py` pra upload em anthropic-skills/Claude.ai
+- `.brv/context-tree/` — knowledge base do byterover (curate/query), per-project
+- `.env` — secrets (byterover API key), gitignored
+
+## Scripts utilitários
+
+- `python zip-skills.py [nomes...]` — zipa skills específicas ou todas (sem arg)
+- `python test-rubric-loading.py` — valida carregamento das 4 rubrics do prompt-engineer
+
+## Skills modificadas no Wave G (2026-04-11)
+
+- `maestro/SKILL.md` — 14 bugs Trident corrigidos (catalog 40, IRON LAW wired, --health/--loose implementados, GATE clarificado, context budget per-skill, tiebreaker)
+- `context-tree/SKILL.md` — unified reader user-level + byterover project-level
+- Demais zips no dist/ são das Waves 1-6 que ainda não foram re-upadas pra anthropic-skills
+
+## Convenção ao editar SKILL.md nesta pasta
+
+IL-1 do `~/.claude/rules/iron-laws.md` aplica: validar com rubric antes do Write/Edit, criar marker via `~/.claude/hooks/write-validation-marker.ps1`, V2 hook bloqueia sem marker fresh.
+
 <!-- BEGIN BYTEROVER RULES -->
 
 # Workflow Instruction
