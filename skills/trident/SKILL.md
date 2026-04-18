@@ -1,6 +1,6 @@
 ---
 name: trident
-description: "Three-pronged code review pipeline: Scan, Verify, Judge. Deep codebase audit for bugs, security vulnerabilities, logic errors, SOLID violations, and dead code with independent 3-agent verification. Use when user asks to: review code, audit code, find bugs, security review, 'revisa esse código', 'tem bug nisso?', 'faz um audit', review PR, review changes, code quality check, check for vulnerabilities, 'analisa esse código', inspect codebase, is this code safe, check my PR, what's wrong with this code. Supports: unstaged, staged, PR, commit range, directory scan. Don't use for: style-only reviews, trivial one-line changes, test coverage, UX review."
+description: "Three-pronged code review pipeline: Scan, Verify, Judge. Deep codebase audit for bugs, security vulnerabilities, logic errors, SOLID violations, and dead code with independent 3-agent verification. Use when user asks to: review code, audit code, find bugs, security review, 'revisa esse código', 'tem bug nisso?', 'faz um audit', review PR, review changes, code quality check, check for vulnerabilities, 'analisa esse código', inspect codebase, is this code safe, check my PR, what's wrong with this code. Supports: unstaged, staged, PR, commit range, directory scan. Don't use for: style-only reviews, trivial one-line changes, test coverage, UX review. Se o arquivo não for encontrado no worktree, pedir paste do código inline — não bloquear análise."
 ---
 
 # Trident

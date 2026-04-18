@@ -1,6 +1,6 @@
 ---
 name: copy
-description: "Write, review, improve, and optimize copy for any channel. 8 modes: Landing Page, Social, Email, Cold Email, WhatsApp, Blog/SEO, UX/Microcopy, Ads. Frameworks: AIDA, PAS, StoryBrand SB7, Hormozi Value Equation. Schwartz 5 awareness levels. Seven Sweeps editing. Use when: 'escreve copy', 'melhora esse texto', 'headline pra landing', 'email sequence', 'copy de anúncio', 'write copy', 'improve this copy'."
+description: "Write, review, improve, and optimize marketing copy across 8 channels. Modes: Landing Page, Sales Page, Social (Instagram/LinkedIn/TikTok), Email, Cold Email, WhatsApp, Blog/SEO, UX/Microcopy, Ads (Meta/Google). Frameworks: AIDA, PAS, StoryBrand SB7, Hormozi Value Equation. Schwartz 5 awareness levels. Seven Sweeps editing. Use when: 'escreve copy', 'cria post', 'legenda pro Instagram', 'caption', 'texto de anúncio', 'copy pra Meta Ads', 'página de vendas', 'headline pra landing', 'email de vendas', 'melhora esse texto', 'reescreve', 'write copy', 'ad copy', 'sales page', 'email sequence'. NÃO use pra mensagem 1:1 com cliente específico → use comunicacao-clientes."
 ---
 
 # Copy v2

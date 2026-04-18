@@ -1,6 +1,6 @@
 ---
 name: security-audit
-description: "Three-agent security audit pipeline (Scanner → Verifier → Arbiter). Three modes: Code (OWASP Top 10, RLS, secrets, XSS, injection, auth), VPS (hardening, ports, containers, firewall), Web (blackbox pentest — headers, SSL, CORS, DNS). Use when: 'audit security', 'tem vulnerabilidade?', 'tá seguro?', 'revisa a segurança'. Stack: React/Supabase, adaptável. Includes OWASP LLM Top 10 for AI features."
+description: "Three-agent security audit pipeline (Scanner → Verifier → Arbiter). Three modes: Code (OWASP Top 10, RLS, secrets, XSS, injection, auth), VPS (hardening, ports, containers, firewall), Web (blackbox pentest — headers, SSL, CORS, DNS). Use when: 'audit security', 'tem vulnerabilidade?', 'tá seguro?', 'revisa a segurança'. Stack: React/Supabase, adaptável. Includes OWASP LLM Top 10 for AI features. Trigger pela INTENÇÃO de segurança, não pela presença de código — a skill coleta o artefato no Step 1. Triggers: 'injection', 'vazamento de dados', 'tá seguro esse código?', 'preocupado com segurança'."
 ---
 
 # Security Audit v2

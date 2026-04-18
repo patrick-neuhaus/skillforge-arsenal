@@ -1,6 +1,6 @@
 ---
 name: maestro
-description: "Analyze user intent and route to the right skill or skill chain. Plan multi-skill pipelines, check skill availability, organize workflow sequences, and review context window budget. Use when user asks: 'o que posso fazer?', 'qual skill usar?', 'que skills tenho?', which skill, help me choose, list skills, 'me ajuda a decidir', plan skill chain, orchestrate pipeline, 'quero fazer X mas não sei por onde começar', 'preciso de ajuda com', route skills, which tool should I use, help me pick a skill, what can you do, validate skill choice, list available skills. Auto-activates when multiple skills could apply to a request AND the request is non-trivial (see 'When NOT to use')."
+description: "Analyze user intent and route to the right skill or skill chain. Plan multi-skill pipelines, check skill availability, organize workflow sequences, and review context window budget. Use when user asks: 'o que posso fazer?', 'qual skill usar?', 'que skills tenho?', which skill, help me choose, list skills, 'me ajuda a decidir', plan skill chain, orchestrate pipeline, 'quero fazer X mas não sei por onde começar', 'preciso de ajuda com', route skills, which tool should I use, help me pick a skill, what can you do, validate skill choice, list available skills, 'tenho N coisas pra fazer', 'qual ferramenta usar', 'me ajuda a priorizar'. Auto-activates when multiple skills could apply to a request AND the request is non-trivial (see 'When NOT to use')."
 ---
 
 # Maestro — Skill Orchestrator
@@ -87,6 +87,7 @@ Map to categories:
 | "launch/GTM/Product Hunt/go-to-market/feature release/waitlist" | Marketing | launch-strategy |
 | "lovable knowledge/workspace knowledge/project knowledge" | Implementation | lovable-knowledge |
 | "schedule task/recurring/cron/agendar" | Workflow | schedule |
+| "reunião/transcrição/processar call/daily/meeting notes/sync reunião" | Meeting | meeting-sync |
 
 ## Phase 2: Route
 
@@ -209,6 +210,9 @@ This separation exists because:
 - **tech-lead-pm** — Gestão e liderança técnica
 - **comunicacao-clientes** — Comunicação via WhatsApp/Telegram
 
+### Meeting
+- **meeting-sync** — Processar transcrição de reunião → ClickUp sync + daily .md
+
 ### Workflow
 - **schedule** — Tarefas agendadas
 
@@ -222,7 +226,7 @@ This separation exists because:
 - **free-tool-strategy** — Ferramentas gratuitas para lead gen e SEO
 - **launch-strategy** — GTM, Product Hunt, feature release, waitlist
 
-**Total: 40 skills** (auto-verify with `ls skills/ | wc -l`)
+**Total: 41 skills** (auto-verify with `ls skills/ | wc -l`)
 ```
 
 ### --health Workflow

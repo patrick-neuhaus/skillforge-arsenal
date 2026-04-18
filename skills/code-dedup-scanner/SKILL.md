@@ -1,6 +1,6 @@
 ---
 name: code-dedup-scanner
-description: "Scan codebase to find reusable components, functions, and patterns before creating new code. Prevents duplication and wasted tokens. Use when user asks: 'já tem isso no projeto?', find duplicates, 'antes de criar verifica se existe', scan for reusables, check existing code, 'tem componente parecido?', 'posso reutilizar algo?', find similar code, duplicate scan, code reuse, 'não quero duplicar', 'existe algo parecido?', dedup check, 'antes de implementar busca se já tem'. Sub-step of SDD Phase 1 Research. Also useful standalone before any implementation. Complementa component-architect: este escaneia o que existe, component-architect planeja o que criar."
+description: "Scan codebase to find reusable components, functions, and patterns before creating new code. Prevents duplication and wasted tokens. Use when user asks: 'já tem isso no projeto?', find duplicates, 'antes de criar verifica se existe', scan for reusables, check existing code, 'tem componente parecido?', 'posso reutilizar algo?', find similar code, duplicate scan, code reuse, 'não quero duplicar', 'existe algo parecido?', dedup check, 'antes de implementar busca se já tem'. Sub-step of SDD Phase 1 Research. Also useful standalone before any implementation. Complementa component-architect: este escaneia o que existe, component-architect planeja o que criar. Ao iniciar, faça scan proativo (glob *.tsx *.ts *.jsx) ANTES de perguntar 'qual componente?' — mostre o que já existe primeiro."
 ---
 
 # Code Dedup Scanner — Encontrar Reutilizáveis

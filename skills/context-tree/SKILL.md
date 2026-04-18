@@ -1,6 +1,6 @@
 ---
 name: context-tree
-description: "Hierarchical knowledge management system with scoring and decay. Organizes domain knowledge across skills using importance scoring, maturity tiers, and automatic archival. Unified reader across user-level tree (~/.claude/context-tree/) and project-level byterover storage (.brv/context-tree/). Use when user asks to: organize knowledge, 'quero catalogar isso', score references, manage context tree, 'o que já sei sobre X?', prune stale knowledge, knowledge base status, cross-domain connections, 'conecta isso com o que já tenho', save this knowledge, what do I know about, knowledge base, organize what I learned. Supports: add entries, query knowledge, prune stale, view status."
+description: "Hierarchical knowledge management system with scoring and decay. Organizes domain knowledge across skills using importance scoring, maturity tiers, and automatic archival. Unified reader across user-level tree (~/.claude/context-tree/) and project-level byterover storage (.brv/context-tree/). Use when user asks to: organize knowledge, 'quero catalogar isso', score references, manage context tree, 'o que já sei sobre X?', prune stale knowledge, knowledge base status, cross-domain connections, 'conecta isso com o que já tenho', save this knowledge, what do I know about, knowledge base, organize what I learned. Supports: add entries, query knowledge, prune stale, view status, 'catalogar aprendizados sobre projeto', 'guardar o que aprendi', 'organizar num lugar'."
 ---
 
 # Context Tree
