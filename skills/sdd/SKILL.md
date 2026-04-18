@@ -1,6 +1,6 @@
 ---
 name: sdd
-description: "Spec Driven Development — anti-vibecoding workflow. Four-phase pipeline: Research codebase, write detailed Spec, Implement with fresh context, Review with Trident. Prevents context window bloat and ensures deterministic implementation. Use when user asks to: implement a feature, 'quero adicionar funcionalidade', build something new, 'como implemento isso?', plan implementation, 'faz um plano antes', anti-vibecoding, spec driven, '/research', '/spec', '/implement', plan before coding, structured implementation, spec first then code. Supports: full pipeline, individual phases."
+description: "Spec Driven Development — anti-vibecoding workflow. Four-phase pipeline: Research codebase, write detailed Spec, Implement with fresh context, Review with Trident. Prevents context window bloat and ensures deterministic implementation. NOT the same as Claude Code native plan mode — this is a full spec-driven pipeline with Trident review. Use when user asks to: implement a feature, 'quero adicionar funcionalidade', build something new, 'como implemento isso?', plan implementation, 'faz um plano antes', 'planeja antes de codar', 'antes de sair codando', 'planeja antes de implementar', 'não sai codando', anti-vibecoding, spec driven, '/research', '/spec', '/implement', plan before coding, structured implementation, spec first then code. Supports: full pipeline, individual phases."
 ---
 
 # SDD — Spec Driven Development
