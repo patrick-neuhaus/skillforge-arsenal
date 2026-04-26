@@ -67,6 +67,7 @@ Map to categories:
 | "import pattern/.tmp" | Workflow | pattern-importer, sdd |
 | "plan/spec/research" | Workflow | sdd |
 | "discovery/PRD/user story/validar ideia" | Design | product-discovery-prd |
+| "lab de testes/validation lab/laboratorio de testes/medir assertividade IA/ambiente de teste IA/test lab/retrofit de validação/como vou validar a IA/ground truth design" | Design | test-lab-architect |
 | "audit infra/VPS" | Infra | vps-infra-audit |
 | "SEO/keyword/rankear/programático/semântico" | Design | seo |
 | "audit UX/UI" | Design | ux-audit |
@@ -135,6 +136,7 @@ Replace the old "20-40% flat" heuristic with category-based estimates sourced fr
 | Typical implementation skill (react-patterns, n8n-architect, etc.) | ~15-20% | Single-pass reasoning |
 | Reference lookup (reference-finder, context-tree) | ~10-15% | Load + match |
 | Meta skills (skill-builder, prompt-engineer, maestro) | ~10-20% | Small scope, high reasoning density |
+| Architect/discovery skills (product-discovery-prd, test-lab-architect, component-architect) | ~15-25% | Multi-step discovery + decision matrix |
 | Marketing skills (copy, ai-seo, site-architecture, etc.) | ~15-25% | Research + content generation |
 | Content (pdf, docx, pptx, xlsx) | ~5-10% | Utility-class |
 
@@ -158,7 +160,7 @@ This separation exists because:
 ### --catalog Output
 
 ```markdown
-## Arsenal de Skills (40 skills)
+## Arsenal de Skills (42 skills)
 
 > Last-verified source of truth: `skills/` directory listing. If skill-catalog.md is >7d old, re-scan directly.
 
@@ -194,6 +196,7 @@ This separation exists because:
 - **ui-design-system** — Design tokens e design.json
 - **ux-audit** — Auditoria de UX/UI
 - **product-discovery-prd** — Discovery, PRD, user stories, validação de ideia
+- **test-lab-architect** — Arquitetura de labs de teste pra apps com IA (ground truth check + modelos inline/standalone/híbrido + comparação binária/LLM-judge/híbrida + isolamento + promoção lab→prod)
 - **seo** — SEO completo (audit, keyword, content, programmatic, semantic)
 
 ### Knowledge
@@ -226,7 +229,7 @@ This separation exists because:
 - **free-tool-strategy** — Ferramentas gratuitas para lead gen e SEO
 - **launch-strategy** — GTM, Product Hunt, feature release, waitlist
 
-**Total: 41 skills** (auto-verify with `ls skills/ | wc -l`)
+**Total: 42 skills** (auto-verify with `ls skills/ | wc -l`)
 ```
 
 ### --health Workflow
