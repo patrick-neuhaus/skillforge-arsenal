@@ -41,6 +41,32 @@ Maestro Progress:
   - [ ] ⛔ GATE: Maestro stops here. Recommend + await user confirmation. The user's next message triggers skill invocation directly — maestro does NOT invoke on behalf of the user. If user rejects the recommendation, re-run Phase 1.1 with refined intent from user feedback.
 ```
 
+## Phase 0.1: Query context-tree (V2.1 — Wave 5)
+
+ANTES de mode selection: query knowledge anterior do Patrick em `~/.claude/context-tree/`.
+
+### Steps
+
+1. Extract keywords from intent (substantivos, decisões, nomes próprios — clientes, projetos, skills)
+2. Grep nos `_index.md` (não recursive — performance):
+   - `~/.claude/context-tree/decisoes/_index.md` — decisões arquiteturais prévias
+   - `~/.claude/context-tree/plans/_index.md` — planos prévios sobre tema
+   - `~/.claude/context-tree/clientes/` (se intent menciona cliente Gascat/Barry/etc)
+   - `~/.claude/context-tree/projetos/` (se intent menciona projeto Artemis/Athie/etc)
+3. Se match: cita decisão/plan no output ANTES de propor
+
+**Padrão:** "Encontrei decisão prévia em `<path>`: <summary>. Considerar antes de propor."
+
+**Quando pular Phase 0.1:**
+- Intent trivial (1 skill óbvia, baixo risco)
+- Modo `--fast` explícito
+- Intent não tem keywords semânticas (palavras genéricas)
+
+### Exemplo
+
+> Patrick: "decidi usar Drizzle no Artemis SEO, ainda vale?"
+> Maestro V2 Phase 0.1: grep "Drizzle\|Artemis SEO" em `decisoes/_index.md` → match em `decisoes/drizzle-artemis-2026-04-15.md`. Cita decisão prévia + verifica se context mudou.
+
 ## Phase 0: Mode Selection (V2)
 
 Antes de Phase 1, decida modo:
