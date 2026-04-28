@@ -41,6 +41,18 @@ Maestro Progress:
   - [ ] ⛔ GATE: Maestro stops here. Recommend + await user confirmation. The user's next message triggers skill invocation directly — maestro does NOT invoke on behalf of the user. If user rejects the recommendation, re-run Phase 1.1 with refined intent from user feedback.
 ```
 
+## Phase 0: Mode Selection (V2)
+
+Antes de Phase 1, decida modo:
+
+| Sinal no intent | Modo | Output |
+|---|---|---|
+| Intent simples, 1 skill clara | `--fast` | invoca skill direto, sem chain |
+| Multi-domain, 2+ skills, ou agent envolvido | `--full` | chain (até 5 entries) com handoff |
+| "autopilot", "team review", "ralph", "deep interview" — workflow estruturado | `--workflow` | recomenda comando OMC direto (`/autopilot "..."` ou `/team N:executor "..."`) |
+
+**Default:** `--fast` se intent simples; `--full` se ambíguo. Patrick override sempre ganha.
+
 ## Phase 1: Understand Intent
 
 Parse the request for:
@@ -55,7 +67,7 @@ Map to categories:
 | "review/audit code" | Code Review | trident, react-patterns |
 | "find bugs/security issues" | Code Review | trident, security-audit |
 | "validate architecture/thin client" | Guard | architecture-guard, trident |
-| "find duplicates/reusables" | Guard | code-dedup-scanner |
+| "find duplicates/reusables/verifica antes de criar" | Guard | trident --dedup |
 | "context window/clear/handoff" | Guard | context-guardian |
 | "design system/tokens/UI" | Design | ui-design-system, component-architect |
 | "find references/books/frameworks" | Knowledge | reference-finder, context-tree |
@@ -124,6 +136,53 @@ If the request crosses domains, load `references/composition-chains.md` and pres
 ### Step 2.5: Alternatives detection (routing flag)
 If 2+ candidates score similarly (within ~15% match delta), flag . Do NOT present alternatives here — Phase 3.3 is the sole authority for alternative presentation and ordering. This step only detects, Phase 3 presents.
 
+### Step 2.6: Model + Thinking decision (V2 — absorveu model-skill-router.md)
+
+Pra cada skill/agent escolhido, decidir modelo + thinking budget:
+
+**Modelo:**
+- **Sonnet medium** (default 80%) — implementação, debug normal, edits, response técnica
+- **Sonnet high** — task com 5+ arquivos, ou Sonnet medium loopou 1x
+- **Opus high** — planejamento, arquitetura, decisão multi-sistema, debug onde Sonnet falhou 2x
+- **Opus high + `/model opusplan`** — chain Opus(plan) → Sonnet(implement) auto. Default pra feature complexa
+- **Haiku** — sub-agents read-only (search, classificação)
+
+**Heurística:** 80% Sonnet / 20% Opus.
+
+**Thinking:**
+- **default** — bug fix, refactor isolado
+- **think hard** — feature nova, migração, schema change, debug 2-3 hipóteses
+- **ultrathink** (~32k tokens) — arquitetura, debug sistêmico, decisão cara
+
+**Bump rule:** bump thinking ANTES de bump model. Sonnet medium + ultrathink frequentemente > Opus high + default.
+
+**Output Phase 2.6 (vai pra Phase 3):** se config atual ≠ recomendada, alerta. Se igual, executa silent.
+
+### Agent Catalog (V2)
+
+| Agent | Modelo | Quando |
+|---|---|---|
+| OMC executor / próprio executor | Sonnet | implementação |
+| OMC planner / próprio planner-skill | Opus | planning, SDD |
+| OMC verifier / próprio verifier-skill | Sonnet | validation pós-edit |
+| OMC critic / próprio critic-skill (opcional) | Opus | confronto premissa |
+| OMC explore | Haiku | search read-only |
+| OMC architect | Opus | decisão arquitetural |
+| lovable-implementer (próprio) | Sonnet | executar lovable-router output |
+| n8n-fixer (próprio) | Sonnet | debug n8n |
+
+**Routing preference:** próprios > OMC pra contexto skillforge. OMC pra workflows nativos OMC.
+
+### Workflow Routing (V2 — modo `--workflow`)
+
+| Intent | Workflow OMC |
+|---|---|
+| "feature complexa autônoma" | `/autopilot "<intent>"` |
+| "team review com N executors paralelos" | `/team N:executor "<intent>"` |
+| "iteração contínua até critério" | `/ralph "<intent>"` |
+| "deep interview pra design decision" | `/deep-interview "<topic>"` |
+
+Modo `--workflow` recomenda comando direto, NÃO invoca skill skillforge.
 ### Context Window Budget (per-skill table)
 
 Replace the old "20-40% flat" heuristic with category-based estimates sourced from `references/composition-chains.md`:
@@ -160,7 +219,7 @@ This separation exists because:
 ### --catalog Output
 
 ```markdown
-## Arsenal de Skills (42 skills)
+## Arsenal de Skills (42 skillforge + 8 OMC workflows + 6 OMC agents + 5-7 próprios = ~62 capabilities)
 
 > Last-verified source of truth: `skills/` directory listing. If skill-catalog.md is >7d old, re-scan directly.
 
