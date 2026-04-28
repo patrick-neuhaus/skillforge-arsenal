@@ -106,6 +106,8 @@ Final verdicts: REAL_BUG, NOT_A_BUG, or NEEDS_HUMAN_CHECK. May re-inspect disput
 
 ### Severity Levels
 
+**Source (Wave 2):** `~/.claude/library/severity/{p0,p1,p2,p3}.md` + `security-checklist.md` / `solid-checklist.md` / `code-quality-checklist.md` migradas. Local `references/` kept 7d backup compat.
+
 | Level | Action |
 |-------|--------|
 | **P0** Critical | Must block merge — security vuln, data loss, correctness bug |

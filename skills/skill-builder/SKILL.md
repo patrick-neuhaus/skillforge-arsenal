@@ -3,7 +3,9 @@ name: skill-builder
 description: "Create, improve, and optimize Claude Code skills with battle-tested techniques. Expert guidance on skill architecture, progressive loading, workflow design, description optimization (GEO), and packaging. Use when user wants to: create skill, build skill, new skill, improve skill, refactor skill, debug skill, package skill, evolve skill, write SKILL.md, 'transforma isso numa skill', 'quero automatizar esse processo', 'a skill tá ruim', 'a skill não tá funcionando', update skill, edit skill, test skill, optimize description, 'capturar esse workflow', 'salvar esse processo', scaffold skill, init skill, validate skill. Na dúvida entre skill e prompt: 'Instruções persistentes pro Claude (skill) ou prompt avulso?'"
 ---
 
-# Skill Builder v3
+# Skill Builder
+
+> **Templates source (Wave 2):** `~/.claude/library/templates/{templates,cli-first-template,design-skill-template}.md` (canonical). Local `references/` kept 7d backup. v3
 
 IRON LAW: NEVER generate a skill without reading 2+ existing skills as reference first. Copying patterns from real skills that work beats inventing from scratch every time.
 

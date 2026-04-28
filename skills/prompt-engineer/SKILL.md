@@ -45,6 +45,8 @@ Prompt Engineer Progress:
 
 If `--validate`: Read existing → run ccinspect (if applicable) → run promptfoo with rubric for `--type` → combine outputs → score sheet + findings P0/P1/P2 → suggest fixes. **DO NOT use the legacy quality checklist below — it's kept for `--create` mode reference only.**
 
+**Rubric source (Wave 2):** load from `~/.claude/library/rubrics/<type>.yaml` (canonical). Local `rubric/` kept as backup compat 7d. New rubrics: `agents-md.yaml`, `geo.yaml` (added Wave 2 for Wave 3 agents).
+
 If `--update-rubric --gap <file>`: Read gap file in `gaps/` → propose new criterion in YAML → present to user → on approval, edit rubric YAML and bump version.
 
 ## Principles
