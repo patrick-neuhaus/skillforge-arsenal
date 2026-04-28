@@ -172,7 +172,7 @@ Per phase:
 
 - **Trident** — used in Phase 4 for code review
 - **Architecture Guard** — use after implement to validate architectural rules (thin client/fat server)
-- **Code Dedup Scanner** — use in Phase 1 to find reusable code before creating new
+- **trident --dedup** — use in Phase 1 to find reusable code before creating new (substituiu code-dedup-scanner em Wave 1)
 - **Pattern Importer** — use in Phase 1 for `.tmp` technique (import external patterns)
 - **Context Guardian** — use between phases to monitor context window and generate handoffs
 - **React Patterns** — use `--scaffold` during implement phase for React features

@@ -1,6 +1,6 @@
 ---
 name: trident
-description: "Three-pronged code review pipeline: Scan, Verify, Judge. Deep codebase audit for bugs, security vulnerabilities, logic errors, SOLID violations, and dead code with independent 3-agent verification. Use when user asks to: review code, audit code, find bugs, security review, 'revisa esse código', 'tem bug nisso?', 'faz um audit', review PR, review changes, code quality check, check for vulnerabilities, 'analisa esse código', inspect codebase, is this code safe, check my PR, what's wrong with this code. Supports: unstaged, staged, PR, commit range, directory scan. Don't use for: style-only reviews, trivial one-line changes, test coverage, UX review. Se o arquivo não for encontrado no worktree, pedir paste do código inline — não bloquear análise."
+description: "Three-pronged code review pipeline: Scan, Verify, Judge. Deep codebase audit for bugs, security vulnerabilities, logic errors, SOLID violations, and dead code with independent 3-agent verification. Use when user asks to: review code, audit code, find bugs, security review, 'revisa esse código', 'tem bug nisso?', 'faz um audit', review PR, review changes, code quality check, check for vulnerabilities, 'analisa esse código', inspect codebase, is this code safe, check my PR, what's wrong with this code. Supports: unstaged, staged, PR, commit range, directory scan. Use --dedup mode for pre-implementation duplicate scan ('verifica antes de criar', 'já tem isso no projeto?', 'tem componente parecido?', find duplicates, code reuse). Don't use for: style-only reviews, trivial one-line changes, test coverage, UX review. Se o arquivo não for encontrado no worktree, pedir paste do código inline — não bloquear análise."
 ---
 
 # Trident
@@ -14,6 +14,7 @@ Three-pronged pipeline: **Scan → Verify → Judge**. Multi-lens scanning (SOLI
 - **`--design` é code-level** (CSS, layout, performance, a11y dentro do código). Para auditoria de **experiência do usuário** (fluxos, heurísticas Nielsen, dark patterns, jornada), use **`ux-audit`** — não trident --design.
 - **`--skill` é review holístico** de uma skill como produto (estrutura + GEO + distribuição). Para **otimização cirúrgica de description** apenas, use **`geo-optimizer`** — não trident --skill.
 - **Para code review use trident, sempre.** A skill built-in `simplify` (Anthropic) parece similar mas tem cobertura inferior (sem 3-agent verification, sem multi-lens scan, sem severity P0-P3).
+- **`--dedup` substitui `code-dedup-scanner`** (absorvida em Wave 1, 2026-04-29). Pre-implementation scan pra evitar duplicação. Use ANTES de criar componente/função/hook novo.
 
 **Exemplo de disambiguation:**
 > "revisa o checkout" → ambíguo. Pergunta:
@@ -29,6 +30,7 @@ Three-pronged pipeline: **Scan → Verify → Judge**. Multi-lens scanning (SOLI
 | `--target <t>` | PR number, commit range, or directory path | current changes |
 | `--design` | Design review: visual consistency + accessibility + performance (3 layers) | false |
 | `--skill` | Review a skill as product: GEO, structure, distribution readiness | false |
+| `--dedup` | Pre-implementation scan: find existing components/functions before creating | false |
 
 ## Workflow
 
@@ -143,6 +145,47 @@ Final verdicts: REAL_BUG, NOT_A_BUG, or NEEDS_HUMAN_CHECK. May re-inspect disput
 
 ### Clean Review (no bugs found)
 State: what was checked, areas not covered, residual risks, recommended follow-ups.
+
+## Dedup Mode (--dedup)
+
+**Quando usar:** ANTES de criar componente, função, hook, query. Sub-step do SDD Phase 1 Research. Evita duplicação invisível em codebase grande.
+
+**Workflow compacto (3 steps):**
+
+1. **Intent** — entender o que vai criar:
+   - "O que vai criar?" (component, function, hook, query, page, util)
+   - "Qual domínio?" (UI, data, auth, utils, invoices)
+   - "Descreve a funcionalidade em 1 frase"
+   - Extrai keywords pra search.
+
+2. **Scan** — busca multi-vector:
+   - Por nome exato + fuzzy: `grep -r "ComponentName\|functionName" src/ --include="*.ts*"`
+   - Por padrão funcional: keywords related (Button, Btn, button)
+   - Em `node_modules` (deps instaladas) e `src/components/ui/` (shadcn/design system)
+   - Pra cada match: file path, line number, usage context atual.
+
+3. **Report ⛔ GATE** — apresentar com recomendação por match:
+   - **🟢 REUSE** (>80% match) → use o que existe, não cria
+   - **🟡 EXTEND** (40-80%) → forka/configura o existente
+   - **🔴 CREATE** (nada cobre) → cria novo, justifica por quê
+
+IRON LAW (--dedup): NEVER report a duplicate without showing exact location + usage context. False positives custam mais tempo que economizam.
+
+**Output format:**
+
+```markdown
+## Dedup Scan: <intent>
+
+### Matches found (N)
+| Match | Path | Lines | Action | Why |
+|-------|------|-------|--------|-----|
+| Button | src/components/ui/button.tsx | 1-45 | 🟢 REUSE | Same variants needed |
+
+### Decision per match
+[user decides REUSE/EXTEND/CREATE]
+```
+
+Diferente de `--mode dir` (review de bugs em código existente): `--dedup` busca REUSO antes de implementação, não bugs em código já escrito.
 
 ## Shared Output Contract
 

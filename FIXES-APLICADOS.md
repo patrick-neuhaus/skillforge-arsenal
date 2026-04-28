@@ -57,7 +57,7 @@
 | Skill | Mudança | Input que fixou |
 |---|---|---|
 | trident | Fallback: "se arquivo não encontrado no worktree, pedir paste do código inline — não bloquear análise" | 3 (OK-PARCIAL → OK) |
-| code-dedup-scanner | Scan proativo: "ao iniciar, fazer scan (glob *.tsx *.ts) ANTES de perguntar 'qual componente?'" | 25 (NENHUMA → OK) |
+| ~~code-dedup-scanner~~ | **ABSORVIDA em trident --dedup (Wave 1, 2026-04-29)** — skill apagada, lock-in removido | n/a |
 | security-audit | (coberto na Wave B1) | 40 |
 
 ### Wave B3 — 2 boundaries
