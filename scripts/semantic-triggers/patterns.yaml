@@ -1,0 +1,176 @@
+# Semantic Triggers — Pattern Configuration
+#
+# Schema per category:
+#   name: display name
+#   output_file: target .md file (relative to output_dir)
+#   description: what this category captures
+#   patterns: list of regex patterns
+#     - regex: the pattern (PT-BR or EN)
+#       label: short tag for this specific pattern (used in dedup + output)
+#       context_window: {before: N, after: N} — lines to capture around match
+#       flags: list of re flags — "I" (case-insensitive), "M" (multiline), "S" (dotall)
+#
+# Convenções de calibração:
+#   - Multi-token obrigatório (evita false-positive de palavra única)
+#   - Case-insensitive por default ("I")
+#   - context_window default: 3 antes / 5 depois
+#   - Negative lookahead quando aplicável pra reduzir ruído
+#   - Patterns em PT-BR e EN misturados (vernacular do Patrick)
+
+categories:
+
+  - name: "Erros do Claude"
+    output_file: "erros-do-claude.md"
+    description: "Admissões de erro, overengineering, premissas falsas, raciocínio equivocado"
+    patterns:
+      - label: "pensei-errado"
+        regex: '(pensei|pensava|achava|assumi|imaginei|acreditava)\s+(que\s+)?[^.]{0,60}?\s+(errad[oa]|mal|equivocad[oa]|incorret[oa]|furad[oa])'
+        flags: ["I"]
+        context_window: {before: 3, after: 5}
+      - label: "embarquei"
+        regex: '\bembarquei\s+(no|em|junto|contigo|nessa)\b'
+        flags: ["I"]
+        context_window: {before: 5, after: 5}
+      - label: "overengineering"
+        regex: '\b(overengineer(ed|ing)?|over-engineer|sobre[- ]?engenhari[ao])\b'
+        flags: ["I"]
+        context_window: {before: 3, after: 5}
+      - label: "fiz-errado"
+        regex: '\bfiz\s+(errado|merda|mal|bobagem|cagada)\b'
+        flags: ["I"]
+        context_window: {before: 3, after: 5}
+      - label: "premissa-falsa"
+        regex: '\b(falsa|errada|equivocada)\s+premissa\b|\bpremissa\s+(falsa|errada|equivocada)\b'
+        flags: ["I"]
+        context_window: {before: 3, after: 5}
+      - label: "nao-questionei"
+        regex: '\b(n[aã]o\s+)(questionei|confrontei|validei|verifiquei)\b'
+        flags: ["I"]
+        context_window: {before: 3, after: 5}
+      - label: "fiz-merda-admissao"
+        regex: '\b(eu|claude)\s+(fiz\s+)?merda\b|\b(tava\s+errado|estava\s+errado)\b'
+        flags: ["I"]
+        context_window: {before: 3, after: 5}
+
+  - name: "Gaps de IRON LAW"
+    output_file: "iron-law-gaps.md"
+    description: "Regras que existiam no CLAUDE.md ou iron-laws.md e não foram aplicadas"
+    patterns:
+      - label: "regra-existia"
+        regex: '\b(regra|IL-?\d+|iron\s?law)\s+[^.]{0,30}?\s+(existia|tinha|tava|estava|j[aá]\s+era)\b'
+        flags: ["I"]
+        context_window: {before: 3, after: 5}
+      - label: "nao-apliquei"
+        regex: '\bn[aã]o\s+(apliquei|segui|usei|respeitei|obedec[ií])\b'
+        flags: ["I"]
+        context_window: {before: 3, after: 5}
+      - label: "esqueci-regra"
+        regex: '\besqueci\s+(d[ae]\s+)?(regra|IL|iron\s?law|filtro|confrontaç)'
+        flags: ["I"]
+        context_window: {before: 3, after: 5}
+      - label: "deveria-ter-aplicado"
+        regex: '\b(deveria|devia)\s+ter\s+(aplicado|seguido|usado|invocado)\b'
+        flags: ["I"]
+        context_window: {before: 3, after: 5}
+      - label: "il-violation"
+        regex: '\b(furei|violei|ignorei|pulei)\s+(a\s+)?(IL-?\d+|iron\s?law|regra)\b'
+        flags: ["I"]
+        context_window: {before: 3, after: 5}
+      - label: "filtro-nao-disparou"
+        regex: '\b(filtro\s+de\s+alavancagem|confronta[cç][aã]o)\s+[^.]{0,40}?\s+(n[aã]o\s+)(disparou|ativou|rodou)\b'
+        flags: ["I"]
+        context_window: {before: 3, after: 5}
+
+  - name: "Decisões arquiteturais"
+    output_file: "decisoes-arquiteturais.md"
+    description: "Decisões técnicas com rationale explícito (X porque Y), tradeoffs avaliados"
+    patterns:
+      - label: "escolhi-porque"
+        regex: '\b(escolhi|optei|decidi|preferi|vou\s+usar)\s+[^.]{1,80}?\s+(porque|por\s+causa|devido|pois)\b'
+        flags: ["I"]
+        context_window: {before: 2, after: 8}
+      - label: "tradeoff-a-vs-b"
+        regex: '\btradeoff(s)?\s+[^.]{0,40}?\s+(vs|versus|contra)\s+\w+'
+        flags: ["I"]
+        context_window: {before: 3, after: 8}
+      - label: "ao-inves-de"
+        regex: '\b(uso|usar|usei|fui\s+com)\s+\w+\s+(ao\s+inv[eé]s|em\s+vez)\s+de\s+\w+'
+        flags: ["I"]
+        context_window: {before: 2, after: 6}
+      - label: "rationale-explicito"
+        regex: '\b(a\s+raz[aã]o|o\s+motivo|o\s+racion[aá]l)\s+(é|foi|pra|para)\b'
+        flags: ["I"]
+        context_window: {before: 2, after: 8}
+      - label: "descartei-porque"
+        regex: '\b(descartei|rejeitei|abandonei)\s+[^.]{1,60}?\s+(porque|por|devido)\b'
+        flags: ["I"]
+        context_window: {before: 2, after: 6}
+
+  - name: "Applied learnings"
+    output_file: "applied-learnings.md"
+    description: "Falhas reconhecidas + lição extraída + como aplicar no futuro"
+    patterns:
+      - label: "falhei-em"
+        regex: '\b(falhei|errei|n[aã]o\s+consegui|quebrou|deu\s+ruim)\s+(em|ao|no|na)\s+\w'
+        flags: ["I"]
+        context_window: {before: 3, after: 8}
+      - label: "licao-aprendida"
+        regex: '\b(li[cç][aã]o\s+aprendida|learning|aprendizado|takeaway)\b'
+        flags: ["I"]
+        context_window: {before: 2, after: 8}
+      - label: "proxima-vez"
+        regex: '\b(da|na)\s+pr[oó]xima\s+vez\b'
+        flags: ["I"]
+        context_window: {before: 3, after: 6}
+      - label: "quebrou-porque"
+        regex: '\bquebrou\s+[^.]{0,40}?\s+porque\b'
+        flags: ["I"]
+        context_window: {before: 3, after: 8}
+      - label: "teria-economizado"
+        regex: '\b(teria\s+economizado|evitaria|pouparia)\s+\w'
+        flags: ["I"]
+        context_window: {before: 3, after: 6}
+
+  - name: "Skill invocations"
+    output_file: "skill-invocations.md"
+    description: "Invocações explícitas de skills (pra ter histórico de uso e detectar NENHUMA vs OK)"
+    patterns:
+      - label: "skill-colon"
+        regex: '^skill:\s+([\w-]+|anthropic-skills:[\w-]+)\s*$'
+        flags: ["I", "M"]
+        context_window: {before: 1, after: 3}
+      - label: "launching-skill"
+        regex: '\bLaunching\s+skill:\s+([\w-]+|anthropic-skills:[\w-]+)\b'
+        flags: ["I"]
+        context_window: {before: 1, after: 3}
+      - label: "anthropic-skills-prefix"
+        regex: '\banthropic-skills:([\w-]+)\b'
+        flags: ["I"]
+        context_window: {before: 1, after: 2}
+      - label: "invoquei-skill"
+        regex: '\b(invoquei|chamei|usei)\s+(a\s+)?skill\s+([\w-]+)\b'
+        flags: ["I"]
+        context_window: {before: 2, after: 4}
+
+# Configuração global
+settings:
+  # Diretório raiz dos logs nativos do Claude Code
+  logs_root: "~/.claude/projects"
+
+  # Diretório de output (context-tree nova estrutura)
+  output_dir: "~/.claude/context-tree/patrick-pessoal/skills-ecosystem"
+
+  # Dedup: se (sessionId + uuid + pattern_label) já apareceu, não duplica
+  dedup: true
+
+  # Max matches por categoria no output (evita .md gigante)
+  max_matches_per_category: 500
+
+  # Min match length pra evitar ruído extremo
+  min_match_length: 8
+
+  # Skip sessions older than N days (0 = sem limite)
+  max_age_days: 0
+
+  # Priority pra extração de texto: thinking tem preferência sobre text
+  text_extraction_priority: ["thinking", "text"]

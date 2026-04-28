@@ -1,36 +1,45 @@
 # skillforge-arsenal — contexto do projeto
 
-Este é o repositório de skills customizadas do Patrick (40 skills atualmente). Regras gerais do usuário vivem no CLAUDE.md parent (`D:\DOCUMENTOS\Github\CLAUDE.md`) e nas `~/.claude/rules/*.md` — este arquivo só cobre o específico do skillforge-arsenal.
+Repositório de skills customizadas do Patrick (42 skills). Regras gerais user-level vivem em `~/.claude/rules/*.md` (auto-loaded). Este file cobre só o específico do skillforge.
 
 ## Estrutura
 
-- `skills/<nome>/SKILL.md` — source of truth de cada skill (YAML frontmatter + workflow)
-- `skills/<nome>/references/` — scripts, templates, exemplos carregados sob demanda
-- `dist/` — zips gerados pelo `zip-skills.py` pra upload em anthropic-skills/Claude.ai
-- `.brv/context-tree/` — knowledge base do byterover (curate/query), per-project
-- `.env` — secrets (byterover API key), gitignored
+- `skills/<nome>/SKILL.md` — source of truth (YAML frontmatter + workflow)
+- `skills/<nome>/references/` — scripts, templates, exemplos sob demanda
+- `dist/` — zips gerados pelo `zip-skills.py` pra upload em Claude.ai
+- `internal-docs/` — docs internos (waves passadas, análises) — gitignored, não público
+- `.brv/context-tree/` — knowledge byterover per-project
+- `.env` — secrets, gitignored
 
-## Scripts utilitários
+## Scripts
 
-- `python zip-skills.py [nomes...]` — zipa skills específicas ou todas (sem arg)
-- `python test-rubric-loading.py` — valida carregamento das 4 rubrics do prompt-engineer
+- `python zip-skills.py [nomes...]` — zipa skills (sem arg = todas)
+- `python test-rubric-loading.py` — valida 4 rubrics do prompt-engineer
 
-## Skills modificadas no Wave G (2026-04-11)
+## Convenção edit SKILL.md
 
-- `maestro/SKILL.md` — 14 bugs Trident corrigidos (catalog 40, IRON LAW wired, --health/--loose implementados, GATE clarificado, context budget per-skill, tiebreaker)
-- `context-tree/SKILL.md` — unified reader user-level + byterover project-level
-- Demais zips no dist/ são das Waves 1-6 que ainda não foram re-upadas pra anthropic-skills
+IL-1 (`~/.claude/rules/iron-laws.md`) aplica: validar via `prompt-engineer --validate` ANTES Write/Edit, marker via `~/.claude/hooks/write-validation-marker.ps1`, V2 hook bloqueia sem marker fresh.
 
-## Convenção ao editar SKILL.md nesta pasta
+Skills em **lock-in IL-10** (validated:YYYY-MM-DD em `FIXES-APLICADOS.md`): edit exige confronto vocal e justificativa concreta. 22 skills atualmente em lock-in pós Wave 4.
 
-IL-1 do `~/.claude/rules/iron-laws.md` aplica: validar com rubric antes do Write/Edit, criar marker via `~/.claude/hooks/write-validation-marker.ps1`, V2 hook bloqueia sem marker fresh.
+## Wave 4 Ecosystem (2026-04-29)
+
+Plano completo: `~/.claude/plans/snazzy-shimmying-prism.md`. 4 waves executadas.
+
+**Boundary skillforge ↔ OMC ↔ library:**
+- **Skillforge** = 42 skills versionadas neste repo
+- **OMC** (Yeachan-Heo/oh-my-claudecode) = 8 workflows + 6 agents OMC habilitados (kill switches granulares pendentes Wave 5)
+- **Library** (`~/.claude/library/`) = rubrics/severity/templates extraídos de prompt-engineer/trident/skill-builder (IL-11)
+- **Maestro V2** prioriza skillforge sobre OMC pra contexto Patrick (agent-catalog inline em `maestro/SKILL.md`)
+
+**Wave G specifics (2026-04-11):** mantidos como histórico em `internal-docs/`, não atualizar.
 
 ## Routing: brv-query vs context-tree skill
 
-- `brv-query` (byterover MCP): knowledge do PROJETO atual (.brv/context-tree/)
-- `context-tree` skill (local): knowledge USER-LEVEL (~/.claude/context-tree/meta/) + unified read
-- Pra knowledge operacional do Patrick (decisions, learnings, wave history): preferir context-tree skill
-- Pra knowledge tecnico do projeto (code patterns, architecture): preferir brv-query
+- `brv-query` (byterover MCP): knowledge do PROJETO atual (`.brv/context-tree/`)
+- `context-tree` skill (local): knowledge USER-LEVEL (`~/.claude/context-tree/`) + unified read
+- Operacional Patrick (decisions, learnings, wave history) → `context-tree`
+- Técnico do projeto (code patterns, architecture) → `brv-query`
 
 <!-- BEGIN BYTEROVER RULES -->
 

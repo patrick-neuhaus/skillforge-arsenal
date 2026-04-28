@@ -166,3 +166,30 @@ Em vez de logar "skill X invocada" (shallow), logar **padrões de pensamento do 
 | 2026-04-18 | Wave C | Este fechamento — publish meeting-sync + rezip + doc + IL-10 + commits |
 
 **Parada definitiva após Wave C.** Próximos testes de triggering SÓ quando houver skill nova ou mudança solicitada explicitamente.
+
+
+## Wave 4 Ecosystem (2026-04-29)
+
+Marker: `validated:2026-04-29`
+
+**Mudanças:**
+- Wave 1 (hygiene): 7 descriptions trim (todas <720 chars), trident absorveu code-dedup-scanner (--dedup mode), code-dedup-scanner DELETADO, model-skill-router.md deprecated, sdd carve-out (Folloni Marmelab+Scott Logic)
+- Wave 2 (componentização): ~/.claude/library/{rubrics,severity,templates}/ extraída de prompt-engineer/trident/skill-builder, IL-11 ativa
+- Wave 3 (orquestração): maestro V2 (modos --fast/--full/--workflow + Phase 2.6 model+thinking), 5 agents próprios (~/.claude/agents/), 2 hooks layered (SessionStart bootstrap + Stop error-doubt-tracker), ~/.claude/state/, OMC instalado híbrido, IL-5 estendida
+- Wave 4 (closure): este file + IL-10 estendida cobrindo agents + CLAUDE.md updates
+
+**Lock-in extended (validated:2026-04-29):**
+- 22 skills (validated:2026-04-18 mantidas) — geo-optimizer, sdd, n8n-architect, component-architect, tech-lead-pm, prompt-engineer, launch-strategy, ui-design-system, sales-enablement, product-marketing-context, react-patterns, pattern-importer, context-guardian, context-tree, lovable-router, maestro, security-audit, supabase-db-architect, copy, meeting-sync, trident, skill-routing.md
+- ~~code-dedup-scanner~~ removida (absorvida em trident --dedup)
+
+**Agents próprios (NÃO em lock-in ainda):**
+- executor, planner-skill, verifier-skill, lovable-implementer, n8n-fixer
+- Marker `validated:2026-05-06` aplicado APÓS 1 semana de uso real sem regressão (Patrick decide promover individualmente)
+- Razão: Wave A+B+C provou que lock-in prematuro introduz regressões
+
+**Pendências (backlog):**
+- 6º/7º agents próprios (critic-skill, reviewer-trident) — backlog
+- OMC kill switches granulares — Wave 5 ou ciclo dedicado
+- Built-ins audit (pdf/docx/pptx/xlsx) — test-driven decision quando uso real aparecer
+- Cleanup library cópias legadas (skills/X/references/ duplicadas) — após 7d cooldown
+- Sanity test final em fresh session — agendar

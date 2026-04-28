@@ -25,3 +25,6 @@ __pycache__/
 .env
 .env.local
 .env.*.local
+
+# Internal docs (Wave 4 cleanup — não público)
+internal-docs/
