@@ -1,110 +1,151 @@
-# Skillforge Arsenal
+# skillforge-arsenal
 
-Coleção pessoal de 40 skills para Claude Code — prompts especializados que transformam o Claude em ferramentas focadas para tarefas específicas.
+Ecossistema de skills, agents, hooks e knowledge persistente pra Claude Code.
 
-## O que são Skills?
+**42 skills + 5 agents proprios + 13 IRON LAWs + library compartilhada + maestro V2 orquestrador + memoria long-term cross-session.**
 
-Skills são instruções estruturadas (em Markdown) que ensinam o Claude a executar tarefas complexas de forma consistente. Cada skill define um fluxo de trabalho, princípios, regras e outputs esperados.
+## Estrutura
 
-## Skills disponíveis (40)
+```
+skillforge-arsenal/
+├── skills/                    ← 42 skills versionadas (source of truth)
+├── dist/                      ← zips gerados pelo zip-skills.py
+├── scripts/
+│   ├── setup-junctions.ps1    ← bulk junction sync skillforge -> Claude AppData
+│   └── semantic-triggers/     ← parser context-tree (Onda alpha)
+├── internal-docs/             ← gitignored (waves narratives, sanity tests)
+├── FIXES-APLICADOS.md         ← lock-in IL-10 tracker
+└── HOW-TO-USE.md              ← guia uso
+```
 
-### Produto & Discovery
-| Skill | Descrição |
-|-------|-----------|
-| [product-discovery-prd](skills/product-discovery-prd/) | Conduz discovery de produto e gera PRDs otimizados para Lovable e outras ferramentas |
-| [product-marketing-context](skills/product-marketing-context/) | Cria e atualiza documento de contexto de marketing de produto (ICP, posicionamento, messaging) |
-| [lovable-knowledge](skills/lovable-knowledge/) | Gera Workspace/Project Knowledge otimizados para configurar o Lovable |
-| [lovable-router](skills/lovable-router/) | Classifica e roteia mudanças em projetos Lovable (código direto vs prompt Lovable) |
-| [ux-audit](skills/ux-audit/) | Auditorias de UX/UI em apps web e mobile, baseadas em heurísticas |
-| [ui-design-system](skills/ui-design-system/) | Gera design tokens e design.json completo (cores, tipografia, espaçamento, componentes) |
+## Quick start
 
-### Engenharia & Arquitetura
-| Skill | Descrição |
-|-------|-----------|
-| [sdd](skills/sdd/) | Spec Driven Development — pipeline anti-vibecoding de 4 fases (research → spec → implement → review) |
-| [n8n-architect](skills/n8n-architect/) | Arquitetura, construção, debug e otimização de automações n8n |
-| [supabase-db-architect](skills/supabase-db-architect/) | Arquitetura de banco Supabase/PostgreSQL para apps de pequeno/médio porte |
-| [component-architect](skills/component-architect/) | Planeja arquitetura de componentes com atomic design, composição e shadcn/ui |
-| [react-patterns](skills/react-patterns/) | Audita e implementa padrões modernos React/Next.js (Server Components, App Router, Suspense) |
-| [architecture-guard](skills/architecture-guard/) | Valida implementações contra regras arquiteturais e convenções do projeto |
-| [pattern-importer](skills/pattern-importer/) | Clona repos de referência, analisa padrões e gera documentos de padrão (few-shot learning) |
-| [cli-skill-wrapper](skills/cli-skill-wrapper/) | Transforma qualquer API em CLI tool otimizada para agentes de IA |
-| [prompt-engineer](skills/prompt-engineer/) | Cria, valida e otimiza prompts para qualquer LLM |
-
-### Code Review & Qualidade
-| Skill | Descrição |
-|-------|-----------|
-| [trident](skills/trident/) | Pipeline de 3 agentes para code review profundo (Scan → Verify → Judge) |
-| [code-dedup-scanner](skills/code-dedup-scanner/) | Escaneia codebase para encontrar componentes e padrões reutilizáveis antes de criar novo código |
-
-### Segurança & Infraestrutura
-| Skill | Descrição |
-|-------|-----------|
-| [security-audit](skills/security-audit/) | Pipeline de 3 agentes para auditoria de segurança (Code, VPS ou Web) |
-| [vps-infra-audit](skills/vps-infra-audit/) | Pipeline de 3 agentes para auditoria de infraestrutura VPS |
-
-### SEO & Marketing
-| Skill | Descrição |
-|-------|-----------|
-| [seo](skills/seo/) | Audita, planeja e implementa estratégias de SEO completas (técnico, on-page, off-page, conteúdo) |
-| [ai-seo](skills/ai-seo/) | Otimiza conteúdo para motores de busca com IA (AEO, GEO, LLMO) |
-| [copy](skills/copy/) | Escreve, revisa e otimiza copy para 8 canais (landing, social, email, cold-email, WhatsApp, blog, UX, ads) |
-| [competitor-alternatives](skills/competitor-alternatives/) | Cria páginas de comparação com concorrentes e alternativas para SEO e vendas |
-| [site-architecture](skills/site-architecture/) | Planeja e reestrutura hierarquia de páginas, navegação, URLs e linking interno |
-| [free-tool-strategy](skills/free-tool-strategy/) | Planeja e avalia ferramentas gratuitas para marketing (engineering as marketing) |
-| [launch-strategy](skills/launch-strategy/) | Planeja lançamentos de produto, feature announcements e estratégia go-to-market |
-| [sales-enablement](skills/sales-enablement/) | Cria colateral de vendas: pitch decks, one-pagers, objection handling, demo scripts |
-| [geo-optimizer](skills/geo-optimizer/) | Otimiza descrições e metadados para Generative Engine Optimization (GEO) |
-
-### Gestão & Comunicação
-| Skill | Descrição |
-|-------|-----------|
-| [tech-lead-pm](skills/tech-lead-pm/) | Gestão de projetos e liderança técnica para líder de primeira viagem com equipe junior |
-| [comunicacao-clientes](skills/comunicacao-clientes/) | Ensina a escrever melhor para clientes via WhatsApp/Telegram |
-
-### Pesquisa & Conhecimento
-| Skill | Descrição |
-|-------|-----------|
-| [reference-finder](skills/reference-finder/) | Fundamenta temas com referências consagradas: livros, frameworks, artigos |
-| [skill-builder](skills/skill-builder/) | Cria, modifica e otimiza skills do Claude Code |
-| [context-tree](skills/context-tree/) | Sistema hierárquico de gestão de conhecimento com scoring e decay |
-| [context-guardian](skills/context-guardian/) | Monitora, analisa e gerencia uso da context window |
-
-### Documentos & Arquivos
-| Skill | Descrição |
-|-------|-----------|
-| [pdf](skills/pdf/) | Leitura, criação, merge, split e manipulação de PDFs |
-| [docx](skills/docx/) | Cria, lê e edita documentos Word (.docx) |
-| [pptx](skills/pptx/) | Cria, lê e edita apresentações PowerPoint (.pptx) |
-| [xlsx](skills/xlsx/) | Cria, lê e edita planilhas (.xlsx, .csv, .tsv) |
-
-### Orquestração & Utilidades
-| Skill | Descrição |
-|-------|-----------|
-| [maestro](skills/maestro/) | Orquestrador que conhece todas as 40 skills e compõe chains automaticamente |
-| [schedule](skills/schedule/) | Cria tarefas agendadas que rodam sob demanda ou em intervalo |
-
-## Como usar
-
-### No Claude Desktop (Habilidades Pessoais)
-Essas skills já estão configuradas como "Habilidades pessoais" no Claude Desktop. Basta invocar pelo nome na conversa.
-
-### No Claude Code (CLI)
-Copie a pasta da skill desejada para `.claude/commands/<skill-name>/` no seu projeto:
+### 1. Clone + setup junctions
 
 ```bash
-cp -r skills/n8n-architect ~/.claude/commands/n8n-architect
+git clone https://github.com/patrick-neuhaus/skillforge-arsenal
+cd skillforge-arsenal
+powershell -ExecutionPolicy Bypass -File scripts/setup-junctions.ps1
 ```
 
-### Estrutura de cada skill
-```
-skills/<nome>/
-├── SKILL.md          # Prompt principal da skill
-├── references/       # Base de conhecimento acumulada (algumas skills)
-├── scripts/          # Scripts auxiliares (algumas skills)
-└── ...               # Arquivos de suporte específicos
+Junctions criadas em `AppData\Claude\...\skills-plugin\<UUID>\skills\` apontando pro skillforge. **Edits no skillforge refletem instantaneo no Claude Code.** Zero zip upload manual.
+
+### 2. Editar skill
+
+```bash
+# Edita SKILL.md em skills/<nome>/
+vim skills/maestro/SKILL.md
+
+# IL-1 hook V2 valida antes do Write (rubric prompt-engineer score >=80)
+# Junction reflete edit imediato em AppData
+# Restart Claude Code se mudar metadata frontmatter
 ```
 
-## Licença
+### 3. Skill nova
 
-Uso pessoal. Skills de documentos (pdf, docx, pptx, xlsx) possuem licença própria — veja `LICENSE.txt` dentro de cada uma.
+```bash
+# Cria pasta + SKILL.md em skills/<nova>/
+# Hook PostToolUse Write auto-cria junction em AppData
+```
+
+## Ecossistema
+
+### Skills (42)
+
+Categorias principais:
+- **Meta/Orchestration:** maestro V2, prompt-engineer, skill-builder, geo-optimizer, reference-finder, context-guardian, context-tree
+- **Code review:** trident (com modos `--mode`, `--design`, `--skill`, `--dedup`), security-audit, architecture-guard
+- **Implementation:** sdd, react-patterns, component-architect, supabase-db-architect, n8n-architect, lovable-router
+- **Design:** ui-design-system, ux-audit, design-system-audit, product-discovery-prd, test-lab-architect
+- **Marketing:** copy, ai-seo, seo, site-architecture, competitor-alternatives, sales-enablement, free-tool-strategy, launch-strategy, product-marketing-context
+- **Knowledge:** lovable-knowledge, pattern-importer
+- **Content:** pdf, docx, pptx, xlsx
+- **Infra:** vps-infra-audit
+- **People:** comunicacao-clientes, tech-lead-pm, meeting-sync
+- **Workflow:** schedule, cli-skill-wrapper
+
+### Agents proprios (5)
+
+Em `~/.claude/agents/`:
+- `executor` (Sonnet) — skillforge-aware code executor
+- `planner-skill` (Opus) — SDD-aware planner
+- `verifier-skill` (Sonnet) — IL-1/IL-4 compliance check
+- `lovable-implementer` (Sonnet) — executa output lovable-router
+- `n8n-fixer` (Sonnet) — debug n8n workflows
+
+### Library compartilhada
+
+Em `~/.claude/library/`:
+- `rubrics/` — promptfoo (claude-md, system-prompt, iron-laws, technical-plan, agents-md, geo)
+- `severity/` — checklists P0-P3 (security, SOLID, code quality)
+- `templates/` — skill templates
+
+### Memory long-term
+
+Em `~/.claude/context-tree/`:
+- `decisoes/` — decisoes arquiteturais
+- `clientes/` — knowledge por cliente
+- `projetos/` — knowledge por projeto
+- `knowledge/` — generico/tecnico
+- `plans/` — 43 plans indexados + auto-capture forward
+- `sessions/` — PreCompact snapshots + ExitPlanMode markers
+- `erros/` — erros do Claude + duvidas
+
+Auto-populated por hooks (Wave 5).
+
+### Hooks (8)
+
+Em `~/.claude/hooks/`:
+- PreToolUse Write/Edit: V2 hash marker (IL-1 enforcement)
+- Stop: token tracker + error-doubt-tracker (5 categorias auto)
+- SessionStart: bootstrap inventory ecossistema
+- PostToolUse Write: plan-capture + skill-junction-sync
+- PostToolUse ExitPlanMode: log approvals
+- PreCompact: snapshot recovery
+
+### IRON LAWs (13)
+
+User-level em `~/.claude/rules/iron-laws.md`:
+1. Edit instrucao = prompt-engineer --validate
+2. Code review = trident
+3. Skills locais > built-ins
+4. Skill nova/estrutural = skill-builder --validate
+5. Composicao 2+ entries = maestro V2
+6. Hook bloqueia = pausa real
+7. Skill nova = skill-builder Step 0 (8 perguntas)
+8. Problema novo = reference-finder --solution-scout
+9. Task Hygor/Jonas = vocal confrontation
+10. FIXES-APLICADOS validated:* = lock-in
+11. Componentes em library/
+12. Maestro V2 query context-tree em Phase 0.1
+13. Skillforge fonte de verdade, AppData = junctions
+
+## Plugins (OMC + Caveman)
+
+```bash
+claude plugin install caveman@caveman                      # Token compression
+claude plugin install oh-my-claudecode@omc                 # 19 agents + 39 skills + workflows
+```
+
+OMC workflows aproveitados: autopilot, ralph, team, deep-interview, ultrawork, ccg, deepinit, caveman.
+OMC agents aproveitados: executor, planner, verifier, critic, explore, architect.
+Maestro V2 prioriza skillforge sobre OMC.
+
+## Roadmap (waves)
+
+- **Waves A-C** (Apr 14-18): triggering reliability 39% -> 95%, lock-in IL-10
+- **Wave G** (Apr 11): V2 hook hard block
+- **Wave 1** (Apr 29): hygiene, trim 7 descriptions, trident absorveu code-dedup-scanner
+- **Wave 2** (Apr 29): library/ compartilhada (rubrics + severity + templates), IL-11
+- **Wave 3** (Apr 29): maestro V2 + 5 agents proprios + 2 hooks + state mgmt + OMC hibrido, IL-5 estendida
+- **Wave 4** (Apr 29): closure, repo cleanup, CLAUDE.md enxutos, IL-10 estendida
+- **Wave 5** (Apr 29): long-term memory, context-tree refactor por dominio, 3 hooks novos, parser retroativo (43 plans + 61 sessions), IL-12
+- **Wave 6** (Apr 29): junction sync skillforge -> AppData, IL-13. Diagnostico critico: edits Wave 1-5 nao chegaram no front antes (descoberto pos-Wave 5)
+
+## Stack
+
+Claude Code (Sonnet medium / Opus high) + Lovable + Supabase + n8n + ClickUp.
+
+## Licenca
+
+Pessoal. Patrick Neuhaus.
