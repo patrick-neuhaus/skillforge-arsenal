@@ -53,9 +53,8 @@ Design System Audit Progress:
 Estrutura esperada:
 - `docs/03-token-system.md` — regras WCAG AA + tokens
 - `docs/07-component-patterns.md` — Login 50/50, AppTable, Configurações user panel
-- `presets/warm-editorial/` — cream + teal + Lora/Poppins
-- `presets/minimalist-tech/` — mono + signal (Forge.sh flavor)
-- `presets/_shared/` — AppTable, StatusBadge, table.tsx
+- `presets/default/` — warm-editorial flavor: cream + teal + Lora/Poppins
+- `presets/_shared/` — AppTable, StatusBadge
 
 **Ativação automática:**
 - Se user pede "design system audit" SEM citar path explícito → assume default acima
