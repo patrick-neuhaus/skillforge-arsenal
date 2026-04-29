@@ -222,25 +222,21 @@ Apenas após aprovação explícita, modo `--apply` executa Edits.
 - **prompt-engineer --validate** ao editar este SKILL.md (IL-1)
 - **skill-builder --validate** valida estrutura (IL-4)
 
-## Example: AWControl audit
+## Reference applications (Patrick canonical)
 
-**Phase 1:**
-- Users: "Admin (awnet) + end-user opcional"
-- Workflow: "Upload + processamento + revisão de documentos"
-- Admin: "Configurações = admin only"
+3 repos cobrem o spectrum de adoção do default DS. Use como vocabulário compartilhado quando audit precisar contextualizar drift no target.
 
-**Phase 3 finding:** "Configurações em adminItems da nav E em user panel"
+### chocotracking — positive reference
+**Path:** `~/Documents/Github/chocotracking`
+**O que demonstra:** o DS aplicado literalmente como spec. Sidebar teal `#00585c`, Lora display + Poppins body, Login 50/50, Configurações no user panel, AppTable simétrico (`px-4` head/cell, `text-left` default). Brand-fitted Barry Callebaut sem perder estrutura. É a fonte canônica do warm-editorial flavor que virou o preset `default`.
+**Usar como:** gold standard. Quando audit detectar drift no target em radius/spacing/sidebar, comparar com choco pra ver o spec literal.
 
-**Phase 4 coherence:**
-- 4.2 navigation duplication: Configurações está em 2 lugares
-- 4.4 adaptação: Phase 1 disse "admin only". User panel resolve acesso rápido. Manter em adminItems duplica caminhos sem hierarquia clara → STRUCTURAL duplication, não semantic
-- Decisão: ADAPT — manter no user panel, remover de adminItems
+### charming-solutions — adaptation with brand layer
+**Path:** `~/Documents/Github/charming-solutions`
+**O que demonstra:** estrutura do DS preservada + brand layer Artemis substituindo a paleta default. Navy `222 100% 30%` primary, vibrant blue `217 100% 50%` accent, IBM Plex Sans + Inter no lugar de Lora + Poppins, Untitled-UI gray scale (10 stops). Phase 4.5 Contrast Audit pegou `muted-foreground` falhando AA (gray-400 `220 9% 46%` = 4.39:1) e `status-warning-fg` (38 92% 35% = 3.6:1) — fix: gray-500 `218 19% 35%` (6.77:1) e warning-fg `38 92% 28%` (5.46:1).
+**Usar como:** adaptation reference quando target tem identity própria. Mostra o que trocar (cor primary/accent, fontes, gray scale) e o que NÃO mexer (spacing scale, radius scale, hierarquia, regras estruturais). Também é o caso real onde Phase 4.5 detectou contrast fail e gerou delta `apply` automático.
 
-**Phase 5 delta:**
-- What: Configurações em 2 lugares na sidebar
-- Why HERE: Admin (Phase 1) precisa acesso rápido — user panel resolve. Duplicar em adminItems vira ruído
-- Adaptation: Remover de adminItems, manter no user panel
-- Severity: média
-- Action: adapt
-
-**Sem Phase 4:** spec aplicada literal "Config no user panel ✓", duplicação passa, app fica confuso. Foi exatamente isso que aconteceu antes desta skill existir.
+### dwg-insight-ext — negative reference / audit target archetype
+**Path:** `~/Documents/Github/dwg-insight-ext`
+**O que demonstra:** pure shadcn defaults. Card soup, `<table>` HTML em UI, foreground `0 0% 0%` (sem hue), system font, sidebar default, `tablecell` com padding assimétrico (`px-0 pr-4 text-center`). Auditado e documentado em `audits/02-dwg-current.md` do anti-ai-design-system.
+**Usar como:** archetype do estado "antes". Quando user pede "tira a cara de IA do app", esse é o baseline visual que ele quer sair. Audit típico: 8-12 deltas, severity alta-média, foco em foreground hue + Card removal + table → grid migration.
