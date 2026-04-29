@@ -1,6 +1,6 @@
 ---
 name: design-system-audit
-description: "Audita um app contra um design system existente com fase explícita de coerência (não apenas checklist de regras). Use quando: 'aplica o design system X em Y', 'esse app segue o design system?', 'audita conformidade com design system', 'compara app com tokens', 'tira a cara de IA usando o design system Z', 'onboard app no design system', 'verifica drift do design system', 'esse app está alinhado com nossa spec?', 'design system audit', 'design conformance check'. Diferente de ui-design-system (que GERA tokens) e component-architect (que audita health interno). Foco: app contra spec externa, com julgamento de coerência — não copia patterns cegamente, questiona se cada padrão serve o contexto do app antes de aplicar."
+description: "Audita app contra design system EXTERNO existente com fase de coerência. Default DS: anti-ai-design-system (Patrick canonical). Use quando: 'tira a cara de IA do app', 'deixa o app mais bonito', 'aplica design system', 'aplica o design system X em Y', 'esse app segue o design system?', 'audita conformidade com design system', 'compara app com tokens', 'onboard app no design system', 'verifica drift do design system', 'design system audit', 'design conformance check'. Diferente de ui-design-system (que GERA do zero) e component-architect (audita health interno). Foco: app contra spec EXTERNA, julgamento de coerência. Se user fala 'design system' sem citar repo: assume default anti-ai-design-system."
 ---
 
 # Design System Audit
@@ -14,6 +14,7 @@ IRON LAW: NEVER apply a pattern without first asking if it fits the target app's
 | `--audit` | Inventory + diff + coherence check, output delta report | default |
 | `--apply` | Audit + aplica deltas aprovados (gated por delta) | - |
 | `--bootstrap` | Scaffold app from scratch following design system | - |
+| `--ds-path <path>` | Override default DS reference path | default: ~/Documents/Github/anti-ai-design-system |
 
 ## Workflow
 
@@ -43,6 +44,31 @@ Design System Audit Progress:
   - [ ] 5.1 Cada delta com WHAT + WHY HERE + ADAPTATION + severity + action
 - [ ] Phase 6: GATE ⛔
   - [ ] User decides por delta: apply / adapt / skip
+```
+
+## Default DS Reference (Wave 7)
+
+**Default path:** `~/Documents/Github/anti-ai-design-system`
+
+Estrutura esperada:
+- `docs/03-token-system.md` — regras WCAG AA + tokens
+- `docs/07-component-patterns.md` — Login 50/50, AppTable, Configurações user panel
+- `presets/warm-editorial/` — cream + teal + Lora/Poppins
+- `presets/minimalist-tech/` — mono + signal (Forge.sh flavor)
+- `presets/_shared/` — AppTable, StatusBadge, table.tsx
+
+**Ativação automática:**
+- Se user pede "design system audit" SEM citar path explícito → assume default acima
+- Se path existe → Phase 2 Inventory roda `ls` e `cat` automático nos arquivos chave
+- Se path NÃO existe → Phase 1 pergunta: "DS canônico em outro repo? Path?"
+- User pode override com `--ds-path <custom-path>` (ex: para auditar contra DS de cliente)
+
+**Phase 2 auto-loads (quando default ativo):**
+```bash
+ls ~/Documents/Github/anti-ai-design-system/presets/
+cat ~/Documents/Github/anti-ai-design-system/docs/03-token-system.md
+cat ~/Documents/Github/anti-ai-design-system/docs/07-component-patterns.md
+ls ~/Documents/Github/anti-ai-design-system/presets/_shared/
 ```
 
 ## Phase 1: Context Collection
