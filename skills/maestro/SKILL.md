@@ -95,7 +95,11 @@ Map to categories:
 | "validate architecture/thin client" | Guard | architecture-guard, trident |
 | "find duplicates/reusables/verifica antes de criar" | Guard | trident --dedup |
 | "context window/clear/handoff" | Guard | context-guardian |
-| "design system/tokens/UI" | Design | ui-design-system, component-architect |
+| "design system — gerar tokens/breakpoints/primitives/spacing/motion" | Design | ui-design-system --generate |
+| "design system — auditar maturidade visual / o projeto tem DS coerente?" | Design | ui-design-system --audit |
+| "design system — conformidade com DS externo / tira cara de IA / drift de tokens" | Design | design-system-audit (default: anti-ai-design-system) |
+| "design system — anatomia/slots/variants/contrato a11y de componente" | Design | component-architect --plan |
+| "cross-browser bug / funciona no Chrome quebra em Firefox/Safari/Edge / build target / Browserslist / Playwright multi-engine" | Technical | react-patterns --audit-cross-browser |
 | "find references/books/frameworks" | Knowledge | reference-finder, context-tree |
 | "create/improve skill" | Meta | skill-builder, prompt-engineer |
 | "validate skill choice/which skill/help me pick" | Meta | maestro (--suggest) |

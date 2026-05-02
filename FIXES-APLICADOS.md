@@ -193,3 +193,51 @@ Marker: `validated:2026-04-29`
 - Built-ins audit (pdf/docx/pptx/xlsx) — test-driven decision quando uso real aparecer
 - Cleanup library cópias legadas (skills/X/references/ duplicadas) — após 7d cooldown
 - Sanity test final em fresh session — agendar
+---
+
+## Wave Design Skills (2026-05-01) — DR-01..05 + chats 0..4 reconciliação
+
+**Contexto:** Patrick rodou pesquisa pesada (5 Deep Research + 4 chats Claude Design). PLAN.md + chat-4 reconciliação consolidaram em 6 waves de mudança.
+
+**Decisões humanas confirmadas:**
+- U1 OKLCH+WCAG+HCT benchmark
+- U2 breakpoints rem 20/30/48/64/80/120
+- U3 status colors manuais
+- U4 dark mode opcional
+- U5 9 primitives mantidos
+- R1-R3 browser matrix: `last 2 years, > 0.5%, not dead` + Safari iOS público + Edge enterprise
+- R4 Phase 5 cross-browser opt-in
+- R5 frontend-qa NÃO criada
+- A1 (DR-05 motion-design) adiado
+
+**Skills aplicadas:**
+
+| Skill | Wave | Score | Novo marker |
+|---|---|---|---|
+| ux-audit | 1 (v3→v4) | 92 | `validated:2026-05-01` (1ª lock-in) |
+| ui-design-system | 2 (v1→v2) | 94 | `validated:2026-05-01` (re-lock) |
+| skill-routing.md | 3 (patch) | 88 | `validated:2026-05-01` (re-lock) |
+| react-patterns | 4 (cross-browser) | 89 | `validated:2026-05-01` (re-lock) |
+| component-architect | 5 (light boundary + states-inventory) | 85 | `validated:2026-05-01` (re-lock) |
+| maestro | 6 (routing patch + chains) | 88 | `validated:2026-05-01` (re-lock) |
+
+**Mudanças por skill:**
+
+- **ux-audit v4:** 3 Iron Laws (percorre fluxo + critério aceite + triagem). 7 fases. 5 references novos: ux-foundations, wcag-ux-checklist, ux-severity-rubric, audit-output-template, triage-matrix. Removidos: ux-ui-foundations, wcag-checklist, scoring-rubrics, audit-templates, dark-patterns-check.
+- **ui-design-system v2:** 3 Iron Laws (concrete inputs + tokens by role + foreground real pair). 6 fases pipeline. 5 references novos: color-token-algorithms, responsive-design-system, component-state-rubric, motion-and-interaction, design-system-maturity-rubric. design-json-schema preservado (extensão fica pra fork v2). mini-identity-guide + remotion-design-tokens preservados.
+- **skill-routing.md:** linhas novas (cross-browser → react-patterns; ui-design-system --generate / --audit; design-system-audit default anti-ai-design-system; component-architect --plan; UX vs UI vs visual review). Regra anti-routing shadcn. "review" estendido pra 4 categorias (código/prompt/UX/visual).
+- **react-patterns:** Iron Laws preservados (Thin Client Fat Server primeira) + 2 novos (multi-engine evidence + triagem). Phase 0 triagem nova. Phase 5 cross-browser opt-in. Phase 6 síntese. 3 references novos: cross-browser-checklist, build-targets-and-polyfills, playwright-browser-matrix. pattern-guide + remotion-react-patterns preservados.
+- **component-architect:** 1 linha boundary com ui-design-system em Integration. states-inventory.md canônico criado (17 estados + anatomia/comportamento/a11y, ui-DS owns tokens visuais, ux-audit referencia).
+- **maestro:** routing table Phase 1 expandida (1 linha → 5 linhas específicas + cross-browser). composition-chains.md ganhou 2 chains: "App com cara de IA + problemas técnicos" e "Novo produto — definir DS + componentes + scaffold".
+
+**Boundaries respeitadas:**
+- design-system-audit NÃO modificada (boundary protegida)
+- WCAG limiares redigidos SÓ em ux-audit/wcag-ux-checklist
+- Severidade Nielsen redigida SÓ em ux-audit/ux-severity-rubric
+- shadcn não virou DS default
+- frontend-qa NÃO criada
+- DR-05 motion-design NÃO absorvida (adiada pra Step 0 skill-builder futuro)
+
+**Lock-in IL-10 atualizado:**
+- 6 skills com `validated:2026-05-01` (cooldown 1 semana, promoção pra `validated:2026-05-08` após uso real sem regressão)
+- ux-audit entra em lock-in pela primeira vez (não estava em validated:2026-04-18)

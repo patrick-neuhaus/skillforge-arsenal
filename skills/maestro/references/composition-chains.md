@@ -252,3 +252,33 @@ skill-builder --evolve → prompt-engineer --validate → geo-optimizer
 ```
 geo-optimizer --optimize → prompt-engineer --validate + skill-builder --validate → (publicação manual no skills.sh)
 ```
+
+## Design / Frontend Chains (Wave-design 2026-05-01)
+
+### App com cara de IA + problemas técnicos
+
+```
+1. design-system-audit --audit        → delta report de conformidade
+   handoff: delta report
+2. component-architect --audit        → health de componentes
+   handoff: lista de componentes com anatomia incompleta
+3. ux-audit (Focado)                  → findings de UX dos fluxos críticos
+   handoff: findings com critério de aceite
+4. react-patterns --audit-cross-browser → diagnóstico de cross-browser
+   handoff: rubrica de bugs
+```
+
+Budget estimado: ~70–80% context window. Usar `context-guardian --handoff` entre steps 2 e 3.
+
+### Novo produto — definir DS + componentes + scaffold React
+
+```
+1. ui-design-system --generate        → design.json + tokens
+   handoff: design.json
+2. component-architect --plan         → árvore de componentes consumindo tokens
+   handoff: component tree + interfaces
+3. react-patterns --scaffold          → scaffold React seguindo a árvore
+   handoff: código scaffolded
+```
+
+Budget estimado: ~45–55% context window. Sem necessidade de handoff intermediário.

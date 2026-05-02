@@ -144,7 +144,7 @@ Before creating components:
 
 ## Integration
 
-- **UI Design System** — apply design tokens to component specs
+- **UI Design System** — apply design tokens to component specs. **Boundary:** `ui-design-system` owns visual state tokens (colors/contrast/motion via `component-state-rubric.md`); this skill owns anatomy + a11y behavior (canonical state inventory in `states-inventory.md`)
 - **React Patterns** — follow server/client component boundaries
 - **Code Dedup Scanner** — run BEFORE creating components to find existing reusables. This skill plans what to CREATE; dedup-scanner finds what already EXISTS
 - **Trident** — `--design` mode validates component output (visual, a11y, performance)
