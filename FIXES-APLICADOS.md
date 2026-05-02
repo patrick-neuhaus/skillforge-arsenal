@@ -241,3 +241,31 @@ Marker: `validated:2026-04-29`
 **Lock-in IL-10 atualizado:**
 - 6 skills com `validated:2026-05-01` (cooldown 1 semana, promoção pra `validated:2026-05-08` após uso real sem regressão)
 - ux-audit entra em lock-in pela primeira vez (não estava em validated:2026-04-18)
+
+## Wave 7 — motion-design skill nova (2026-05-02)
+
+**Decisão Patrick:** desimpedir DR-05. Skill nova com 4 references = 4 pilares da taxonomia DR-05.
+
+**Skill:** `skills/motion-design/`
+- SKILL.md (score 90, marker IL-1 fresh)
+- references/01-funcional-estrutural.md (Pilar 1: microinteractions, page transitions)
+- references/02-vetorial-branding.md (Pilar 2: logos, kinetic type, character, SVG/Lottie/Rive)
+- references/03-narrativo-editorial.md (Pilar 3: scrollytelling, hero, parallax, ambient)
+- references/04-espacial-imersivo.md (Pilar 4: WebGL/3D/AR/VR/faux 3D)
+
+**Iron Laws:**
+1. Motion paga aluguel ou sai (função observável obrigatória)
+2. Calibragem por contexto (operacional ≠ landing ≠ brand-heavy)
+3. Reduced-motion + a11y são gates
+
+**3 modos:** `--catalog` (default), `--spec`, `--audit`
+
+**Trigger adicionado em skill-routing.md:** "qual animação usar", "lottie ou rive", "scrollytelling", "configurador 3D", "AR try-on", "kinetic typography", "logo animado", "page transition", "spec de motion", motion design.
+
+**Boundaries:**
+- Tokens duração/easing → ui-design-system (consome, não redefine)
+- Auditoria observável de motion → ux-audit
+- Implementação React/cross-browser → react-patterns
+- Anatomia de componente animado → component-architect
+
+**Lock-in:** motion-design entra com `validated:2026-05-02` (1ª lock-in, cooldown 1 semana).
