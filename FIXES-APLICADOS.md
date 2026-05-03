@@ -288,3 +288,76 @@ Marker: `validated:2026-04-29`
 - `audit-instruction-edits.ps1` passou com marker fresco.
 
 **Lock-in:** `motion-design`, `ui-design-system`, `component-architect` e `maestro` seguem com `validated:2026-05-02`. Nao mexer por gosto; so por bug real de routing, contradicao detectada em uso ou necessidade repetida 3+ vezes.
+
+## Wave Copy v3 (2026-05-03)
+
+**Contexto:** Patrick rodou 3 Deep Research (DR-pais-fundadores, DR-canais-2025-2026, DR-copywriting-brasileiro) cobrindo gaps grandes: pais fundadores (Schwartz deep, Bencivenga, Collier, Bird, Caples, Forde, Masterson), canais 2026 (VSL, SaaS PLG, email moderno, social hooks, ads 2026, SEO pos-AI, launch, AI-era), e Brasil (Escola BR + peculiaridades culturais + canais BR-specific).
+
+**IL-10 lock-in override:** Patrick autorizou explicitamente em sessao 2026-05-03 (3 DRs anexados, intent claro de upgrade).
+
+**Plano:** `~/.claude/plans/copy-upgrade-2026-05-03.md` (v3 final). Mudancas vs Plan v1 → v2 → v3:
+- v1: 7 refs novos (anti-padrao create > update)
+- v2: 0 refs novos, 14 updates densificados (pos-critique Patrick)
+- v3: 14 updates + 1 ref novo standalone (copy-review-site.md), SDD removido (overkill texto), geo-optimizer aplicado mental, code-dedup-scanner antes criar review-site (dedup mental: competitor-alternatives = propria marca; ai-seo = otimizacao tecnica; sem overlap forte)
+
+**Skills tocadas (13 changes total):**
+
+Refs atualizados (11):
+- `foundations.md` (~161 → ~404 linhas) — Schwartz deep + Bencivenga/Collier/Bird/Caples/Forde/Masterson/Lampropoulos + Tier 3 Escola BR (Olivetto/Nizan/Conrado/Erico/Sobral/Icaro) + Compliance (FTC/LGPD/Anvisa/CVM)
+- `copy-psychology.md` — Cialdini Pre-Suasion (privileged moments, Unity 7°), Kahneman S1/S2, Ariely top 5 vieses APLICADOS A COPY, Heath SUCCESs deep
+- `copy-process.md` — VoC Research profissional (5★/1★ matrix, Wynter, ResearchXL, JTBD, Painstorming) + Sweep #8 Anti-AI (default ON) + Testing & validation (MDE, Bayes, sequential, multivariate, VWO benchmarks)
+- `audience-classification.md` — Schwartz sophistication levels separados de awareness + Tom BR vs US deep
+- `copy-landing.md` — VSL completo (Jon Benson 8 parts, TAILOR, WSJ letter, Halbert coat, TikTok-VSL hooks, Brunson Perfect Webinar) + SaaS Pricing (Dunford positioning)
+- `copy-email.md` — Beehiiv/Substack/Kit, Ben Settle daily soap opera, Chaperon ARM, Justin Goff, Apple MPP, Gmail/Yahoo 2024 deliverability, plain-text vs HTML pendulo, SaaS sequences (activation/onboarding/trial-to-paid/churn/expansion), Launch sequences (PLF/Perfect Webinar/5-day challenge/high-ticket coaching/affiliate)
+- `copy-social.md` — TikTok hook taxonomy 2025-26 (5 categorias OpusClip), LinkedIn document/carousel vs texto, X long-form vs thread, Threads (Meta), YouTube Shorts vs longform, Reddit anti-corporate, newsletter cross-promo
+- `copy-anuncios.md` — Meta Advantage+ AI, Google PMax/RSA, TikTok Ads, LinkedIn Thought Leader, Reddit Ads, YouTube TrueView (5s science), Click-to-WhatsApp Ads (BR domina globalmente)
+- `copy-blog-seo.md` — E-E-A-T pos-AI flood (Experience signals diferenciados), AI Overview/Perplexity/ChatGPT Search citation, Schema markup pra LLM (Article/FAQ/HowTo/Review), GEO (Generative Engine Optimization), Topical Authority Pillar/Hub/Cluster atualizado
+- `copy-produto.md` — Voice/tone matrices (Mailchimp/Atlassian/Shopify), 4 dimensoes NN/g, AI features UX (transparencia/controle/calibragem), error handling fluxos criticos (pagamento/auth/destrutivo), a11y, push notifications, SMS
+- `copy-whatsapp.md` — WhatsApp Business API broadcast vs conversa, PIX como urgencia (71% compras WA BR via Pix), LGPD opt-in claro (ANPD multa 2% faturamento), Click-to-WhatsApp Ads BR domina, Telegram nicho, Kwai vs TikTok no NE/Norte
+
+Ref novo (1):
+- `copy-review-site.md` (NOVO, ~180 linhas) — Mode 9 review-site standalone. 4 sub-tipos (single/comparison 3rd-party/best-of round-up/buying guide). FTC disclosure (obrigatorio), Schema.org Review markup, tom critique honesto, scoring/rating systems (5 stars/10 points/multi-dim), aspectos eticos, cases benchmark (Wirecutter/NerdWallet/Authority Hacker)
+
+SKILL.md (1):
+- v2 → v3
+- 9 modes (8 mantidos + review-site novo)
+- 4 flags novas: --audit (analisa copy externo), --variants N (gera A/B), --locale br/us, --skip-anti-ai
+- Phase 0 Mode Detection com 60+ trigger words
+- Phase 0.5 (NOVA): Sub-type Detection cross-canal (VSL/launch/saas-plg/webinar)
+- Phase 0.6 (NOVA): --audit bypass
+- Phase 0.7 (NOVA): Locale detection
+- Phase 2-A (NOVA): Audit Mode workflow
+- Sweep #8 Anti-AI integrado default ON
+- GATE 0.0 com 10 boundaries explicitas (comunicacao-clientes, competitor-alternatives, sales-enablement, product-marketing-context, launch-strategy, ai-seo, ux-audit, seo, prompt-engineer, product-discovery-prd)
+- Reference Mapping com 9 modes mapeados
+- Anti-Patterns expandido (16 items)
+- 10 Design Principles
+
+Refs MANTIDOS (sem mudanca, nao tinham gap nos DRs):
+- `framework-selection.md` (50 linhas)
+- `headlines.md` (185 linhas)
+- `power-words.md` (121 linhas)
+
+**Skills auxiliares usadas (merito-driven):**
+- maestro V2 (Phase 0.1 context-tree query, mode --full chain)
+- prompt-engineer --validate type system-prompt (12 invocacoes — todos edits, IL-1)
+- code-dedup-scanner (mental, antes criar copy-review-site.md — confirmou sem overlap)
+- geo-optimizer (mental, aplicado na description YAML expanded)
+- skill-builder --validate (estrutural — IL-4, mudanca de modes/flags)
+
+**Skills auxiliares descartadas (merito-driven, nao echo):**
+- SDD (overkill texto/markdown — Patrick certo)
+- reference-finder (3 DRs cobrem state-of-art)
+- context-tree --query (Phase 0.1 zero matches)
+- critic (Patrick fez confronto vocal)
+- autopilot/ralph/team/ultrawork (overkill)
+- deep-interview (decisoes ja tomadas)
+- verifier-skill / oh-my-claudecode:verify (duplica trident)
+- executor agent (hash mismatch risk)
+- pattern-importer (marginal)
+
+**Validacoes:**
+- 13 markers V2 hook (todos hash match — score >=87)
+- Score medio: 87.7 (foundations 87 / psy 87 / process 88 / audience 87 / landing 88 / email 88 / social 87 / anuncios 87 / blog-seo 88 / produto 87 / whatsapp 88 / review-site 88 / SKILL.md 90)
+
+**Lock-in:** `copy v3` com `validated:2026-05-03` (re-lock — 3 DRs incorporados, mode 9 review-site, 4 flags novas, Sweep #8 default ON). Nao mexer por gosto; so por bug real de routing, contradicao detectada em uso ou necessidade repetida 3+ vezes.
