@@ -260,6 +260,73 @@ Valor = (Resultado Desejado x Probabilidade Percebida) / (Atraso de Tempo x Esfo
 - **iFood**: humor cotidiano + memes pop, conteudo curto em stories
 - **Hotmart Fire / Eduzz**: depoimentos genuinos + serie emails + CTA WhatsApp
 
+### Mercado BR Atual 2025-2026
+
+**Investimento midia digital BR:** R$ 42.7 bi em 2025 (+12.7% vs 2024). Recuperacao apos restricoes iOS14 + cookie deprecation.
+
+**Custo midia BR vs US (CPC):**
+- Google Search BR: R$2.50-R$8.00 | US: 2-3x mais caro
+- Meta (FB/IG) BR: R$0.80-R$2.50 | US: 2-3x mais caro
+- CPM social BR: R$10-R$20 | desenvolvido: ~R$50-100
+
+Implicacao: BR atrativo pra teste de criativo (orcamento estica), saturado em nichos especificos.
+
+**Ecosystem creators BR:** ~20 milhoes de criadores brasileiros (estudo Meta/YouPix). Brasileiros passam mais tempo em redes que media global. Hotmart/Elfa oferecem programas afiliados + treinamentos. Aceleradoras de creators emergem (Widi Care, etc).
+
+**Newsletter BR (emergente):**
+- The News (geral)
+- DeuRuim (financas)
+- Pipeline (startups)
+- Monic (curadoria)
+- UOL/Exame/Estadao relancaram secoes por email em 2025
+- Tom: bullet points + resumos no estilo ingles, mas com tom mais pessoal/divertido
+
+**Taticas em declinio:**
+- Lives de vendas (auge 2018-22, perderam folego — audiencia migrou pra Reels/WhatsApp)
+- Stories diarios genericos sem segmentacao
+- Webinars gratuitos pra B2C massa (ainda funciona em B2B/financas/cursos)
+- Apostar tudo em Facebook Ads (nao basta — fragmentacao multicanal e regra)
+
+**Taticas que funcionam:**
+- Multicanal coordenado (TikTok + Kwai + Telegram + WhatsApp + Email)
+- Click-to-WhatsApp ads (BR domina globalmente)
+- Lancamentos PLF adaptados BR (Erico Rocha)
+- Reels/Shorts com hooks 3s
+
+### Literatura BR (recursos pra estudar)
+
+**Livros em PT-BR (referencias autorais BR):**
+- "Bíblia do Marketing Digital" — Claudio Torres
+- "Vendas 360°" — funil de vendas
+- "Copywriting do Zero" — Thiago Tessmann
+- "Fórmula da VSL" — Henrique Carvalho
+- "8Ps" — Conrado Adolpho (metodo proprio)
+- "O Novo Mercado" — Icaro de Carvalho (livros + portal)
+- Sebrae publica PDFs de Guia de Comunicacao de Marketing
+
+**Cursos BR pagos (alta circulacao, conteudo varia):**
+- Formula de Lancamento — Erico Rocha
+- 8Ps — Conrado Adolpho
+- Copy 360 — Thiago Tessmann
+- Haja Conteudo — Bruno Picinini
+- Copywriter 5.0 — Henrique Carvalho
+- Copywriting 3.0 — Arthur Debert
+- "Codigo da VSL" — Pedro Sobral
+- ⚠️ Muitos sao infoprodutos com vies de promessa rapida — estude com cuidado
+
+**Newsletters/Blogs BR ativos (2026):**
+- Pedro Sobral (trafego pago + copy)
+- Conrado Adolpho (estrategias digitais)
+- "Terror do CCO" — Manoela Sobral
+- Portal "O Novo Mercado" — Icaro
+- "Radio Conecta" — Matheus Vieira
+- Lucas Rydmann (LinkedIn copy emocional)
+
+**Profissionais ativos pra estudar (LinkedIn/Twitter):**
+- Pedro Sobral, Conrado Adolpho, Erico Rocha, Icaro de Carvalho, Paulo Cuenca
+- Walter Stutchi, Gabriel Souza, Vinicius Possebon
+- Empresas: Magalu, Nubank, iFood, RD Station — copy social BR de marca
+
 ---
 
 ## Eugene Schwartz — 5 Niveis de Consciencia
