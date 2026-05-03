@@ -88,6 +88,26 @@ Falha em qualquer uma das 4 = finding. A skill responsável pelo finding muda co
 - Token visual errado / inconsistente → `ui-design-system`
 - Estado existe mas não funciona em fluxo → `ux-audit`
 
+## 4.5 Contrato de microinteracao por estado
+
+Para cada componente interativo, declare o comportamento minimo dos estados, sem definir token visual aqui:
+
+| Estado / caso | Contrato comportamental | Dono do detalhe visual |
+|---|---|---|
+| press / active | feedback imediato; se for botao, estado nao espera animacao para confirmar clique | `ui-design-system` tokens; `motion-design` se precisar spec |
+| focus-visible | separado de hover; teclado recebe feedback instantaneo ou quase instantaneo | `ui-design-system` contraste/focus token |
+| loading | preserva dimensao do componente; nao causa layout shift; texto ou live region quando bloqueia acao | `ui-design-system` motion token |
+| disabled | explica motivo quando a causa nao e obvia; nao vira read-only | `ui-design-system` cor/contraste |
+| tooltip / popover | ancora no trigger; dismiss por Esc/click outside; foco preservado | `motion-design` se origem/motion for problema |
+| expanded | `aria-expanded` muda junto com DOM; conteudo aparece proximo do trigger | `motion-design` se precisar spec de reveal |
+
+Boundary:
+
+- Anatomia, eventos, foco, ARIA e layout sem shift ficam aqui.
+- Cor, contraste, duration, easing e press token ficam em `ui-design-system`.
+- Motion criativo, origem espacial, timing refinado e auditoria `Antes | Depois | Por que` ficam em `motion-design`.
+- Bug React, focus refs e browser runtime ficam em `react-patterns`.
+
 ## 5. Anti-patterns
 
 - **Disabled sem motivo visível** — usuário não sabe por quê. Pelo menos tooltip/texto adjacente.
@@ -112,6 +132,7 @@ Componente novo / refatorado declara explicitamente os estados cobertos:
 | default | ✅ | --color-surface-1 | role="button" | render limpo |
 | hover | ✅ | --color-surface-1-hover | — | mouse over altera fundo |
 | focus-visible | ✅ | --color-focus-ring | outline visível | tab com 3:1 contraste |
+| active/pressed | sim | --motion-press | aria-pressed quando toggle | clique tem feedback imediato |
 | disabled | ✅ | --color-surface-disabled | aria-disabled | não recebe submit |
 | loading | ✅ | --motion-spinner | aria-busy + live region | spinner < 100ms; texto "Salvando…" |
 | ... | | | | |

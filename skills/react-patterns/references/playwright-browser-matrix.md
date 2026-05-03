@@ -1,4 +1,4 @@
-# Playwright browser matrix (proposed reference)
+# Playwright browser matrix
 
 > Carregado por `react-patterns` na **Phase 5.6**. Define matriz mínima de teste multi-engine. Fonte: DR-04. Boundary: não substitui `ux-audit` em a11y manual nem `ui-design-system` em visual regression — aqui é teste funcional cross-engine.
 

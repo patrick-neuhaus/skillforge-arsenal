@@ -1,6 +1,6 @@
 ---
 name: motion-design
-description: "Cataloga, especifica e audita motion (animacoes) na web seguindo 4 pilares: funcional/estrutural (microinteractions, page transitions, feedback), vetorial/branding (logos animados, kinetic typography, character, doodle, line/morph SVG), narrativo/editorial (scrollytelling, hero entry, parallax, ambient backgrounds, sticky narrative), espacial/imersivo (WebGL/3D, AR/VR via WebXR, faux 3D, isometric, liquid/glassmorphic). Decide entre tecnicas: CSS transitions, WAAPI, Motion (Framer Motion), GSAP, Rive, dotLottie, SVG, Canvas, WebGL/Three.js, View Transitions API, Scroll-driven Animations. Calibra severidade por contexto: SaaS operacional pede motion funcional contido; landing/showcase/brand-heavy pode expressivo; documentacao tecnica e minimo. Use SEMPRE em: qual animacao usar pra X, que motion cabe nesse hero, avaliar se a animacao paga aluguel, escolher entre Lottie ou Rive, spec de motion pra implementar, animacao ta atrapalhando, queremos algo mais animado, parallax/scrollytelling/3D no site, logo animado, kinetic type, page transition entre rotas, configurador 3D de produto, AR try-on, motion design, animation design, motion specification, motion audit. NAO use para: tokens de duracao/easing como sistema (ui-design-system e dono), auditoria observavel de motion atrapalhando tarefa (ux-audit), implementacao tecnica React/cross-browser/polyfill (react-patterns), anatomia de componente animado (component-architect). Foco: catalogo + decisao criativa + escolha tecnica + spec executavel."
+description: "Cataloga, especifica e audita motion/animation design para web e UI polish. Decide qual animacao usar, se ela paga aluguel, e gera spec executavel com funcao observavel, frequencia de uso, trigger, duracao, easing, tecnica, fallback reduced-motion, browser risk e criterio de aceite. Cobre microinteractions, button press, UI feel, dropdown lento, popover estranho, page transitions, animated logo, kinetic typography, SVG, Lottie/dotLottie, Rive, parallax, scrollytelling, WebGL/Three.js, Canvas, View Transitions, Scroll-driven Animations, GSAP, WAAPI. Use em: motion design, animation audit, motion spec, botao parece morto, site mais animado. NAO use para tokens/easing de sistema (ui-design-system), UX observavel/WCAG (ux-audit), implementacao React/cross-browser/polyfill (react-patterns), anatomia de componente (component-architect)."
 ---
 
 # Motion Design
@@ -32,6 +32,11 @@ description: "Cataloga, especifica e audita motion (animacoes) na web seguindo 4
   - 2.3 Pilar 3 (narrativo/editorial) cabe? landing/editorial sim, SaaS op nao
   - 2.4 Pilar 4 (espacial/imersivo) cabe? so se produto e visual/spatial por natureza
   - 2.5 Decisao: lista de pilares legitimos + pilares descartados com motivo
+- Phase 2.5: Craft gate REQUIRED
+  - 2.5.1 Classificar frequencia de uso: 100+/dia, dezenas/dia, ocasional, raro/brand
+  - 2.5.2 Declarar origem da acao: teclado, ponteiro, scroll, viewport, route-change ou sistema
+  - 2.5.3 Decidir se motion deve ser instantaneo, reduzido, funcional padrao ou delight
+  - 2.5.4 Para --audit, usar tabela `Antes | Depois | Por que`
 - Phase 3: Catalogo aplicavel - Load reference do(s) pilar(es) selecionado(s)
   - 3.1 Pilar 1 - references/01-funcional-estrutural.md
   - 3.2 Pilar 2 - references/02-vetorial-branding.md
@@ -42,7 +47,7 @@ description: "Cataloga, especifica e audita motion (animacoes) na web seguindo 4
   - 4.2 Validar suporte browser contra alvo declarado (encaminhar a react-patterns se baseline incerto)
   - 4.3 Estimar custo de bundle + perf
 - Phase 5: Spec BLOCKING (Iron Law 1 + 3)
-  - 5.1 Cada animacao fecha spec: padrao + pilar + trigger + duracao + easing + tecnica + fallback reduced-motion + browser + criterio de aceite
+  - 5.1 Cada animacao fecha spec: padrao + pilar + frequencia + origem da acao + trigger + duracao + easing + tecnica + fallback reduced-motion + browser + criterio de aceite
   - 5.2 Justificativa de funcao observavel (Iron Law 1)
   - 5.3 Reduced-motion fallback declarado (Iron Law 3)
   - GATE: Animacao sem funcao observavel = cortar. Sem fallback = nao esta pronto.
@@ -87,6 +92,22 @@ Sem essa declaracao, a Phase 3 sai generica.
 
 Carrega reference do(s) pilar(es) selecionado(s). Nao carrega tudo. Cada reference tem: quando entra, padroes com duracao/easing/tecnica, bom uso vs mau uso, decisao tecnica, reduced-motion, spec template, boundary com outras skills.
 
+## Phase 2.5: Craft gate
+
+Antes de catalogar efeito, decida se a animacao merece existir naquela frequencia de uso:
+| Frequencia / origem | Decisao padrao | Motivo |
+|---|---|---|
+| 100+ vezes/dia | Sem animacao ou instantaneo | Operacao repetitiva amplifica friccao |
+| Acao por teclado | Instantaneo ou quase instantaneo | Teclado exige resposta direta; motion nao pode atrasar percepcao |
+| Dezenas/dia | Motion minimo, <=150ms | Feedback sim, teatro nao |
+| Ocasional | Motion funcional padrao | Pode explicar estado/continuidade |
+| Raro, first-time, brand | Delight permitido | Valor de memorabilidade pode pagar o custo |
+Pergunte: "Se isso rodar 100 vezes no dia, ainda ajuda?" Se a resposta for nao, reduza ou corte.
+Para `--audit`, use:
+| Antes | Depois | Por que |
+|---|---|---|
+| <motion atual> | <ajuste ou corte> | <funcao observavel, frequencia, risco> |
+
 ## Phase 4: Decisao tecnica
 
 Arvore de decisao simplificada (detalhe nos references):
@@ -117,6 +138,8 @@ Padrao: <nome>
 Pilar: <1/2/3/4>
 Contexto justificado: <onde aparece + por que cabe>
 Funcao observavel (Iron Law 1): <causalidade / foco / state change / continuidade espacial / reducao de espera>
+Frequencia de uso: <100+/dia / dezenas/dia / ocasional / raro/brand>
+Origem da acao: <teclado / ponteiro / scroll / viewport / route-change / sistema>
 Trigger: <click/hover/focus/route-change/viewport-enter/scroll-progress/time>
 Duracao: <ms ou loop>
 Easing: <curve>
@@ -143,9 +166,7 @@ Formate output no modo escolhido:
 
 - --catalog: lista de pilares aplicaveis + padroes recomendados, sem implementacao ainda
 - --spec: 1 ou mais specs canonicos, prontos pra react-patterns --scaffold ou component-architect --plan
-- --audit: findings por animacao existente - paga aluguel / atrapalha / encaminhar
-
-Gate: nao implementa. Encaminha.
+- --audit: tabela `Antes | Depois | Por que` por animacao existente - paga aluguel / atrapalha / encaminhar. Gate: nao implementa. Encaminha.
 
 ## Principios
 
@@ -157,6 +178,7 @@ Gate: nao implementa. Encaminha.
 6. A11y e gate. Texto kinetic > 5s sem pause = WCAG 2.2.2. 3+ flashes/s = 2.3.1. WebGL sem keyboard alt = excludente.
 7. Bundle importa. Importar GSAP pra fade simples = anti-pattern. Justifique cada lib pesada.
 8. Loop infinito = ruido. Se o usuario olha 2 segundos e nao muda nada, e decoracao competindo com tarefa.
+9. Teclado e soberano. Acao iniciada por teclado nao depende de animacao para parecer responsiva.
 
 ## Anti-patterns
 
@@ -172,12 +194,21 @@ Gate: nao implementa. Encaminha.
 - Kinetic type em corpo de texto - leitura comprometida.
 - Animar 100% das linhas em sort de tabela 500+ rows - paint cost > continuidade.
 - Implementar antes de spec - sem criterio de aceite, retrabalho garantido.
+- `transition: all` - anima propriedades acidentais e cria bugs invisiveis.
+- Entrada com `scale(0)` - parece spawn barato; use `scale(0.95)` + opacity quando scale for justificavel.
+- `ease-in` em feedback comum - comeca lento justamente quando o usuario espera resposta.
+- Popover/dropdown sem origem do trigger - quebra causalidade espacial.
+- Hover motion sem media query - vira comportamento fantasma em touch.
+- Keyframes em UI interrompivel - preferir transition/WAAPI cancelavel.
+- Animar layout quando transform/opacity resolvem - cria jank.
 
 ## Pre-delivery Checklist
 
 - [ ] Tipo de produto + contexto explicitados (Phase 1)
 - [ ] Pilares aplicaveis declarados (Phase 2 - nao usar todos por default)
 - [ ] Cada animacao tem funcao observavel justificada (Iron Law 1)
+- [ ] Frequencia de uso + origem da acao declaradas (Craft gate)
+- [ ] Audit usa `Antes | Depois | Por que` quando houver motion existente
 - [ ] Calibragem por contexto aplicada (Iron Law 2)
 - [ ] Reduced-motion fallback declarado em todo spec (Iron Law 3)
 - [ ] Decisao tecnica respeita bundle + suporte browser

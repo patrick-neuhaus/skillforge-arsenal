@@ -1,4 +1,4 @@
-# Cross-browser checklist (proposed reference)
+# Cross-browser checklist
 
 > Carregado por `react-patterns` na **Phase 5** do workflow. Checklist por categoria. Cada item tem: feature, leitura prática 2026, sintoma típico, fix preferencial. Fonte: DR-04. Não duplica WCAG (mora em `ux-audit`) nem regras visuais (moram em `ui-design-system`).
 

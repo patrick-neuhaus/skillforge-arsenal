@@ -95,11 +95,12 @@ Map to categories:
 | "validate architecture/thin client" | Guard | architecture-guard, trident |
 | "find duplicates/reusables/verifica antes de criar" | Guard | trident --dedup |
 | "context window/clear/handoff" | Guard | context-guardian |
-| "design system — gerar tokens/breakpoints/primitives/spacing/motion" | Design | ui-design-system --generate |
+| "design system — gerar tokens/breakpoints/primitives/spacing/motion/press/easing/duration" | Design | ui-design-system --generate |
 | "design system — auditar maturidade visual / o projeto tem DS coerente?" | Design | ui-design-system --audit |
 | "design system — conformidade com DS externo / tira cara de IA / drift de tokens" | Design | design-system-audit (default: anti-ai-design-system) |
-| "design system — anatomia/slots/variants/contrato a11y de componente" | Design | component-architect --plan |
+| "design system — anatomia/slots/variants/contrato a11y/loading/disabled/focus/pressed de componente" | Design | component-architect --plan |
 | "cross-browser bug / funciona no Chrome quebra em Firefox/Safari/Edge / build target / Browserslist / Playwright multi-engine" | Technical | react-patterns --audit-cross-browser |
+| "motion design / UI feel / polish de interacao / microinteraction / botao morto / dropdown lento / popover estranho / qual animação usar / animação paga aluguel? / parallax / scrollytelling / Lottie / Rive / GSAP / Three.js" | Design | motion-design |
 | "find references/books/frameworks" | Knowledge | reference-finder, context-tree |
 | "create/improve skill" | Meta | skill-builder, prompt-engineer |
 | "validate skill choice/which skill/help me pick" | Meta | maestro (--suggest) |
@@ -284,6 +285,7 @@ This separation exists because:
 ### Design / Discovery
 - **ui-design-system** — Design tokens e design.json
 - **ux-audit** — Auditoria de UX/UI
+- **motion-design** — Motion criativo e specs de animação (Lottie/Rive/GSAP/Three.js, scrollytelling, parallax)
 - **product-discovery-prd** — Discovery, PRD, user stories, validação de ideia
 - **test-lab-architect** — Arquitetura de labs de teste pra apps com IA (ground truth check + modelos inline/standalone/híbrido + comparação binária/LLM-judge/híbrida + isolamento + promoção lab→prod)
 - **seo** — SEO completo (audit, keyword, content, programmatic, semantic)

@@ -1,6 +1,6 @@
 ---
 name: react-patterns
-description: "Audit and implement modern React/Next.js patterns AND diagnose cross-browser/runtime issues in React stacks. Server Components, App Router, Server Actions, Suspense, error boundaries, data fetching, caching, hydration. PLUS: build target (Vite/Next config, Browserslist, Autoprefixer, Babel/SWC), polyfills, ESM/dynamic import, browser API support, CSS rendering bugs (flex auto-min, sticky in overflow ancestor, stacking context with transform), Playwright multi-engine testing. Use when user asks to: audit React code, fix React anti-patterns, migrate to App Router, server vs client component, scaffold Next.js feature, optimize React performance, fix hydration errors, fix useEffect, re-render excessivo, 'tá pesado o React', AND ALSO: 'funciona no Chrome, quebra no Firefox/Safari/Edge', 'tela branca em produção', 'modal atrás do header', 'sticky não gruda', 'sticky some', 'cards explodem largura', 'login perde sessão no Safari', 'date picker some no iOS', 'copy/paste falha em Firefox', 'autoplay não toca', 'app não monta em browser X', cross-browser bug, browser compatibility, Vite build target, Browserslist, Playwright projects, multi-engine test. Supports: pattern audit, scaffolding, migration, performance review, cross-browser audit. Does NOT cover: visual tokens / breakpoints / motion-as-system (ui-design-system), heuristics / WCAG criteria / user flow audit (ux-audit), component anatomy / slots / variants (component-architect), adherence to external DS (design-system-audit)."
+description: "Audit and implement React/Next.js patterns and diagnose cross-browser/runtime issues. Covers Server Components, App Router, Server Actions, Suspense, hydration, useEffect, re-render excessivo, React performance, client/server boundaries, scaffold/migrate patterns. Also use for: funciona no Chrome mas quebra no Safari/Firefox/Edge, tela branca em produção, sticky não gruda, modal atrás do header, cards explodem, login Safari, date picker iOS, clipboard/autoplay, Vite build target, Browserslist, polyfills, ESM, Playwright multi-engine. Modes: --audit, --scaffold, --migrate, --audit-cross-browser. NÃO use para tokens/breakpoints/motion-as-system (ui-design-system), UX/WCAG/user flow (ux-audit), anatomy/slots/variants (component-architect), DS externo/shadcn (design-system-audit)."
 ---
 
 # React Patterns
@@ -9,9 +9,9 @@ description: "Audit and implement modern React/Next.js patterns AND diagnose cro
 
 1. **Thin Client, Fat Server.** NEVER put business logic in client components. Zero `fetch()`, zero data transformation, zero validation in `'use client'` files. If it doesn't need `useState`, `useEffect`, or browser APIs, it's a Server Component.
 
-2. **[NOVO] Multi-engine evidence before any cross-browser patch.** Nunca diagnostique "bug do Firefox/Safari/Edge" sem reproduzir em ambiente isolado **e** confirmar a feature em MDN BCD / Can I Use / wpt.fyi. Se você não consegue reproduzir e não consegue citar fonte de baseline, **não é diagnóstico — é palpite**, e palpite vira regressão no Chrome.
+2. **Multi-engine evidence before any cross-browser patch.** Nunca diagnostique "bug do Firefox/Safari/Edge" sem reproduzir em ambiente isolado **e** confirmar a feature em MDN BCD / Can I Use / wpt.fyi. Se você não consegue reproduzir e não consegue citar fonte de baseline, **não é diagnóstico — é palpite**, e palpite vira regressão no Chrome.
 
-3. **[NOVO] Triagem antes do patch.** Antes de absorver um sintoma, classifique: é React pattern? CSS de composição? UI/visual de design system? UX observável? Bug funcional? Cada destino tem dono diferente. Skill correta = patch correto. Skill errada = relatório que ninguém executa.
+3. **Triagem antes do patch.** Antes de absorver um sintoma, classifique: é React pattern? CSS de composição? UI/visual de design system? UX observável? Bug funcional? Cada destino tem dono diferente. Skill correta = patch correto. Skill errada = relatório que ninguém executa.
 
 ## Options
 
@@ -20,15 +20,15 @@ description: "Audit and implement modern React/Next.js patterns AND diagnose cro
 | `--audit` | Check for anti-patterns in current code | default |
 | `--scaffold` | Scaffold feature with correct patterns | - |
 | `--migrate` | Fix anti-patterns (client logic → server) | - |
-| `--audit-cross-browser` **[NOVO]** | Audita compatibilidade cross-browser, build target, polyfills, features arriscadas | - |
-| `--include-cross-browser` **[NOVO]** | Flag para `--audit` rodar a Fase 5 (cross-browser) também | - |
+| `--audit-cross-browser` | Audita compatibilidade cross-browser, build target, polyfills, features arriscadas | - |
+| `--include-cross-browser` | Flag para `--audit` rodar a Fase 5 (cross-browser) também | - |
 
 ## Workflow
 
 ```
 React Patterns Progress:
 
-- [ ] Phase 0: [NOVO] Triagem do sintoma ⚠️ REQUIRED
+- [ ] Phase 0: Triagem do sintoma ⚠️ REQUIRED
   - [ ] 0.1 Sintoma é React pattern, CSS de composição, UI visual, UX, ou bug funcional?
   - [ ] 0.2 Se UX puro → encaminhar para ux-audit
   - [ ] 0.3 Se token / motion / breakpoint / primitive → encaminhar para ui-design-system
@@ -41,8 +41,8 @@ React Patterns Progress:
   - [ ] 1.2 Identify state management (Zustand, Jotai, Redux, Context)
   - [ ] 1.3 Check styling approach (Tailwind, CSS Modules, styled-components)
   - [ ] 1.4 Check data fetching (React Query, SWR, server actions, tRPC)
-  - [ ] 1.5 [NOVO] Capture build target: Vite `build.target`, `@vitejs/plugin-legacy`, Next config, Browserslist, Autoprefixer, Babel/SWC targets
-  - [ ] 1.6 [NOVO] Capture browser matrix declarada (Browserslist real ou política do time)
+  - [ ] 1.5 Capture build target: Vite `build.target`, `@vitejs/plugin-legacy`, Next config, Browserslist, Autoprefixer, Babel/SWC targets
+  - [ ] 1.6 Capture browser matrix declarada (Browserslist real ou política do time)
 - [ ] Phase 2: Pattern Audit (existente)
   - [ ] Load references/pattern-guide.md
   - [ ] 2.1 Server vs Client component boundaries
@@ -54,22 +54,22 @@ React Patterns Progress:
   - [ ] ⛔ GATE: Get approval before modifying code
 - [ ] Phase 4: Implement (existente)
   - [ ] Apply approved patterns
-- [ ] Phase 5: [NOVO] Cross-browser audit (condicional: `--audit-cross-browser` ou `--include-cross-browser`, ou disparada por sintoma técnico)
-  - [ ] Load references/cross-browser-checklist.proposto.md
+- [ ] Phase 5: Cross-browser audit (condicional: `--audit-cross-browser` ou `--include-cross-browser`, ou disparada por sintoma técnico)
+  - [ ] Load references/cross-browser-checklist.md
   - [ ] 5.1 Browser API checklist (Clipboard, Storage Access, autoplay, codecs, showPicker, Pointer Events)
   - [ ] 5.2 CSS support checklist (anchor positioning, popover, dialog, container queries, dvh/svh/lvh, :has, :focus-visible, backdrop-filter, color())
   - [ ] 5.3 Rendering bugs sweep (flex auto-min, sticky in overflow ancestor, stacking context com transform/filter/perspective)
   - [ ] 5.4 Native inputs sweep (date/time/color picker, atributos avançados, fallback)
-  - [ ] 5.5 Build target review → Load references/build-targets-and-polyfills.proposto.md
-  - [ ] 5.6 Test strategy review → Load references/playwright-browser-matrix.proposto.md
+  - [ ] 5.5 Build target review → Load references/build-targets-and-polyfills.md
+  - [ ] 5.6 Test strategy review → Load references/playwright-browser-matrix.md
   - [ ] 5.7 Rubrica de bug aplicada (severidade, evidência, hipótese técnica, teste de confirmação, fix proposto, risco de regressão no Chrome, critério de aceite)
-- [ ] Phase 6: [NOVO] Síntese cross-browser ⛔ BLOCKING (apenas em Fase 5)
+- [ ] Phase 6: Síntese cross-browser ⛔ BLOCKING (apenas em Fase 5)
   - [ ] 6.1 Cada bug com formato canônico (severidade, browser/versão/SO, evidência, hipótese, fix, critério de aceite)
   - [ ] 6.2 Riscos de regressão no Chrome listados explicitamente
   - [ ] 6.3 Apresentar antes de implementar — gate humano obrigatório
 ```
 
-## Phase 0: [NOVO] Triagem do sintoma
+## Phase 0: Triagem do sintoma
 
 | Sintoma | Cabe aqui? | Onde mais |
 |---|---|---|
@@ -95,13 +95,13 @@ React Patterns Progress:
 
 Check these files:
 - `package.json`, `next.config.*`, `vite.config.*`, `tsconfig.json`, `app/` vs `pages/`, `tailwind.config.*` (existente).
-- **[NOVO] `.browserslistrc` / `browserslist` em package.json** — alvo declarado.
-- **[NOVO] `vite.config.*` `build.target`** — alvo real do bundle moderno.
-- **[NOVO] `@vitejs/plugin-legacy`** — fallback para browsers fora do alvo moderno.
-- **[NOVO] Babel/SWC config** — `targets` ou herança de Browserslist.
-- **[NOVO] PostCSS/Autoprefixer config** — lê Browserslist por padrão.
+- **`.browserslistrc` / `browserslist` em package.json** — alvo declarado.
+- **`vite.config.*` `build.target`** — alvo real do bundle moderno.
+- **`@vitejs/plugin-legacy`** — fallback para browsers fora do alvo moderno.
+- **Babel/SWC config** — `targets` ou herança de Browserslist.
+- **PostCSS/Autoprefixer config** — lê Browserslist por padrão.
 
-Report: "[Framework] [Version] with [State Mgmt] + [Data Fetching] + [Styling] + [NOVO: Build target X, Browserslist Y, Legacy plugin Z]".
+Report: "[Framework] [Version] with [State Mgmt] + [Data Fetching] + [Styling] + [Build target X, Browserslist Y, Legacy plugin Z]".
 
 ## Phase 2: Pattern Audit (inalterado)
 
@@ -113,7 +113,7 @@ Load `references/pattern-guide.md`. (Conteúdo existente — Server vs Client De
 
 ## Phase 4: Implement (inalterado)
 
-## Phase 5: [NOVO] Cross-browser audit
+## Phase 5: Cross-browser audit
 
 **Quando disparar:**
 
@@ -124,9 +124,9 @@ Load `references/pattern-guide.md`. (Conteúdo existente — Server vs Client De
 **Não disparar:** auditoria geral de React patterns. Cross-browser não roda por padrão para evitar inflar relatórios.
 
 **Carrega 3 references:**
-- `references/cross-browser-checklist.proposto.md` — checklist por categoria (browser APIs, CSS, rendering, inputs nativos).
-- `references/build-targets-and-polyfills.proposto.md` — Vite/Next/Babel/SWC/Browserslist alinhados.
-- `references/playwright-browser-matrix.proposto.md` — matriz mínima de teste multi-engine.
+- `references/cross-browser-checklist.md` — checklist por categoria (browser APIs, CSS, rendering, inputs nativos).
+- `references/build-targets-and-polyfills.md` — Vite/Next/Babel/SWC/Browserslist alinhados.
+- `references/playwright-browser-matrix.md` — matriz mínima de teste multi-engine.
 
 **Output:** rubrica de bug com formato canônico.
 
@@ -143,7 +143,7 @@ Risco de regressão no Chrome: [explícito]
 Critério de aceite: [como validar que corrigiu sem quebrar Chrome]
 ```
 
-## Phase 6: [NOVO] Síntese cross-browser ⛔ BLOCKING
+## Phase 6: Síntese cross-browser ⛔ BLOCKING
 
 ⛔ Gate: nenhum bug cross-browser sem critério de aceite. Nenhum patch que regrida o caminho feliz no Chrome. Apresentar antes de implementar.
 
@@ -158,7 +158,7 @@ Critério de aceite: [como validar que corrigiu sem quebrar Chrome]
 - Fetching no parent passando para filhos
 - `React.memo` everywhere
 
-**[NOVO] Cross-browser:**
+**Cross-browser:**
 - **Browser sniffing por UA string** em vez de feature detection / `@supports`.
 - **Suposição "Chrome = web"** — testar só no engine principal e enviar.
 - **Polyfill defensivo** — instalar polyfill sem confirmar que a feature realmente é usada e que o alvo precisa.
@@ -179,7 +179,7 @@ Critério de aceite: [como validar que corrigiu sem quebrar Chrome]
 - [ ] No `useEffect` para fetch
 - [ ] Images via `next/image` (Next.js)
 
-**[NOVO] Cross-browser (apenas em Phase 5):**
+**Cross-browser (apenas em Phase 5):**
 - [ ] Browserslist e build.target declarados e coerentes
 - [ ] `@vitejs/plugin-legacy` configurado se a matriz inclui browsers fora do alvo moderno
 - [ ] Features arriscadas (popover, anchor, multiple import maps, clipboard avançado, alpha/colorspace) com `@supports` ou fallback

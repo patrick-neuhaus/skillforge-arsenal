@@ -82,10 +82,10 @@ Quando o intent do usuário pode acionar 2+ skills, use estas regras antes de pr
 - **Quando NÃO usar:** Review de estilo, mudanças triviais, UX review
 
 ### react-patterns
-- **O que faz:** Audita e implementa padrões modernos React/Next.js (Server Components, App Router, Server Actions)
-- **Triggers PT-BR:** "tá certo esse padrão?", "onde coloco essa lógica?", "posso usar use client aqui?"
-- **Triggers EN:** audit React code, fix React anti-patterns, server vs client component
-- **Modes:** --audit (padrão), --scaffold, --migrate
+- **O que faz:** Audita e implementa padrões modernos React/Next.js e diagnostica problemas cross-browser/runtime
+- **Triggers PT-BR:** "tá certo esse padrão?", "onde coloco essa lógica?", "posso usar use client aqui?", "funciona no Chrome mas quebra no Safari/Firefox/Edge", "build target", "Browserslist"
+- **Triggers EN:** audit React code, fix React anti-patterns, server vs client component, cross-browser bug, browser compatibility, Playwright multi-engine
+- **Modes:** --audit (padrão), --scaffold, --migrate, --audit-cross-browser, --include-cross-browser
 - **Input:** Codebase React/Next.js
 - **Output:** Tabela de anti-patterns com before/after examples
 - **Iron Law:** Thin Client, Fat Server — zero business logic em 'use client'
@@ -112,8 +112,8 @@ Quando o intent do usuário pode acionar 2+ skills, use estas regras antes de pr
 
 ### component-architect
 - **O que faz:** Planeja e constrói arquitetura de componentes (atomic design, shadcn, composição)
-- **Triggers PT-BR:** "como organizo meus componentes", "componente tá muito grande", "quantos props é demais"
-- **Triggers EN:** plan components, component tree, decompose monolithic component
+- **Triggers PT-BR:** "como organizo meus componentes", "componente tá muito grande", "quantos props é demais", "estado loading/disabled", "contrato de estados", "focus-visible", "pressed state"
+- **Triggers EN:** plan components, component tree, decompose monolithic component, component state contract, loading state, disabled state, focus-visible, pressed state
 - **Modes:** --plan, --create, --refactor, --audit
 - **Input:** Feature ou componente existente
 - **Output:** Component tree + interfaces + reuse map
@@ -140,9 +140,9 @@ Quando o intent do usuário pode acionar 2+ skills, use estas regras antes de pr
 ## Design
 
 ### ui-design-system
-- **O que faz:** Gera design tokens e design.json a partir de inputs de marca
-- **Triggers PT-BR:** "cria um design.json", "monta identidade visual", "preciso de tokens de design"
-- **Triggers EN:** create design system, generate design tokens, brand to code
+- **O que faz:** Gera e audita tokens, breakpoints, primitives, responsividade, motion funcional e maturidade visual do design system
+- **Triggers PT-BR:** "cria um design.json", "monta identidade visual", "preciso de tokens de design", "tokenizar easing", "press state", "motion tokens", "audita maturidade visual", "breakpoints", "primitives", "responsividade"
+- **Triggers EN:** create design system, generate design tokens, tokenize easing, press state tokens, motion tokens, design system maturity audit, responsive primitives, brand to code
 - **Modes:** --generate, --audit, --apply
 - **Input:** Cores hex, fontes, keywords de conceito, tipo de projeto
 - **Output:** design.json completo + Tailwind config ou CSS variables
@@ -154,6 +154,15 @@ Quando o intent do usuário pode acionar 2+ skills, use estas regras antes de pr
 - **Triggers EN:** UX audit, UI review, usability check
 - **Input:** Screenshots, URLs, ou código de frontend
 - **Output:** Heuristic evaluation com findings priorizados
+
+### motion-design
+- **O que faz:** Cataloga, especifica e audita motion criativo e UI polish para web, decidindo animacao, tecnica, frequencia, fallback e criterio de aceite
+- **Triggers PT-BR:** "qual animacao usar", "essa animacao paga aluguel?", "botao parece morto", "dropdown esta lento", "popover abre estranho", "polish de interacao", "microinteraction", "parallax", "scrollytelling", "Lottie ou Rive", "GSAP", "Three.js", "motion design"
+- **Triggers EN:** motion design, animation design, UI feel, interaction polish, microinteraction, dead button, slow dropdown, weird popover, Lottie, Rive, GSAP, Three.js, parallax, scrollytelling, motion spec
+- **Modes:** --catalog, --spec, --audit
+- **Input:** Tipo de produto, tela/fluxo, restrições de performance/browser e objetivo da animação
+- **Output:** Catalogo aplicavel, spec executavel ou tabela `Antes | Depois | Por que` com reduced-motion, risco tecnico e criterio de aceite
+- **Quando NÃO usar:** Tokens de duração/easing como sistema (ui-design-system), auditoria de motion que atrapalha tarefa (ux-audit), implementação React/cross-browser (react-patterns)
 
 ### product-discovery-prd
 - **O que faz:** Discovery de produto e geração de PRDs otimizados para Lovable

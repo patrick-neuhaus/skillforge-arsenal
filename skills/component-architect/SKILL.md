@@ -1,6 +1,6 @@
 ---
 name: component-architect
-description: "Plan and build component architecture using atomic design, composition patterns, and shadcn/ui. Generates component trees, defines interfaces, scaffolds components with proper structure. Use when user asks to: plan components, create component tree, 'como organizo meus componentes', decompose monolithic component, refactor component, component hierarchy, 'componente tá muito grande', 'componente gigante', 'quebrar componente', 'componente de N linhas', atomic design, composition over props, slot pattern, 'quantos props é demais', how to structure components, too many props, split this component. Supports: planning, creation, refactoring, audit."
+description: "Plan and build component architecture using atomic design, composition patterns, shadcn/ui, state contracts and component behavior. Generates component trees, interfaces, variants, slots, loading/disabled/focus/pressed state contracts, a11y behavior, and scaffolds components. Use when user asks: plan components, create component tree, como organizo meus componentes, decompose monolithic component, refactor component, component hierarchy, componente muito grande, quebrar componente, atomic design, composition over props, slot pattern, quantos props e demais, component state contract, loading state, disabled state, focus-visible, pressed state. Supports: planning, creation, refactoring, audit. NAO use para visual tokens/easing (ui-design-system) ou motion polish criativo (motion-design)."
 ---
 
 # Component Architect
@@ -31,9 +31,11 @@ Component Architect Progress:
   - [ ] 2.3 Identify reuse opportunities from Phase 1
 - [ ] Phase 3: Interface Design
   - [ ] Load references/composition-patterns.md
+  - [ ] Load references/states-inventory.md for interactive components
   - [ ] 3.1 Define props (max 7 per component)
   - [ ] 3.2 Define variants (via props, not separate components)
   - [ ] 3.3 Define slots for flexible composition
+  - [ ] 3.4 Define state/microinteraction contract (loading, disabled, focus-visible, pressed)
 - [ ] Phase 4: Review ⛔ BLOCKING
   - [ ] Present component plan with interfaces
   - [ ] ⛔ GATE: Get approval before creating/modifying files
@@ -106,6 +108,10 @@ Use discriminated unions, not boolean soup:
 <Button variant="primary" | "secondary" | "ghost" | "destructive" />
 ```
 
+### State Contract
+
+For interactive components, load `references/states-inventory.md` and declare behavior for default, hover, focus-visible, active/pressed, disabled and loading. This skill owns anatomy, ARIA, focus, events and layout stability. `ui-design-system` owns visual tokens/easing; `motion-design` owns refined motion spec when the interaction needs polish.
+
 ## Phase 4: Review
 
 Present:
@@ -131,6 +137,7 @@ Before creating components:
 - [ ] Every component classified (atom/molecule/organism)
 - [ ] No component exceeds 7 props
 - [ ] Variants use discriminated unions, not booleans
+- [ ] Interactive components declare state/microinteraction contract
 - [ ] Data flow is unidirectional (props down, events up)
 - [ ] Composition via slots where flexible layout needed
 

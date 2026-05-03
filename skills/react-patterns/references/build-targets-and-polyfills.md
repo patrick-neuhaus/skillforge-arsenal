@@ -1,4 +1,4 @@
-# Build targets and polyfills (proposed reference)
+# Build targets and polyfills
 
 > Carregado por `react-patterns` na **Phase 5.5**. Quando a app "nem monta" em browser X, suspeite do target antes do componente. Fonte: DR-04.
 

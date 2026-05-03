@@ -269,3 +269,22 @@ Marker: `validated:2026-04-29`
 - Anatomia de componente animado → component-architect
 
 **Lock-in:** motion-design entra com `validated:2026-05-02` (1ª lock-in, cooldown 1 semana).
+
+## Wave 8 - polish final das skills de design (2026-05-02)
+
+**Decisao Patrick:** incorporar benchmark de design engineering (`emil-design-eng`) e `animations.dev` sem depender de skill externa em runtime. Objetivo: ultima rodada planejada nas skills de design.
+
+**Skills tocadas:**
+- `motion-design`: adicionou Craft gate, frequencia de uso, origem da acao, output de audit `Antes | Depois | Por que`, checklist de UI polish e triggers de "botao parece morto", "dropdown lento", "popover estranho".
+- `ui-design-system`: ajustou `motion-and-interaction.md` para permitir press feedback calibrado `scale(0.97-0.99)`, separar easing tokens de state/layout-enter/layout-exit/decorative e manter reduced-motion.
+- `component-architect`: adicionou contrato de microinteracao por estado em `states-inventory.md` e description com state contracts.
+- `maestro` e `skill-routing.md`: adicionaram routing para UI feel, polish de interacao, microinteraction, motion tokens e contrato de estados.
+
+**Validacoes:**
+- `ccinspect lint` passou em `motion-design`, `component-architect`, `ui-design-system` e `maestro`.
+- descriptions <1024 chars.
+- `rg` sem `TODO|FIXME|PROPOSED|proposed reference|.proposto.md|[NOVO]` nos alvos.
+- `git diff --check` passou (somente warnings LF/CRLF).
+- `audit-instruction-edits.ps1` passou com marker fresco.
+
+**Lock-in:** `motion-design`, `ui-design-system`, `component-architect` e `maestro` seguem com `validated:2026-05-02`. Nao mexer por gosto; so por bug real de routing, contradicao detectada em uso ou necessidade repetida 3+ vezes.

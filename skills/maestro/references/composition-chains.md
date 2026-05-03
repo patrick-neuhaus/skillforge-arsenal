@@ -282,3 +282,33 @@ Budget estimado: ~70–80% context window. Usar `context-guardian --handoff` ent
 ```
 
 Budget estimado: ~45–55% context window. Sem necessidade de handoff intermediário.
+
+### Produto brand-heavy - DS + motion + implementacao React
+
+```
+1. ui-design-system --generate        -> design.json + tokens + motion funcional
+   handoff: design.json
+2. motion-design --catalog            -> pilares de motion aplicaveis + padroes recomendados
+   handoff: motion catalog aprovado
+3. motion-design --spec               -> specs executaveis por animacao
+   handoff: specs com reduced-motion + criterios de aceite
+4. react-patterns --scaffold          -> implementacao React respeitando browser baseline
+   handoff: codigo scaffolded
+```
+
+Budget estimado: ~65-75% context window. Usar `context-guardian --handoff` antes do step 4 se specs tiverem 3+ animacoes ou incluirem GSAP/Three.js/WebGL.
+
+### Polish de interacao em app existente
+
+```
+1. motion-design --audit             -> tabela Antes | Depois | Por que para UI feel/microinteractions
+   handoff: motion findings por componente/fluxo
+2. ui-design-system --generate       -> tokens de press/easing/duration se o ajuste precisa virar sistema
+   handoff: tokens atualizados
+3. component-architect --plan        -> contrato de estados quando o problema e loading/disabled/focus/popover
+   handoff: states table + interfaces
+4. react-patterns --audit-cross-browser -> somente se o ajuste envolve browser/runtime
+   handoff: bugs tecnicos ou fallback
+```
+
+Quando: "botao parece morto", "dropdown lento", "popover estranho", "microinteraction ruim", "polish de interacao". Se for apenas tokenizacao, pule step 1 e va direto para `ui-design-system`.

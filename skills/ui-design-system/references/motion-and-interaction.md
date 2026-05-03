@@ -1,6 +1,6 @@
-# 07 — `references/motion-and-interaction.md` (proposed)
+# 07 - `references/motion-and-interaction.md`
 
-> Proposed new reference. Defines motion-as-system: durations, easing partition by use, microinteractions canônicas, reduced-motion as a rule. Loaded in Phase 4.
+> Defines motion-as-system: durations, easing partition by use, canonical microinteractions, reduced-motion as a rule. Loaded in Phase 4.
 
 ---
 
@@ -37,13 +37,14 @@ Anything beyond 800ms is suspect — either it's a real animation (video/Lottie)
 
 ## 3. Easing partition
 
-Motion has 3 distinct uses; each gets its own easing family.
+Motion has 4 distinct uses; each gets its own easing family.
 
 | Use | Easing | Why |
 |---|---|---|
-| **State** (hover, focus, press) | `ease` (`cubic-bezier(0.25, 0.1, 0.25, 1)`) | Symmetric; user expects symmetric response |
-| **Layout** (sheet open, drawer slide, modal in) | `ease-out` (`cubic-bezier(0.0, 0.0, 0.2, 1)`) | Decelerates into rest; mimics physical inertia |
-| **Decorative entry** (page hero, illustration reveal) | Expressive cubic-bezier (`cubic-bezier(0.34, 1.56, 0.64, 1)`) or spring | Permits overshoot/bounce when context is celebratory |
+| **State responsive** (hover, focus, press) | `motion.easing.state-responsive`: `ease` or `cubic-bezier(0.25, 0.1, 0.25, 1)` | Symmetric; user expects immediate response |
+| **Layout enter** (sheet open, drawer/modal in, popover show) | `motion.easing.layout-enter`: `ease-out` / `cubic-bezier(0.0, 0.0, 0.2, 1)` | Decelerates into rest; fast first frame |
+| **Layout exit** (sheet close, drawer/modal out) | `motion.easing.layout-exit`: `ease-in` only for exits / `cubic-bezier(0.4, 0.0, 1, 1)` | Speeds away after user already decided |
+| **Decorative** (page hero, illustration reveal) | `motion.easing.decorative`: expressive cubic-bezier or spring | Permits overshoot/bounce when context is celebratory |
 
 Using a decorative spring for a state hover is slop. Using `ease` for a drawer is sluggish. Use the partition.
 
@@ -56,10 +57,11 @@ Using a decorative spring for a state hover is slop. Using `ease` for a drawer i
 - Reduced motion: instant background swap; no translate.
 
 ### 4.2 Press / active
-- Property: `background` (darker) OR `box-shadow: inset`.
+- Property: `background` (darker), `box-shadow: inset`, or `transform: scale(0.97-0.99)`.
 - Duration: `instant` to `fast`.
-- Easing: `ease`.
-- Avoid `transform: scale(0.95)` — it shifts hit targets and reads as a children's app.
+- Easing: `motion.easing.state-responsive`.
+- `scale(0.97-0.99)` is allowed for short press feedback when it does not shift layout, shrink the hit target, or run in high-frequency operational flows. Avoid `scale(0.95)` or bouncy press states.
+- Reduced motion: background/shadow swap only.
 
 ### 4.3 Focus-visible
 - Property: `outline` color/offset; `box-shadow: 0 0 0 3px var(--focus-ring)`.
@@ -102,7 +104,7 @@ Using a decorative spring for a state hover is slop. Using `ease` for a drawer i
 - ❌ Animation without reduced-motion fallback.
 - ❌ Decorative easing (overshoot/bounce) on functional state changes.
 - ❌ Long durations (>500ms) for state transitions.
-- ❌ `transform: scale()` on press (hit-target instability).
+- ❌ Exaggerated or permanent `transform: scale()` on press (hit-target instability).
 - ❌ Skeleton/shimmer running during reduced motion.
 - ❌ Auto-playing video without user trigger above the fold.
 - ❌ Parallax on body scroll without reduced-motion guard.
@@ -112,9 +114,9 @@ Using a decorative spring for a state hover is slop. Using `ease` for a drawer i
 ## 6. Acceptance criteria
 
 - [ ] All 5 duration tokens declared.
-- [ ] Easing partition documented and present in tokens (`motion.easing.state`, `motion.easing.layout`, `motion.easing.decorative`).
+- [ ] Easing partition documented and present in tokens (`motion.easing.state-responsive`, `motion.easing.layout-enter`, `motion.easing.layout-exit`, `motion.easing.decorative`).
 - [ ] Every animation has a `prefers-reduced-motion` fallback.
-- [ ] No `transform: scale()` on interactive press states.
+- [ ] Press scale, when used, stays in `scale(0.97-0.99)` and has a non-motion fallback.
 - [ ] No state animation > `motion.duration.normal`.
 - [ ] No decorative easing on state transitions.
 - [ ] All microinteractions in §4 use the canonical pattern.

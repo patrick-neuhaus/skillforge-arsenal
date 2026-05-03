@@ -12,6 +12,25 @@
 | Template demonstrativo | Alta — precisa demonstrar estados | Sev 3 |
 | Produto visual / brand-heavy | Média — coexiste com pilares 2-4 | Sev 2 |
 
+## 1.5 Craft gate para UI polish
+
+Antes de escolher qualquer padrao funcional, classifique frequencia e origem da acao:
+
+| Caso | Regra |
+|---|---|
+| 100+ vezes/dia | sem motion ou <=100ms, sem bloquear proxima acao |
+| teclado | instantaneo ou quase instantaneo; foco e estado mudam primeiro |
+| dezenas/dia | feedback minimo, <=150ms, sem bounce |
+| ocasional | motion funcional padrao, 150-250ms |
+| raro/brand | delight permitido se nao competir com tarefa |
+
+Perguntas de corte:
+
+- A animacao explica estado, causalidade ou continuidade?
+- Se o usuario repetir isso 100 vezes, ainda ajuda?
+- O mesmo feedback existe sem motion em `prefers-reduced-motion`?
+- O movimento pode ser interrompido sem travar a UI?
+
 ## 2. Catálogo de padrões
 
 ### 2.1 Microinteractions
@@ -30,6 +49,18 @@ Respostas curtíssimas a ação do usuário; precisão, tato, confiança.
 | Card hover lift | Mouse over card | 200ms | ease-out | CSS `transform: translateY(-2px)` + shadow |
 
 **Regra:** microinteraction nunca atrasa tarefa. Se o usuário tem que esperar a animação acabar pra agir, está errado.
+
+Checklist de polish:
+
+- Nao usar `transition: all`; declarar propriedades exatas.
+- Nao iniciar entrada de elemento em `scale(0)`; preferir `opacity` + `scale(0.95)` quando scale pagar funcao.
+- Evitar `ease-in` em feedback comum; entrada/feedback precisa responder rapido.
+- Dropdown/popover abre a partir do trigger; modal abre centrado.
+- Hover com movimento usa `@media (hover: hover) and (pointer: fine)`.
+- UI interrompivel prefere `transition`/WAAPI cancelavel a `@keyframes` rigido.
+- Animar preferencialmente `transform` e `opacity`; medir qualquer animacao de layout.
+- Stagger curto e nao bloqueante; se atrasa leitura/acao, cortar.
+- Em motion critico, fazer QA em slow motion/frame-by-frame.
 
 ### 2.2 Feedback de estado
 
@@ -114,6 +145,8 @@ Mas **fallback inteligente**: feedback de estado (skeleton, error, success) deve
 Padrão: <nome>
 Pilar: 1 (funcional/estrutural)
 Contexto: <onde aparece>
+Frequencia de uso: <100+/dia / dezenas/dia / ocasional / raro>
+Origem da acao: <teclado / ponteiro / sistema / route-change>
 Trigger: <click/hover/route-change/state-change>
 Duração: <ms>
 Easing: <curve>

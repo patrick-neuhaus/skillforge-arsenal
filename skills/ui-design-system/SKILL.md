@@ -1,11 +1,9 @@
 ---
 name: ui-design-system
-description: PROPOSED v2 — Generates and audits design tokens, primitives, breakpoints, motion and visual state systems for any project. Owns color tokens by semantic role (action/brand/focus/surface/decorative), foreground measured on real pairs, macro×micro responsive architecture, named layout primitives, motion-as-system, and design-system maturity. Imports WCAG thresholds from ux-audit; defers component anatomy to component-architect; defers build/baseline to react-patterns. Use when starting a new product, defining tokens from a brand seed, auditing visual maturity, or applying tokens to code. Modes — `--generate` (default), `--audit`, `--apply`, `--identity`.
+description: "Generates and audits design tokens, primitives, breakpoints, motion and visual state systems for any project. Owns color tokens by semantic role (action/brand/focus/surface/decorative), foreground measured on real pairs, macro×micro responsive architecture, named layout primitives, motion-as-system, and design-system maturity. Imports WCAG thresholds from ux-audit; defers component anatomy to component-architect; defers build/baseline to react-patterns. Use when starting a new product, defining tokens from a brand seed, auditing visual maturity, or applying tokens to code. Modes: `--generate` (default), `--audit`, `--apply`, `--identity`."
 ---
 
-> **PROPOSAL FILE.** This is a markdown proposal for the rewritten `ui-design-system/SKILL.md`. It does not replace the live skill until reviewed.
-
-# UI Design System (v2 — proposed)
+# UI Design System
 
 ## Iron Laws (3)
 
