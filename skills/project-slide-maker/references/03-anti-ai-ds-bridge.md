@@ -1,62 +1,104 @@
 # Anti-AI-DS Bridge (Phase 4)
 
 > Mapeia comprehension.tipo → componentes anti-ai-ds CRM-validated. Carrega na Phase 4.
+> v2 (2026-05-04): source = path local. Localhost:8000 dependency REMOVIDA.
 
-## Pré-condições
+## Source — path local
 
-- anti-ai-ds rodando em `http://localhost:8000` (ou path declarado pelo user)
-- demo correspondente existe em `?demo=<tipo>`
-- Patrick sincronizou `/componentes` com versão CRM-validated (per decisão 2026-05-04)
+```
+ANTI_AI_DS_LOCAL = "C:/Users/Patrick Neuhaus/Documents/Github/anti-ai-design-system"
+```
 
-## Mapping tipo → demo + componentes
+Patrick mantem repo local clonado. Skill le tokens + componentes do filesystem.
+Sem servidor rodando, sem dependency runtime localhost.
 
-| comprehension.tipo | anti-ai-ds demo URL | Componentes principais |
+**Fallback:** se path local nao existe, clone ephemeral:
+```bash
+git clone --depth=1 https://github.com/patrick-neuhaus/anti-ai-design-system.git /tmp/aaads
+ANTI_AI_DS_LOCAL=/tmp/aaads
+# (cleanup ao final)
+```
+
+## Files-chave (path local)
+
+| File | Conteudo |
+|---|---|
+| `colors_and_type.css` | Tokens base (foundations + preset default warm-editorial) |
+| `apresentacao-plus/deck.css` | Plus CRM dark preset + animacoes prontas (kanban, chat, csv, kpi) |
+| `presets/default/tokens.css` | Tokens preset default (warm) |
+| `ui_kits/default/components/base/_aa-btn.css` | Button component |
+| `ui_kits/default/components/surfaces/_aa-card.css` | Card component |
+| `ui_kits/default/components/base/_aa-input.css` | Input component |
+| `ui_kits/default/components/navigation/_aa-sidebar.css` | Sidebar component |
+| `ui_kits/default/showcase/*.css` | Showcase styles (footer, nav, token-editor) |
+
+## Mapping tipo -> componentes
+
+| comprehension.tipo | Componentes principais (anti-ai-ds) | CSS pattern (deck.css) |
 |---|---|---|
-| crm | `localhost:8000/ui_kits/default/index.html?demo=crm` | button, sidebar, card, dialog, table, badge, dashboard, chart, login |
-| chat | `?demo=chat` | message-bubble, input, sidebar, avatar, typing-indicator |
-| viewer | `?demo=viewer` | toolbar, canvas, panel, slider, region-select |
-| dashboard | `?demo=dashboard` | card, metric, chart, filter-bar, table |
-| data-tool | `?demo=data-tool` | table, import-modal, mapping-grid, progress |
-| ecomm | (TBD v2 — abrir issue) | — |
+| crm | aa-btn, aa-sidebar, aa-card, aa-input | kanban-mock, settings-list, kpi-strip |
+| chat | aa-card, aa-input | wa-mock (sequence bubbles), conv-drawer |
+| viewer | aa-card | flow (4 steps animated) |
+| dashboard | aa-card | kpi-strip, chart-mock, kpi-card |
+| data-tool | aa-card, aa-input | csv-mock (dropzone + rows + summary) |
+| ecomm | (TBD v2) | — |
 | docs | (TBD v2) | — |
 | landing | (TBD v2) | — |
 
-## Token copy recipe
+## Como skill consome
 
-Pegar HSL CSS vars do anti-ai-ds e copiar pro deck:
+**Default v2:** template do fork artemis-slides (`Documents/Github/open-slide/packages/cli/template/`)
+ja vem com `slides/global.css` baked (concat colors_and_type.css + apresentacao-plus/deck.css).
+
+Skill **NAO regenera** os tokens — confia no scaffold do fork. Patrick re-baka via:
+```bash
+cd Documents/Github/open-slide
+bash scripts/sync-anti-ai-ds-tokens.sh
+```
+
+Se o slide precisar **componente especifico** (button, card) que nao esta inline no
+deck.css, skill le do filesystem:
 
 ```bash
-# 1. Pegar tokens base
-curl -s http://localhost:8000/colors_and_type.css > /tmp/anti-ai-ds-tokens.css
-
-# 2. Extrair :root vars relevantes
-grep -E "^\s+--(background|foreground|accent|primary|sidebar-|font-)" /tmp/anti-ai-ds-tokens.css
-
-# 3. Copiar pro deck
-# (slides/global.css ou inline em cada slide root via style={{}})
+cat "$ANTI_AI_DS_LOCAL/ui_kits/default/components/base/_aa-btn.css"
 ```
 
-Vars-chave a propagar:
+E inclui inline no slide TSX (style={{}}) ou append em slides/<id>/component.css.
+
+## Tokens disponiveis (CRM dark, pos baked global.css)
+
+```css
+--background: 222 20% 10%
+--foreground: 220 15% 92%
+--card: 222 20% 14%
+--primary: 220 90% 55%      /* blue */
+--accent: 280 60% 50%       /* purple */
+--accent-decorative: 310 70% 65%  /* pink */
+--muted: 222 20% 20%
+--border: 222 20% 22%
+--success: 152 70% 45%
+--warning: 38 90% 55%
+--destructive: 0 85% 55%
+--radius: 12px
+
+/* type scale */
+--text-xs: 13px ... --text-3xl: 32px
+
+/* motion */
+--motion-fast: 150ms / --motion-normal: 200ms / --motion-slow: 300ms
+--ease-standard / --ease-out / --ease-in / --ease-spring
 ```
---background, --foreground, --accent, --primary, --primary-foreground
---sidebar-background, --sidebar-foreground
---card, --card-foreground, --border
---font-display, --font-body, --font-mono
---radius
-```
 
-## Componentes — como importar
+## Fallback se tipo sem template
 
-**MVP approach:** copiar componente HTML/CSS standalone do anti-ai-ds direto pro slide TSX. Cada componente fica self-contained no slide (não compartilha módulo, mais simples pra MVP).
+1. Skill falha vocal: "anti-ai-ds nao tem mapping pra tipo '<X>'. Usa CRM como base ou aborta?"
+2. Patrick decide:
+   - **(a)** CRM como base (default)
+   - **(b)** Aborta + abre issue pra adicionar
+   - **(c)** Hybrid: CRM tokens + componentes especificos extraidos do repo target (vira v2 real Layer 4)
 
-**v2 approach:** publicar `@anti-ai-ds/components` como package npm, importar via `import { Button } from '@anti-ai-ds/components'`.
+## Nao fazer
 
-## Fallback
-
-Se `comprehension.tipo` não tem template equivalente:
-
-1. Skill falha vocal: `"anti-ai-ds não tem demo pra tipo '<tipo>'. v2 vai extrair direto. Aborta ou usa template mais próximo (default: crm)?"`
-2. Patrick decide manualmente:
-   - **(a)** Usa CRM como base com warning
-   - **(b)** Aborta e abre issue pra adicionar demo no anti-ai-ds
-   - **(c)** Hybrid: CRM base + componentes específicos extraídos do repo target (já vira v2)
+- **Localhost:8000 dependency** — REMOVIDA. Skill nao roda servidor anti-ai-ds.
+- **Snapshot estatico de tokens dentro da skill** — Patrick disse: "anti-ai-ds atualizacao depende dele, nao trava em mim". Skill aponta pro path local + fallback remote, NUNCA copia state.
+- **Inventar componentes** — anti-ai-ds CRM-validated set eh fonte. Componente novo passa por fork do anti-ai-ds, nao da skill.
