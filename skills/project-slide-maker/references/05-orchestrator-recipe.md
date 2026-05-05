@@ -83,19 +83,6 @@ npm run dev
 
 Phase 7 valida via curl + runtime grep (ver SKILL.md Phase 7).
 
-## Steps removidos vs v1
-
-| v1 step | Por que removido em v2 |
-|---|---|
-| `npx -y @open-slide/cli init <name>-deck` | Substituido por cp template (sem republish npm) |
-| Aplicar patch Windows path + patch-package | Mod 1 baked no fork |
-| Sobrescrever consumer CLAUDE.md | Mod 3 ja libera deps motion no template |
-| `npm install framer-motion` | Mod 4 inclui em package.json default |
-| `npm install @lottiefiles/dotlottie-react` | Mod 4 inclui default |
-| Copy tokens anti-ai-ds (curl localhost) | Mod 6 baked global.css. Patrick re-sync via script. |
-
-Skill orchestrator vira ~40% menor. Robusto, menos pontos de falha.
-
 ## Cherry-pick upstream (manutencao)
 
 Se quiser pegar feature nova do open-slide upstream:

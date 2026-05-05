@@ -1,7 +1,7 @@
 # Anti-AI-DS Bridge (Phase 4)
 
 > Mapeia comprehension.tipo → componentes anti-ai-ds CRM-validated. Carrega na Phase 4.
-> v2 (2026-05-04): source = path local. Localhost:8000 dependency REMOVIDA.
+> Source = path local filesystem.
 
 ## Source — path local
 
@@ -97,8 +97,8 @@ E inclui inline no slide TSX (style={{}}) ou append em slides/<id>/component.css
    - **(b)** Aborta + abre issue pra adicionar
    - **(c)** Hybrid: CRM tokens + componentes especificos extraidos do repo target (vira v2 real Layer 4)
 
-## Nao fazer
+## Boundaries
 
-- **Localhost:8000 dependency** — REMOVIDA. Skill nao roda servidor anti-ai-ds.
-- **Snapshot estatico de tokens dentro da skill** — Patrick disse: "anti-ai-ds atualizacao depende dele, nao trava em mim". Skill aponta pro path local + fallback remote, NUNCA copia state.
-- **Inventar componentes** — anti-ai-ds CRM-validated set eh fonte. Componente novo passa por fork do anti-ai-ds, nao da skill.
+- **Tokens dinamicos:** anti-ai-ds atualizacao depende do Patrick. Skill aponta pro path local + fallback remote, nunca snapshota state interno.
+- **Componente novo:** PR no repo `anti-ai-design-system` primeiro, depois consome.
+- **Componentes fonte:** anti-ai-ds CRM-validated set. MVP polish > genericidade.

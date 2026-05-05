@@ -5,11 +5,11 @@ description: "Gera apresentação de slides open-slide.dev a partir de repositó
 
 # Project Slide Maker
 
-**Iron Law 1:** Componentes + tokens vêm do anti-ai-ds CRM-validated set, source = path local `Documents/Github/anti-ai-design-system/` (fallback remote clone). Nunca extraídos do repo target. MVP polish > genericidade. Reason: validado pelo Patrick (2026-05-04 v2). Localhost:8000 dependency REMOVIDA. Component extractor real fica pra v2.
+**Iron Law 1:** Componentes + tokens vêm do anti-ai-ds CRM-validated set, source = path local `Documents/Github/anti-ai-design-system/` (fallback remote clone). Nunca extraídos do repo target. MVP polish > genericidade. Reason: validado pelo Patrick (2026-05-04 v2). Component extractor real fica pra v2.
 
 **Iron Law 2:** Cada slide declara medium (CSS / framer-motion / lottie / rive / video) com justificativa funcional + reduced-motion fallback. Sem isso, slide não está pronto. Reason: motion paga aluguel (motion-design IL1). Apresentação com motion arbitrário = ruído visual.
 
-**Iron Law 3:** Repo comprehension via repomix antes de narrative. Narrative sem comprehension = alucinação. Reason: deep-research lesson learned (DR alucinou Repomix description). Sem dump estruturado, narrative inventa features que não existem.
+**Iron Law 3:** Repo comprehension via repomix antes de narrative. Narrative sem comprehension = alucinação. Reason: deep-research lesson learned. Sem dump estruturado, narrative inventa features que não existem.
 
 ## Modes
 
@@ -19,21 +19,25 @@ description: "Gera apresentação de slides open-slide.dev a partir de repositó
 | `--audit` | Deck open-slide existente | Findings: cada slide tem medium declarado? motion paga aluguel? reduced-motion? Tabela `Antes \| Depois \| Por que` |
 | `--narrative-only` | Quero só narrative.md (skip slide planning) | Markdown estruturado: pitch + audience + value prop + key flows. Útil pra testar Layer 2 isolado |
 
+## Input gate
+
+Se invocação não trouxe repo path: pergunta uma vez "qual repo? (path local ou URL Lovable)". Resto usa defaults: output `Downloads/Slides Plus/<timestamp>-<repo-name>/`, audiência inferida via Phase 2, mediums via Phase 3 decision tree.
+
 ## Workflow
 
 ```
 Project Slide Maker Progress:
 
 - [ ] Phase 1: Repo Comprehension ⚠️ REQUIRED (IL3)
-  - [ ] 1.1 Validar path do repo (existe? readable?)
+  - [ ] 1.1 Validar path do repo (existe? readable?). Se missing: pergunta uma vez.
   - [ ] 1.2 Rodar repomix --style xml --output ../_meta/repomix.xml
   - [ ] 1.3 Extrair: tipo (crm/dashboard/viewer/chat/...), stack, deps-chave, entry points, componentes-chave, fluxos
   - [ ] 1.4 Output: comprehension.json em ${out}/_meta/
-- [ ] Phase 2: Narrative Extraction
+- [ ] Phase 2: Narrative Extraction ⛔ BLOCKING
   - [ ] 2.1 Load references/02-narrative-template.md
   - [ ] 2.2 Input: comprehension.json + README.md do repo
   - [ ] 2.3 Output: narrative.md (pitch + audience + value-prop + 3-5 key flows)
-  - [ ] 2.4 ⛔ GATE: apresentar narrative pro user antes de Phase 3
+  - [ ] 2.4 ⛔ GATE: apresentar narrative pro user antes de Phase 3. Sem aprovação, slide planning sai descalibrado.
 - [ ] Phase 3: Slide Planning + Medium Decision
   - [ ] 3.1 Load references/01-medium-decision-tree.md
   - [ ] 3.2 Decidir N slides (5-15 MVP), tipos (cover/agenda/problem/solution/feature/demo/closing)
@@ -76,14 +80,14 @@ Flag mudou em repomix v1.14: `--output-style` → `--style`.
 
 Extrair: `tipo` (heurística por deps), `stack`, `componentes-chave` (>100 lines, 3+ rotas), `fluxos` (rotas + sequência). Schema completo em `references/06-comprehension-schema.md`.
 
-## Phase 2: Narrative Extraction
+## Phase 2: Narrative Extraction (gate principal)
 
 Load `references/02-narrative-template.md`. Anti-hallucination:
 - Cite só features em comprehension.json
-- Nunca afirme métricas sem evidência
+- Métricas só com evidência verificável (no README, código, ou comprehension)
 - 3-5 fluxos críticos extraídos de comprehension.fluxos
 
-⛔ GATE: apresentar narrative.md pro user antes de Phase 3.
+⛔ GATE: apresentar narrative.md pro user antes de Phase 3. User aprova ou pede ajuste — pivot/audiência/tom emerge daqui em vez de Phase 0 questionnaire.
 
 ## Phase 3: Slide Planning
 
@@ -110,7 +114,9 @@ data-tool → aa-card, aa-input → csv-mock
 
 Tokens **já baked** em `template/slides/global.css` (Mod 6 fork). Skip Phase 4 token copy. Re-baka via `bash $OPEN_SLIDE_FORK/scripts/sync-anti-ai-ds-tokens.sh`.
 
-⚠️ MVP: tipo sem mapping → falha vocal: "anti-ai-ds não tem mapping pra X. Usa CRM ou aborta?"
+Tipo sem mapping → falha vocal: "anti-ai-ds não tem mapping pra X. Usa CRM ou aborta?"
+
+Componente novo no anti-ai-ds: PR no repo `anti-ai-design-system` primeiro, depois usa.
 
 ## Phase 5: Motion Spec (IL2 gate)
 
@@ -128,30 +134,26 @@ Slides complexos (5+ steps choreography) → `motion-design --spec`. Spec canôn
 
 Load `references/05-orchestrator-recipe.md`. Receita 4 steps: cp template fork → wire `@open-slide/core` file: link → npm install (Rive on-demand) → escrever slides.
 
-**Steps v1 removidos** (baked no fork): patch Windows path, patch optimizeDeps, override CLAUDE.md, install framer-motion+dotlottie, copy tokens. Phase 6 sub-steps: 7 → 4. Skill ~40% menor.
+Mods 1-7 baked no fork — Phase 6 sub-steps: 7 → 4. Skill ~40% menor.
 
 ## Phase 7: Validation (HTTP + runtime)
 
-HTTP-only não cobre runtime errors (gap v1: createRoot named export passou HTTP, quebrou runtime). 4 checks:
+HTTP-only não cobre runtime errors. 4 checks:
 1. Dev server + `/@id/virtual:open-slide/slides` retorna todos slideIds
 2. `/@fs/<abs>/slides/<id>/index.tsx` HTTP 200 sem pre-transform error
 3. Runtime grep `grep -iE "error|ENOENT|Failed to resolve|createRoot|named export|cannot find module" dev.log` → vazio
 4. ⛔ Gate: falha qualquer = não entrega.
-
-Mod 2 do fork (optimizeDeps include react-dom/client) previne createRoot, runtime grep cobre regressão.
 
 ## Anti-patterns
 
 - Extrair componentes do repo target (Layer 4 real) — IL1 violation. MVP só anti-ai-ds.
 - Slide com motion sem header `// MEDIUM:` — IL2 violation.
 - Pular repomix → narrative direto do README — IL3 violation.
-- Localhost:8000 dependency — REMOVIDA v2. Source = path local filesystem.
 - Inferir tipo do repo sem comprehension.json.
 - Slide com 5+ children variants stagger sem spec → motion-design --spec primeiro.
-- Componente novo no anti-ai-ds set sem aprovação Patrick — drift.
 - Animation sem reduced-motion fallback — falha WCAG 2.3.3 + IL2 gate.
-- Mais de 15 slides MVP — fica longo demais.
-- Phase 7 só HTTP — gap v1 (createRoot named export). Runtime grep obrigatório v2.
+- Limite 5-15 slides MVP. Mais que isso = reunião prospect cansa.
+- Componente novo no anti-ai-ds: PR no repo primeiro, depois consome.
 
 ## Pre-delivery checklist
 
@@ -225,7 +227,7 @@ export default [KanbanDemo] satisfies Page[];
 |---|---|
 | `references/01-medium-decision-tree.md` | Decision tree slide.type → medium. |
 | `references/02-narrative-template.md` | Anti-hallucination prompt template. |
-| `references/03-anti-ai-ds-bridge.md` | Mapping `tipo → componentes` + CSS pattern. Source = path local (v2). |
+| `references/03-anti-ai-ds-bridge.md` | Mapping `tipo → componentes` + CSS pattern. Source = path local. |
 | `references/04-motion-patterns-catalog.md` | 10 patterns testáveis (kanban, chat, form, dashboard, cursor, modal, page, stagger, hover, pdf). |
 | `references/05-orchestrator-recipe.md` | Receita Phase 6 v2: cp template + file: link + slide writes. |
 | `references/06-comprehension-schema.md` | Schema JSON Phase 1 + heurísticas tipo. |
