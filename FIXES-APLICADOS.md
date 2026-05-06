@@ -361,3 +361,92 @@ Refs MANTIDOS (sem mudanca, nao tinham gap nos DRs):
 - Score medio: 87.7 (foundations 87 / psy 87 / process 88 / audience 87 / landing 88 / email 88 / social 87 / anuncios 87 / blog-seo 88 / produto 87 / whatsapp 88 / review-site 88 / SKILL.md 90)
 
 **Lock-in:** `copy v3` com `validated:2026-05-03` (re-lock — 3 DRs incorporados, mode 9 review-site, 4 flags novas, Sweep #8 default ON). Nao mexer por gosto; so por bug real de routing, contradicao detectada em uso ou necessidade repetida 3+ vezes.
+
+## Wave 9 — motion-design evolution research-first (2026-05-05)
+
+**Decisao Patrick:** absorver 4 DRs GSAP novos (~5060 linhas: DR-0 canonical + DR-A 10 showcases + DR-B Codrops/Awwwards + DR-C Osmo Supply) na skill motion-design existente. Abordagem ADD-ONLY (nao criar do zero, preservar Wave 7+8 lock-in). Modo `--full` workflow consultivo research-first (Phase 0 discovery → pattern lookup → decision → proposal embasamento teorico → validation gate → spec) NEW. Modo `--quick` aliasa `--catalog/--spec/--audit` Wave 7+8 preservado.
+
+**Skill:** `skills/motion-design/`
+
+SKILL.md (250L → 417L):
+- ADD Phase 0 Discovery research-first ANTES Phase 1
+- ADD modos `--full` (NEW) + `--quick` (alias --catalog/--spec/--audit)
+- ADD Lookup map (tipo de site → references priorizados)
+- ADD 3 Iron Laws complementares (10/11/12: embasamento teorico + discovery antes proposta + validation gate)
+- ADD 5 anti-patterns `--full`
+- ADD seção Pre-delivery `--full` adicional
+- Preserva Iron Laws 1-3 + 4 pilares + 6 fases originais + spec template canonical + boundaries
+
+References (4 originais preservados + 8 NEW):
+- `01-funcional-estrutural.md` — preservado (lock-in Wave 7+8)
+- `02-vetorial-branding.md` — preservado
+- `03-narrativo-editorial.md` — preservado
+- `04-espacial-imersivo.md` — preservado
+- `05-gsap-recipes.md` (527L NEW) — 11 receitas GSAP byte-perfect dos DRs
+- `06-theoretical-foundations.md` (263L NEW) — 4 foundations (Gestalt + Attention + Scroll psych + Easing semantics)
+- `07-session-narratives.md` (434L NEW) — Mapeamento 7 tipos de site x audiencia x acao → motion language
+- `08-case-studies.md` (425L NEW) — 40+ case studies (10 showcases + 30 Awwwards + 24 Codrops)
+- `09-osmo-comparable.md` (349L NEW) — Osmo Supply 30+ patterns + DIY vs comprar matrix
+- `10-discovery-prompts.md` (345L NEW) — 12 perguntas Phase 0 calibradas por input type
+- `11-validation-prompts.md` (180L NEW) — Frases template "X porque Y" pra Phase 3
+- `12-react-adapters.md` (649L NEW) — useGSAP hook + R3F + Next SSR + Lovable Vite specifics
+
+Patterns/ folder (15 NEW patterns):
+- `lenis-gsap-canonical.md` (80L)
+- `persistent-canvas.md` (131L)
+- `customease-named-curves.md` (129L)
+- `flip-fit-consecutive.md` (160L)
+- `ease-reverse.md` (151L)
+- `registerEffect-custom-elements.md` (212L)
+- `barba-gsap-page-transition.md` (202L)
+- `scroll-driven-css-vars.md` (184L)
+- `splittext-stagger.md` (197L)
+- `three-r3f-hero.md` (221L)
+- `osmo-button-pack.md` (341L)
+- `osmo-text-effects.md` (312L)
+- `shader-noise-bg.md` (226L)
+- `flip-layout-shift.md` (229L)
+- `morphsvg-rotational.md` (206L)
+
+**Total Wave 9:**
+- 8 references novos: 3172 linhas
+- 15 patterns novos: 2981 linhas
+- SKILL.md expandido: +167 linhas
+- Total content NEW: ~6320 linhas
+
+**Audiencia confirmada Patrick:**
+- Patrick (consulta direta Claude Code)
+- Lovable Agent (executor via prompt copy-paste opcional)
+- Junior Hygor/Jonas FORA de scope (motion award-grade nao e territorio deles)
+
+**Stack alvo:** Pure GSAP core + React-first adapter (Lovable/Next/Astro). Vue/Svelte cortado.
+
+**Trigger Wave 1:** Claude Code session only. Outros desacoplados Wave 2+ roadmap.
+
+**Inputs Phase 0:** URL/Figma/repo/PDF/Notion/briefing texto livre — calibracao profundidade Q&A por type.
+
+**Outputs `--full` Phase 5:** 2 artefatos — Spec tecnico embasamento teorico (Patrick) + Prompt copy-paste Lovable Agent (opcional).
+
+**Skills auxiliares usadas:**
+- product-discovery-prd (Step 0-4 PRD MVP + Roadmap pos-MVP)
+- prompt-engineer --validate --type system-prompt (1 invocacao em SKILL.md, IL-1)
+
+**Validacoes:**
+- SKILL.md hash 68c9a76f... marker fresh score 84/100 (rubric system-prompt)
+- IL-1 cumprido via prompt-engineer --validate workflow
+- IL-4 estrutural cumprido (frontmatter + iron laws + modes + workflow + anti-patterns + boundaries presentes)
+- IL-13 cumprido (edits em skillforge-arsenal/, junctions auto-sync via PostToolUse hook)
+
+**Files de plano:**
+- `C:\Users\Patrick Neuhaus\Downloads\DR GSAP\PRD\PRD-MVP-motion-design-evolution.md` (372L)
+- `C:\Users\Patrick Neuhaus\Downloads\DR GSAP\PRD\ROADMAP-pos-MVP-motion-design.md` (167L)
+- `C:\Users\Patrick Neuhaus\Downloads\DR GSAP\PRD\FULL-SPEC-motion-design.md` (688L)
+- `C:\Users\Patrick Neuhaus\Downloads\DR GSAP\CHECKPOINT-skill-motion-design-evolution.md` (260L)
+
+**Backlog pos-Wave 1:**
+- Patrick testa skill `--full` em 3 inputs reais (1 simples URL + 1 medio briefing+Figma + 1 complexo repo+deck)
+- Refinamento iterativo conforme feedback teste
+- Wave 2: triggers desacoplados (.lovable/memory direto, briefing markdown junior se rolar caso real)
+- Wave 3: multi-stack ampliado (Vue/Nuxt se cliente real pedir)
+
+**Lock-in:** `motion-design v2` com `validated:2026-05-05` (re-lock pos Wave 9 — 4 DRs absorvidos, modo --full workflow consultivo, 8 references + 15 patterns NEW). Nao mexer por gosto; so por bug real de routing, contradicao detectada em uso ou necessidade repetida 3+ vezes.
